@@ -115,6 +115,8 @@ panel_sources =			\
 	panel-shell.c		\
 	quick-desktop-reader.c	\
 	panel-access.c		\
+	eggaccelerators.c	\
+	eggaccelerators.h	\
 	panel-stock-icons.c	\
 	$(NULL)
 

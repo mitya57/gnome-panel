@@ -1,3 +1,56 @@
+2002-08-22  Marius Andreiana  <mandreiana@yahoo.com>
+
+        * ro.po: updated
+
+2002-08-22  Zbigniew Chyla  <cyba@gnome.pl>
+
+	* pl.po: Updated Polish translation by
+	GNOME PL Team <translators@gnome.pl>.
+
+2002-08-22 Hasbullah Bin Pit <sebol@ikhlas.com>
+
+        * ms.po: very tiny translation update.
+
+2002-08-22  Christian Rose  <menthos@menthos.com>
+
+	* sv.po: Updated Swedish translation.
+
+2002-08-21  Andras Timar  <timar@gnome.hu>
+
+        * hu.po: Updated Hungarian translation.
+
+2002-08-21  Gustavo Noronha Silva  <kov@debian.org>
+
+	* pt_BR.po: minor update
+
+2002-08-21  Christian Neumair  <christian-neumair@web.de>
+
+	* de.po: Updated German translation.
+
+2002-08-19  Yanko Kaneti  <yaneti@declera.com>
+
+	* bg.po: Slightly updated Bulgarian translation. 25->50%. CP1251->UTF-8
+
+2002-08-16  Vincent van Adrighem <V.vanAdrighem@dirck.mine.nu>
+
+	* nl.po: Dutch translation updated by Reinout van Schouwen.
+
+2002-08-16  Changwoo Ryu  <cwryu@debian.org>
+
+	* ko.po: Updated Korean translation.
+
+2002-08-15  Tõivo Leedjärv  <toivo@linux.ee>
+
+	* et.po: A small fix.
+
+2002-08-14  Tõivo Leedjärv  <toivo@linux.ee>
+
+	* et.po: Updated Estonian translation.
+
+2002-08-14  Peteris Krisjanis <peteris.krisjanis@os.lv>
+
+	* lv.po: Update and QA of Latvian translation.
+
 2002-08-13  Andras Timar  <timar@gnome.hu>
 
         * hu.po: Updated Hungarian translation.

@@ -14,9 +14,10 @@
 #include "panel.h"
 #include "menu.h"
 #include "panel-util.h"
-#include "egg-screen-exec.h"
-
+#include "panel-config-global.h"
+#include "eggaccelerators.h"
 #include "multihead-hacks.h"
+#include "egg-screen-exec.h"
 
 extern GlobalConfig global_config;
 extern GSList *panels;
@@ -29,6 +30,19 @@ typedef struct {
 } ModAndKey;
 typedef void (*BitsCallback) (guint value, ModAndKey *mod_and_key);
 
+static guint
+get_ignored_mods (void)
+{
+  guint ignored_mods;
+
+  ignored_mods = 0;
+  egg_keymap_resolve_virtual_modifiers (gdk_keymap_get_default (),
+                                        EGG_VIRTUAL_NUM_LOCK_MASK |
+                                        EGG_VIRTUAL_SCROLL_LOCK_MASK,
+                                        &ignored_mods);
+
+  return ignored_mods;
+}
 
 static void
 all_combinations (guint mask_to_traverse,
@@ -70,7 +84,12 @@ static void
 grab_key (guint mod, guint key)
 {
 	ModAndKey data;
-        int other_mods = IGNORED_MODS & ~mod;
+        guint ignored_mods;
+        int other_mods;
+
+        ignored_mods = get_ignored_mods ();
+        
+        other_mods = ignored_mods & ~mod;
     
 	data.mods = mod;
         data.key = key;
@@ -89,7 +108,15 @@ static void
 ungrab_key (guint mod,guint key)
 {
 	ModAndKey data;
-	int other_mods = IGNORED_MODS & ~mod;    
+        guint ignored_mods;
+        int other_mods;
+
+        /* FIXME this is broken as the modifiers may have changed
+         * between the grab and the ungrab.
+         */
+        ignored_mods = get_ignored_mods ();
+        
+        other_mods = ignored_mods & ~mod;
     
 	data.mods = mod;
 	data.key = key;
@@ -231,10 +258,13 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 	guint run_keycode, run_state;
 	guint screenshot_keycode, screenshot_state;
 	guint window_screenshot_keycode, window_screenshot_state;
-
+        guint ignored_mods;
+        
 	if(xevent->type != KeyPress)
 		return GDK_FILTER_CONTINUE;
 
+        ignored_mods = get_ignored_mods ();
+        
 	keycode = xevent->xkey.keycode;
 	state = xevent->xkey.state;
 
@@ -256,18 +286,16 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 	window_screenshot_state = global_config.window_screenshot_key.state;
 
 	if (keycode == menu_keycode &&
-	    (state & USED_MODS) == menu_state) {
-		PanelWidget *panel_widget;
-		GtkWidget   *panel;
-		GtkWidget   *menu;
-
+	    (state & (~ignored_mods)) == menu_state) {
+		PanelWidget *panel;
+		GtkWidget *menu, *basep;
 		/* check if anybody else has a grab */
 		if (check_for_grabs ())
 			return GDK_FILTER_CONTINUE;
 
-		panel_widget = panels->data;
-		menu = create_panel_root_menu (panel_widget);
-		panel = panel_widget->panel_parent;
+		panel = panels->data;
+		menu = create_panel_root_menu (panel);
+		panel = panel->panel_parent;
 
 		if (BASEP_IS_WIDGET (panel)) {
 			BASEP_WIDGET (panel)->autohide_inhibit = TRUE;
@@ -280,7 +308,7 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 				NULL, NULL, 0, GDK_CURRENT_TIME);
 		return GDK_FILTER_REMOVE;
 	} else if (keycode == run_keycode &&
-		   (state & USED_MODS) == run_state) {
+		   (state & (~ignored_mods)) == run_state) {
 		/* check if anybody else has a grab */
 		if (check_for_grabs ()) {
 			return GDK_FILTER_CONTINUE;
@@ -289,10 +317,10 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 		show_run_dialog (screen_from_event (event));
 		return GDK_FILTER_REMOVE;
 	} else if (keycode == screenshot_keycode &&
-		   (state & USED_MODS) == screenshot_state) {
+		   (state & (~ignored_mods)) == screenshot_state) {
 		GdkScreen *screen;
-		char      *argv [2];
-		char      *proggie;
+		char *argv[2];
+		char *proggie;
 
 		/* check if anybody else has a grab */
 		if (check_for_grabs ()) {
@@ -321,10 +349,10 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 
 		return GDK_FILTER_REMOVE;
 	} else if (keycode == window_screenshot_keycode &&
-		   (state & USED_MODS) == window_screenshot_state) {
+		   (state & (~ignored_mods)) == window_screenshot_state) {
 		GdkScreen *screen;
-		char      *argv [3];
-		char      *proggie;
+		char *argv[3];
+		char *proggie;
 
 		/* check if anybody else has a grab */
 		if (check_for_grabs ()) {
