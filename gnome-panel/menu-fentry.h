@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 typedef struct _MenuFinfo MenuFinfo;
 typedef struct _FileRec FileRec;
@@ -78,6 +78,6 @@ void init_fr_chunks (void);
 void free_mfile (MFile *mfile);
 void free_mfile_list (GSList *list);
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

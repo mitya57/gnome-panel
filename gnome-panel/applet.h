@@ -4,7 +4,7 @@
 #include <glib.h>
 #include "panel-widget.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define EMPTY_ID "Empty" /*this applet should not be loaded*/
 #define MENU_ID "Menu"
@@ -84,6 +84,6 @@ void show_applet_menu (AppletInfo *info, GdkEventButton *event);
  * removed launchers */
 void remove_unused_launchers (void);
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

@@ -1,3 +1,7 @@
+2001-07-31  Martin Baulig  <baulig@suse.de>
+
+	* *.[ch]: Use G_BEGIN/END_DECLS everywhere.
+
 2001-06-07  Christian Rose  <menthos@menthos.com>
 
 	* panel/panel.soundlist: Added Swedish translation.

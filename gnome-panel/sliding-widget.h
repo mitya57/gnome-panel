@@ -10,7 +10,7 @@
 
 #include "border-widget.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define TYPE_SLIDING_POS           (sliding_pos_get_type ())
 #define SLIDING_POS(o)             (GTK_CHECK_CAST ((o), TYPE_SLIDING_POS, SlidingPos))
@@ -102,6 +102,6 @@ void sliding_widget_change_anchor_offset_edge (SlidingWidget *sliding,
 					       SlidingAnchor anchor, 
 					       gint16 offset,
 					       BorderEdge edge);
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

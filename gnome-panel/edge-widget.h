@@ -10,7 +10,7 @@
 
 #include "border-widget.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 /* even though edge_pos is currently structurally
    the same as border_pos, make it its own type 
@@ -61,6 +61,6 @@ GtkWidget *edge_widget_new (int screen,
 			    gboolean rotate_pixmap_bg,
 			    GdkColor *back_color);
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

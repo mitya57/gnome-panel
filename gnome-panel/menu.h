@@ -4,7 +4,7 @@
 #include <panel-widget.h>
 #include "applet.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 /*compatibility only*/
 typedef enum {
@@ -180,6 +180,6 @@ enum {
 #define MENU_LEVEL_NORMAL "level-normal"
 #define MENU_LEVEL_BELOW "level-below"
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

@@ -14,7 +14,7 @@
 
 #include <gnome-panel.h>
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define TYPE_STATUS_DOCKLET          (status_docklet_get_type ())
 #define STATUS_DOCKLET(obj)          GTK_CHECK_CAST (obj, status_docklet_get_type (), StatusDocklet)
@@ -75,6 +75,6 @@ GtkObject*	status_docklet_new_full		(int maximum_retries,
    calls the build_plug signal with the plug that it has added */
 void		status_docklet_run		(StatusDocklet *docklet);
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif /* __STATUS_DOCKLET_H__ */

@@ -10,7 +10,7 @@
 
 #include "border-widget.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define TYPE_ALIGNED_POS           (aligned_pos_get_type ())
 #define ALIGNED_POS(o)             (GTK_CHECK_CAST ((o), TYPE_ALIGNED_POS, AlignedPos))
@@ -93,6 +93,6 @@ void aligned_widget_change_align (AlignedWidget *aligned,
 void aligned_widget_change_align_edge (AlignedWidget *aligned,
 				       AlignedAlignment align,
 				       BorderEdge edge);
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

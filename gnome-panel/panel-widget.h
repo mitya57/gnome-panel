@@ -17,7 +17,7 @@
 #include "button-widget.h"
 #include "panel-types.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define TYPE_PANEL_WIDGET          (panel_widget_get_type ())
 #define PANEL_WIDGET(obj)          GTK_CHECK_CAST (obj, panel_widget_get_type (), PanelWidget)
@@ -264,6 +264,6 @@ void panel_widget_get_applet_rgb_bg(PanelWidget *panel,
 
 extern gboolean panel_applet_in_drag;
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif /* PANEL_WIDGET_H */

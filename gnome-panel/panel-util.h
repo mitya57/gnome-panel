@@ -3,7 +3,7 @@
 
 #include <gnome.h>
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 typedef void (*UpdateFunction) (gpointer);
 
@@ -94,6 +94,6 @@ char *		panel_gnome_kde_help_path (const char *docpath);
 
 gboolean	panel_is_url		(const char *url);
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif /* PANEL_UTIL_H */

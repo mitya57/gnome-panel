@@ -11,7 +11,7 @@
 #include "basep-widget.h"
 #include "drawer.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define TYPE_DRAWER_POS            (drawer_pos_get_type ())
 #define DRAWER_POS(o)              (GTK_CHECK_CAST ((o), TYPE_DRAWER_POS, DrawerPos))
@@ -94,6 +94,6 @@ void		drawer_widget_close_drawer	(DrawerWidget *panel,
 
 void            drawer_widget_restore_state     (DrawerWidget *drawer);
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

@@ -9,7 +9,7 @@
 
 #include "panel-widget.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define TYPE_BASEP_WIDGET        (basep_widget_get_type ())
 #define BASEP_WIDGET(o)          (GTK_CHECK_CAST((o), TYPE_BASEP_WIDGET, BasePWidget))
@@ -314,6 +314,6 @@ void		basep_border_get		(int screen,
 
 #define GNOME_PANEL_HINTS (WIN_HINTS_SKIP_FOCUS|WIN_HINTS_SKIP_WINLIST|WIN_HINTS_SKIP_TASKBAR)
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif /* __BASEP_WIDGET_H__ */

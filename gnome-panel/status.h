@@ -9,7 +9,7 @@
 
 #include <libgnorba/gnorba.h>
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 /*XXX we get some sore of conflict if we just use Status*/
 typedef struct _StatusApplet StatusApplet;
@@ -48,6 +48,6 @@ StatusSpot * status_applet_get_ss(guint32 winid);
 /*inhibit adding and updating for the purpose of quitting*/
 extern gboolean status_inhibit;
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif

@@ -4,7 +4,7 @@
 #include "panel.h"
 #include "panel_config.h"
 
-BEGIN_GNOME_DECLS
+G_BEGIN_DECLS
 
 #define DRAWER_PANEL_KEY "drawer_panel"
 
@@ -24,6 +24,6 @@ void set_drawer_applet_orient(Drawer *drawer, PanelOrientType orient);
 
 void add_drawer_properties_page(PerPanelConfig *ppc, GtkNotebook *prop_nbook, Drawer *drawer);
 
-END_GNOME_DECLS
+G_END_DECLS
 
 #endif
