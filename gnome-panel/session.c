@@ -39,12 +39,10 @@ extern GList *panel_list;
 static void
 send_tooltips_state(int enabled)
 {
-	AppletInfo *info;
-	int i;
+	GList *li;
 
-	for(i=0,info=(AppletInfo *)applets->data;
-	    i<applet_count;
-	    i++,info++) {
+	for(li = applets; li!=NULL; li = g_list_next(li)) {
+		AppletInfo *info li->data;
 		if(info->type == APPLET_EXTERN) {
 			Extern *ext = info->data;
 			g_assert(ext);
@@ -52,7 +50,7 @@ send_tooltips_state(int enabled)
 			  when the ior is discovered anyhow, so this would be
 			  redundant anyway*/
 			if(ext->obj)
-			  send_applet_tooltips_state(ext->obj,i,enabled);
+				send_applet_tooltips_state(ext->obj,enabled);
 		}
 	}
 }
@@ -136,17 +134,16 @@ gnome_desktop_entry_save_no_sync (GnomeDesktopEntry *dentry)
 
 
 static void
-save_applet_configuration(int num)
+save_applet_configuration(AppletInfo *info)
 {
 	char           path[256];
 	int            panel_num;
 	PanelWidget   *panel;
 	AppletData    *ad;
-	AppletInfo    *info = get_applet_info(num);
 	
 	g_return_if_fail(info!=NULL);
 
-	g_snprintf(path,256, "%sApplet_Config/Applet_%d/", panel_cfg_path, num+1);
+	g_snprintf(path,256, "%sApplet_Config/Applet_%d/", panel_cfg_path, info->applet_id+1);
 	gnome_config_push_prefix(path);
 
 	/*obviously no need for saving*/
@@ -191,7 +188,7 @@ save_applet_configuration(int num)
 			g_snprintf(path,256, "%sApplet_%d_Extern/",
 				   panel_cfg_path, num+1);
 			/*have the applet do it's own session saving*/
-			if(send_applet_session_save(ext->obj,info->applet_id,
+			if(send_applet_session_save(ext->obj,
 						    path, globalcfg)) {
 
 				gnome_config_set_string("id", EXTERN_ID);
@@ -391,7 +388,7 @@ do_session_save(GnomeClient *client,
 	} else {
 		GList *li;
 		for(li = sync_applets; li!=NULL; li=g_list_next(li))
-			save_applet_configuration(GPOINTER_TO_INT(li->data));
+			save_applet_configuration(li->data);
 	}
 	/*DEBUG*/printf(" 2"); fflush(stdout);
 
@@ -498,17 +495,15 @@ int
 panel_session_die (GnomeClient *client,
 		   gpointer client_data)
 {
-	AppletInfo *info;
-	int i;
+	GList *li;
 
 	gtk_timeout_remove(config_sync_timeout);
   
 	/*don't catch these any more*/
 	signal(SIGCHLD, SIG_DFL);
 	
-	for(i=0,info=(AppletInfo *)applets->data;
-	    i<applet_count;
-	    i++,info++) {
+	for(li=applets; li!=NULL; li=g_list_next(li)) {
+		AppletInfo *info = li->data;
 		if(info->type == APPLET_EXTERN) {
 			gtk_widget_destroy(info->widget);
 		} else if(info->type == APPLET_SWALLOW) {

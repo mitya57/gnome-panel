@@ -329,6 +329,24 @@ server_quit(POA_GNOME_Panel *servant,
 CORBA_ORB orb = NULL;
 CORBA_Environment ev;
 
+void
+send_applet_init (CORBA_Object obj, Extern *e);
+{
+	/*we started this and already reserved a spot
+	  for it, including the socket widget*/
+	GtkWidget *socket =
+		GTK_BIN(e->info->widget)->child;
+	/*FIXME: do error detection and recovery here*/
+	GNOME_Applet_init(obj,e->servant,ext->cfg,
+			  g_strdup(old_panel_cfg_path),
+			  GDK_WINDOW_XWINDOW(socket->window));
+	ext->cfg = NULL;
+
+	/*if(ev._major)
+		panel_clean_applet(applet_id);*/
+	return retval;
+}
+
 int
 send_applet_session_save (CORBA_Object obj, int applet_id,
 			  const char *cfgpath,

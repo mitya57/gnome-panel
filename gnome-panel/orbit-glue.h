@@ -25,6 +25,7 @@ void send_applet_change_back (CORBA_Object appl, int applet_id,
 			      PanelBackType back_type, const char *pixmap,
 			      const GdkColor* color);
 void send_applet_tooltips_state (CORBA_Object appl, int applet_id, int enabled);
+void send_applet_init (CORBA_Object appl, Extern *e);
 
 END_GNOME_DECLS
 

@@ -37,28 +37,6 @@ static GList *start_queue = NULL; /*the queue of the applets to be
 				    started*/
 static int start_timeout = -1; /*id of the timeout for starting new applet*/
 
-/*see if there is an extern applet running capable of doing
-  something with this goad_id*/
-static CORBA_Object
-extern_is_goad_ready(const char *goad_id)
-{
-	GList *li;
-	printf("goad_id:%s\n",goad_id);
-	for(li=extern_applets;li!=NULL;li=g_list_next(li)) {
-		Extern *e = li->data;
-		GList *l;
-		puts("GONE THROUGH ONE");
-		for(l=e->goad_ids;l!=NULL;l=g_list_next(l)) {
-			printf("%s\n",l->data);
-			if(strcmp(l->data,goad_id)==0)
-				/*found one*/
-				return e->obj;
-		}
-	}
-	puts("NOT FOUND");
-	return CORBA_OBJECT_NIL;
-}
-
 static int
 start_timeout_handler(gpointer data)
 {
@@ -71,42 +49,37 @@ start_timeout_handler(gpointer data)
 /*queue up a new goad id to start or start it if nothing else is
   starting*/
 static void
-extern_start_new_goad_id(char *goad_id)
+extern_start_new_goad_id(Extern *e)
 {
         CORBA_Environment ev;
 	if(!goad_id_starting) {
-		CORBA_Object obj;
-		obj = extern_is_goad_ready(goad_id);
-		if(obj==CORBA_OBJECT_NIL) {
-			CORBA_Object_release(goad_server_activate_with_id(NULL, goad_id, GOAD_ACTIVATE_NEW_ONLY, NULL), &ev);
-		} else {
-			send_applet_start_new_applet(obj,goad_id);
-		}
-		goad_id_starting = g_strdup(goad_id);
+		/*FIXME: I guess we should detect errors here*/
+		e->applet = goad_server_activate_with_id(NULL, goad_id, GOAD_ACTIVATE_NEW_ONLY, NULL);
+		goad_id_starting = g_strdup(e->goad_id);
+		send_applet_init(e);
 	} else {
 		if(start_timeout>-1)
 			gtk_timeout_remove(start_timeout);
 		start_timeout = -1;
-		start_queue = g_list_append(start_queue,g_strdup(goad_id));
-		start_timeout = gtk_timeout_add(100*1000,start_timeout_handler,NULL);
+		start_queue = g_list_append(start_queue,e);
+		start_timeout = gtk_timeout_add(100*1000,
+						start_timeout_handler,NULL);
 	}
 }
 
 void
 extern_start_next(void)
 {
-	char *goad_id;
+	Extern *e;
 	if(goad_id_starting)
 		g_free(goad_id_starting);
 	goad_id_starting = NULL;
 	if(!start_queue)
 		return;
-	goad_id = start_queue->data;
-	start_queue = g_list_remove(start_queue,goad_id);
+	e = start_queue->data;
+	start_queue = g_list_remove(start_queue,e);
 	
-	extern_start_new_goad_id(goad_id);
-	
-	g_free(goad_id);
+	extern_start_new_goad_id(e);
 }
 
 

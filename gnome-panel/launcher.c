@@ -125,8 +125,6 @@ create_launcher (char *parameters, GnomeDesktopEntry *dentry)
 
 	launcher->dentry = dentry;
 
-	launcher->applet_id = -1;
-
 	gtk_object_set_data(GTK_OBJECT(launcher->button),
 			    LAUNCHER_PROPERTIES,NULL);
 

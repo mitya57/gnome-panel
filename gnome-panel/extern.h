@@ -19,7 +19,7 @@ struct _Extern {
 	char *cfg;
 	GtkWidget *ebox;
 
-	AppletInfo *ai;
+	AppletInfo *info;
 };
 void extern_clean(Extern *ext);
 

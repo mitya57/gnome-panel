@@ -312,9 +312,7 @@ drawer_realize_cb(GtkWidget *button, Drawer *drawer)
 static void
 drawer_move_foreach(GtkWidget *w, gpointer user_data)
 {
-	int applet_id = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(w),
-							    "applet_id"));
-	AppletInfo *info = get_applet_info(applet_id);
+	AppletInfo *info = gtk_object_get_data(GTK_OBJECT(w), "applet_info");
 	
 	if(info->type == APPLET_DRAWER) {
 		Drawer *drawer = info->data;

@@ -203,8 +203,13 @@ add_drawers_from_dir(char *dirname, char *name, int pos, PanelWidget *panel)
 	load_drawer_applet(NULL,pixmap_name,subdir_name,
 			   panel,pos);
 	
-	info = get_applet_info(applet_count -1);
-	g_return_if_fail(info);
+	{ /*slightly ugly*/
+		GList *l;
+		l = g_list_last(applets);
+		g_return_if_fail(l!=NULL);
+		info = l->data;
+		g_return_if_fail(info!=NULL);
+	}
 	
 	drawer = info->data;
 	g_return_if_fail(drawer);
@@ -1814,9 +1819,8 @@ menu_button_pressed(GtkWidget *widget, gpointer data)
 	Menu *menu = data;
 	GdkEventButton *bevent = (GdkEventButton*)gtk_get_current_event();
 	GtkWidget *wpanel = get_panel_parent(menu->button);
-	int applet_id =
-		GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(menu->button),
-						    "applet_id"));
+	AppletInfo *info = gtk_object_get_data(GTK_OBJECT(menu->button),
+					       "applet_info");
 	int main_menu = (strcmp (menu->path, ".") == 0);
 	
 	check_and_reread(menu->menu,menu,main_menu);
@@ -1835,8 +1839,7 @@ menu_button_pressed(GtkWidget *widget, gpointer data)
 	gtk_grab_remove(menu->button);
 
 	gtk_menu_popup(GTK_MENU(menu->menu), 0,0, applet_menu_position,
-		       GINT_TO_POINTER(applet_id),
-		       bevent->button, bevent->time);
+		       info, bevent->button, bevent->time);
 }
 
 static char *
@@ -2329,10 +2332,9 @@ panel_menu_position (GtkMenu *menu, int *x, int *y, gpointer data)
 }
 
 void
-applet_menu_position (GtkMenu *menu, int *x, int *y, gpointer data)
+applet_menu_position (GtkMenu *menu, int *x, int *y, AppletInfo *info)
 {
 	int wx, wy;
-	AppletInfo *info = get_applet_info(GPOINTER_TO_INT(data));
 	PanelWidget *panel;
 	GtkWidget *w; /*the panel window widget*/
 
