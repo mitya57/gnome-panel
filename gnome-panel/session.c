@@ -43,17 +43,17 @@ send_tooltips_state(int enabled)
 	GList *li;
 
 	for(li = applets; li!=NULL; li = g_list_next(li)) {
-		AppletInfo *info li->data;
+		AppletInfo *info = li->data;
 		if(info->type == APPLET_EXTERN) {
 			Extern *ext = info->data;
 			g_assert(ext);
 			/*if it's not set yet, don't send it, it will be sent
 			  when the ior is discovered anyhow, so this would be
 			  redundant anyway*/
-			if(ext->obj) {
+			if(ext->applet) {
 				CORBA_Environment ev;
 				CORBA_exception_init(&ev);
-				GNOME_Applet_set_tooltips_state(ext->obj, enabled, &ev);
+				GNOME_Applet_set_tooltips_state(ext->applet, enabled, &ev);
 				if(ev._major)
 					panel_clean_applet(ext->info);
 				CORBA_exception_free(&ev);
@@ -140,7 +140,8 @@ gnome_desktop_entry_save_no_sync (GnomeDesktopEntry *dentry)
 }
 
 static int
-send_applet_session_save (CORBA_Object obj,
+send_applet_session_save (AppletInfo *info,
+			  CORBA_Object obj,
 			  const char *cfgpath,
 			  const char *globcfgpath)
 {
@@ -152,7 +153,7 @@ send_applet_session_save (CORBA_Object obj,
 				     (CORBA_char *)cfgpath,
 				     (CORBA_char *)globcfgpath, &ev);
   if(ev._major)
-    panel_clean_applet(applet_id);
+    panel_clean_applet(info);
   CORBA_exception_free(&ev);
 
   return retval;
@@ -213,9 +214,9 @@ save_applet_configuration(AppletInfo *info)
 			/*this is the file path we pass to the applet for it's
 			  own config, this is a separate file, so that we */
 			g_snprintf(path,256, "%sApplet_%d_Extern/",
-				   panel_cfg_path, num+1);
+				   panel_cfg_path, info->applet_id+1);
 			/*have the applet do it's own session saving*/
-			if(send_applet_session_save(ext->obj,
+			if(send_applet_session_save(info,ext->applet,
 						    path, globalcfg)) {
 
 				gnome_config_set_string("id", EXTERN_ID);
@@ -277,7 +278,8 @@ save_applet_configuration(AppletInfo *info)
 			/*we set the .desktop to be in the panel config
 			  dir*/
 			g_snprintf(path,256, "%s/%sApplet_%d.desktop",
-				   gnome_user_dir,panel_cfg_path, num+1);
+				   gnome_user_dir,panel_cfg_path,
+				   info->applet_id+1);
 			g_free(launcher->dentry->location);
 			launcher->dentry->location = g_strdup(path);
 			gnome_desktop_entry_save_no_sync(launcher->dentry);
@@ -410,8 +412,9 @@ do_session_save(GnomeClient *client,
 
 	/*DEBUG*/printf("Saving session: 1"); fflush(stdout);
 	if(complete_sync) {
-		for(i=0;i<applet_count;i++)
-			save_applet_configuration(i);
+		GList *li;
+		for(li=applets;li!=NULL;li=g_list_next(li))
+			save_applet_configuration(li->data);
 	} else {
 		GList *li;
 		for(li = sync_applets; li!=NULL; li=g_list_next(li))

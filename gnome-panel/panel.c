@@ -233,10 +233,12 @@ orientation_change(AppletInfo *info, PanelWidget *panel)
 		Extern *ext = info->data;
 		g_assert(ext);
 		/*ingore this until we get an ior*/
-		if(ext->obj) {
+		if(ext->applet) {
 			CORBA_Environment ev;
 			CORBA_exception_init(&ev);
-			GNOME_Applet_change_orient(ext->obj, orient, &ev);
+			GNOME_Applet_change_orient(ext->applet,
+						   get_applet_orient(panel),
+						   &ev);
 			if(ev._major)
 				panel_clean_applet(ext->info);
 			CORBA_exception_free(&ev);
@@ -321,16 +323,19 @@ back_change(AppletInfo *info, PanelWidget *panel)
 		Extern *ext = info->data;
 		g_assert(ext);
 		/*ignore until we have a valid IOR*/
-		if(ext->obj) {
+		if(ext->applet) {
 			GNOME_Panel_BackInfoType backing;
 			CORBA_Environment ev;
 			CORBA_exception_init(&ev);
 			backing._d = panel->back_type;
-			if(panel->back_type == BACK_PIXMAP)
+			if(panel->back_type == PANEL_BACK_PIXMAP)
 				backing._u.pmap = panel->back_pixmap;
-			else if(panel->back_type == BACK_COLOR)
-				backing._u.c = panel->back_color;
-			GNOME_Applet_back_change(ext->obj, &backing, &ev);
+			else if(panel->back_type == PANEL_BACK_COLOR) {
+				backing._u.c.red = panel->back_color.red;
+				backing._u.c.green = panel->back_color.green;
+				backing._u.c.blue = panel->back_color.blue;
+			}
+			GNOME_Applet_back_change(ext->applet, &backing, &ev);
 			if(ev._major)
 				panel_clean_applet(ext->info);
 			CORBA_exception_free(&ev);

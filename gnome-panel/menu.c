@@ -2231,7 +2231,7 @@ load_menu_applet(char *params, int main_menu_type,
 		register_toy(menu->button,menu,
 			     panel,pos,APPLET_MENU);
 
-		applet_add_callback(applet_count-1,"properties",
+		applet_add_callback(applets_last->data,"properties",
 				    GNOME_STOCK_MENU_PROP,
 				    _("Properties..."));
 	}
@@ -2329,8 +2329,9 @@ panel_menu_position (GtkMenu *menu, int *x, int *y, gpointer data)
 }
 
 void
-applet_menu_position (GtkMenu *menu, int *x, int *y, AppletInfo *info)
+applet_menu_position (GtkMenu *menu, int *x, int *y, gpointer data)
 {
+	AppletInfo *info = data;
 	int wx, wy;
 	PanelWidget *panel;
 	GtkWidget *w; /*the panel window widget*/

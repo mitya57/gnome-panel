@@ -39,177 +39,16 @@ static GList *start_queue = NULL; /*the queue of the applets to be
 				    started*/
 static int start_timeout = -1; /*id of the timeout for starting new applet*/
 
+/********************* CORBA Stuff *******************/
+
 CORBA_ORB orb = NULL;
 CORBA_Environment ev;
 PortableServer_POA thepoa;
 
-static int
-start_timeout_handler(gpointer data)
-{
-	start_timeout = -1;
-	extern_start_next();
-	return FALSE;
-}
-
-
-/*queue up a new goad id to start or start it if nothing else is
-  starting*/
-static void
-extern_start_new_goad_id(Extern *e)
-{
-        CORBA_Environment ev;
-	if(!goad_id_starting) {
-		CORBA_exception_init(&ev);
-		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_NEW_ONLY|GOAD_ACTIVATE_ASYNC, NULL),&ev);
-		CORBA_exception_free(&ev);
-		goad_id_starting = g_strdup(e->goad_id);
-	} else {
-		if(start_timeout>-1)
-			gtk_timeout_remove(start_timeout);
-		start_timeout = -1;
-		start_queue = g_list_append(start_queue,e);
-		start_timeout = gtk_timeout_add(100*1000,
-						start_timeout_handler,NULL);
-	}
-}
-
-void
-extern_start_next(void)
-{
-	Extern *e;
-	if(goad_id_starting)
-		g_free(goad_id_starting);
-	goad_id_starting = NULL;
-	if(!start_queue)
-		return;
-	e = start_queue->data;
-	start_queue = g_list_remove(start_queue,e);
-	
-	extern_start_new_goad_id(e);
-}
-
-
-void
-extern_clean(Extern *ext)
-{
-	extern_applets = g_list_remove(extern_applets,ext);
-
-	if(ext->applet != CORBA_OBJECT_NIL) {
-		CORBA_Environment ev;
-		CORBA_exception_init(&ev);
-		CORBA_Object_release(ext->applet, &ev);
-		CORBA_exception_free(&ev);
-	}
-	/*FIXME: is this correct???*/
-	if(ext->servant != CORBA_OBJECT_NIL) {
-		CORBA_Environment ev;
-		CORBA_exception_init(&ev);
-		CORBA_Object_release(ext->servant, &ev);
-		CORBA_exception_free(&ev);
-	}
-
-	g_free(ext->goad_id);
-	g_free(ext->cfg);
-	g_free(ext);
-}
-
-
-
-
-static int
-extern_socket_destroy(GtkWidget *w, gpointer data)
-{
-	Extern *ext = data;
-	gtk_widget_destroy(ext->ebox);
-	extern_clean(ext);
-	return FALSE;
-}
-
-/*note that type should be APPLET_EXTERN_RESERVED or APPLET_EXTERN_PENDING
-  only*/
-guint32
-reserve_applet_spot (Extern *ext, PanelWidget *panel, int pos,
-		     AppletType type)
-{
-	GtkWidget *socket;
-
-	ext->ebox = gtk_event_box_new();
-	gtk_widget_set_events(ext->ebox, (gtk_widget_get_events(ext->ebox) |
-					  APPLET_EVENT_MASK) &
-			      ~( GDK_POINTER_MOTION_MASK |
-				 GDK_POINTER_MOTION_HINT_MASK));
-
-	socket = gtk_socket_new();
-
-	g_return_val_if_fail(socket!=NULL,0);
-
-	gtk_container_add(GTK_CONTAINER(ext->ebox),socket);
-
-	gtk_signal_connect(GTK_OBJECT(socket),"destroy",
-			   GTK_SIGNAL_FUNC(extern_socket_destroy),
-			   ext);
-
-	gtk_widget_show_all (ext->ebox);
-	
-	/*we save the obj in the id field of the appletinfo and the 
-	  path in the path field */
-	if(!register_toy(ext->ebox,ext,panel,pos,type)) {
-		g_warning("Couldn't add applet");
-		return 0;
-	}
-	
-	if(!GTK_WIDGET_REALIZED(socket))
-		gtk_widget_realize(socket);
-
-	return GDK_WINDOW_XWINDOW(socket->window);
-}
-
-void
-load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
-{
-	Extern *ext;
-	POA_GNOME_PanelSpot *panelspot_servant;
-	PortableServer_ObjectId objid = {0, sizeof("PanelSpot"), "PanelSpot" };
-
-	if(!cfgpath || !*cfgpath)
-		cfgpath = g_copy_strings(old_panel_cfg_path,
-					 "Applet_Dummy/",NULL);
-	else
-		/*we will free this lateer*/
-		cfgpath = g_strdup(cfgpath);
-	
-	ext = g_new(Extern,1);
-
-	panelspot_servant = (POA_GNOME_Panel *)ext;
-	panelspot_servant->_private = NULL;
-	panelspot_servant->vepv = &panelspot_vepv;
-
-	POA_GNOME_PanelSpot__init(panelspot_servant, &ev);
-	
-	PortableServer_POA_activate_object_with_id(thepoa, &objid, panelspot_servant, &ev);
-	g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
-
-	ext->applet = CORBA_OBJECT_NIL;
-	ext->goad_id = g_strdup(goad_id);
-	ext->cfg = cfgpath;
-	extern_applets = g_list_prepend(extern_applets,ext);
-
-	if(reserve_applet_spot (ext, panel, pos, APPLET_EXTERN_PENDING)==0) {
-		g_warning("Whoops! for some reason we can't add "
-			  "to the panel");
-		extern_clean(ext);
-		return;
-	}
-
-	extern_start_new_goad_id(goad_id);
-}
-
-/********************* CORBA Stuff *******************/
-
 /***Panel stuff***/
 static CORBA_short
 s_panel_add_applet(POA_GNOME_Panel *servant,
-		   CORBA_Applet panel_applet,
+		   GNOME_Applet panel_applet,
 		   CORBA_char *goad_id,
 		   CORBA_char ** cfgpath,
 		   CORBA_char ** globcfgpath,
@@ -218,7 +57,7 @@ s_panel_add_applet(POA_GNOME_Panel *servant,
 
 static CORBA_short
 s_panel_add_applet_full(POA_GNOME_Panel *servant,
-			CORBA_Applet panel_applet,
+			GNOME_Applet panel_applet,
 			CORBA_char *goad_id,
 			CORBA_short panel,
 			CORBA_short pos,
@@ -309,7 +148,7 @@ static POA_GNOME_Panel__epv panel_epv = {
   (gpointer)&s_panel_add_applet,
   (gpointer)&s_panel_add_applet_full,
   (gpointer)&s_panel_quit,
-  (gpointer)&s_panel_get_indrag
+  (gpointer)&s_panel_get_in_drag
 };
 static POA_GNOME_Panel__vepv panel_vepv = { &panel_base_epv, &panel_epv };
 static POA_GNOME_Panel panel_servant = { NULL, &panel_vepv };
@@ -339,12 +178,174 @@ static POA_GNOME_PanelSpot__epv panelspot_epv = {
   (gpointer)&s_panelspot_sync_config
 };
 static POA_GNOME_Panel__vepv panelspot_vepv = { &panelspot_base_epv, &panelspot_epv };
-//static POA_GNOME_Panel panelspot_servant = { NULL, &panelspot_vepv };
+
+/********************* NON-CORBA Stuff *******************/
+
+static int
+start_timeout_handler(gpointer data)
+{
+	start_timeout = -1;
+	extern_start_next();
+	return FALSE;
+}
+
+
+/*queue up a new goad id to start or start it if nothing else is
+  starting*/
+static void
+extern_start_new_goad_id(Extern *e)
+{
+        CORBA_Environment ev;
+	if(!goad_id_starting) {
+		CORBA_exception_init(&ev);
+		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_NEW_ONLY|GOAD_ACTIVATE_ASYNC, NULL),&ev);
+		CORBA_exception_free(&ev);
+		goad_id_starting = g_strdup(e->goad_id);
+	} else {
+		if(start_timeout>-1)
+			gtk_timeout_remove(start_timeout);
+		start_timeout = -1;
+		start_queue = g_list_append(start_queue,e);
+		start_timeout = gtk_timeout_add(100*1000,
+						start_timeout_handler,NULL);
+	}
+}
+
+void
+extern_start_next(void)
+{
+	Extern *e;
+	if(goad_id_starting)
+		g_free(goad_id_starting);
+	goad_id_starting = NULL;
+	if(!start_queue)
+		return;
+	e = start_queue->data;
+	start_queue = g_list_remove(start_queue,e);
+	
+	extern_start_new_goad_id(e);
+}
+
+
+void
+extern_clean(Extern *ext)
+{
+	CORBA_Environment ev;
+	CORBA_exception_init(&ev);
+
+	extern_applets = g_list_remove(extern_applets,ext);
+
+	if(ext->applet != CORBA_OBJECT_NIL)
+		CORBA_Object_release((CORBA_Object)ext->applet, &ev);
+
+	g_free(ext->goad_id);
+	g_free(ext->cfg);
+
+	/*FIXME: is this correct???*/
+	/*CORBA_Object_release((CORBA_Object)ext, &ev);*/
+
+	g_free(ext);
+
+	CORBA_exception_free(&ev);
+}
+
+
+
+
+static int
+extern_socket_destroy(GtkWidget *w, gpointer data)
+{
+	Extern *ext = data;
+	gtk_widget_destroy(ext->ebox);
+	extern_clean(ext);
+	return FALSE;
+}
+
+/*note that type should be APPLET_EXTERN_RESERVED or APPLET_EXTERN_PENDING
+  only*/
+static guint32
+reserve_applet_spot (Extern *ext, PanelWidget *panel, int pos,
+		     AppletType type)
+{
+	GtkWidget *socket;
+
+	ext->ebox = gtk_event_box_new();
+	gtk_widget_set_events(ext->ebox, (gtk_widget_get_events(ext->ebox) |
+					  APPLET_EVENT_MASK) &
+			      ~( GDK_POINTER_MOTION_MASK |
+				 GDK_POINTER_MOTION_HINT_MASK));
+
+	socket = gtk_socket_new();
+
+	g_return_val_if_fail(socket!=NULL,0);
+
+	gtk_container_add(GTK_CONTAINER(ext->ebox),socket);
+
+	gtk_signal_connect(GTK_OBJECT(socket),"destroy",
+			   GTK_SIGNAL_FUNC(extern_socket_destroy),
+			   ext);
+
+	gtk_widget_show_all (ext->ebox);
+	
+	/*we save the obj in the id field of the appletinfo and the 
+	  path in the path field */
+	if(!register_toy(ext->ebox,ext,panel,pos,type)) {
+		g_warning("Couldn't add applet");
+		return 0;
+	}
+	
+	if(!GTK_WIDGET_REALIZED(socket))
+		gtk_widget_realize(socket);
+
+	return GDK_WINDOW_XWINDOW(socket->window);
+}
+
+void
+load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
+{
+	Extern *ext;
+	POA_GNOME_PanelSpot *panelspot_servant;
+	PortableServer_ObjectId objid = {0, sizeof("PanelSpot"), "PanelSpot" };
+
+	if(!cfgpath || !*cfgpath)
+		cfgpath = g_copy_strings(old_panel_cfg_path,
+					 "Applet_Dummy/",NULL);
+	else
+		/*we will free this lateer*/
+		cfgpath = g_strdup(cfgpath);
+	
+	ext = g_new(Extern,1);
+
+	panelspot_servant = (POA_GNOME_PanelSpot *)ext;
+	panelspot_servant->_private = NULL;
+	panelspot_servant->vepv = &panelspot_vepv;
+
+	POA_GNOME_PanelSpot__init(panelspot_servant, &ev);
+	
+	PortableServer_POA_activate_object_with_id(thepoa, &objid, panelspot_servant, &ev);
+	g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+	ext->applet = CORBA_OBJECT_NIL;
+	ext->goad_id = g_strdup(goad_id);
+	ext->cfg = cfgpath;
+	extern_applets = g_list_prepend(extern_applets,ext);
+
+	if(reserve_applet_spot (ext, panel, pos, APPLET_EXTERN_PENDING)==0) {
+		g_warning("Whoops! for some reason we can't add "
+			  "to the panel");
+		extern_clean(ext);
+		return;
+	}
+
+	extern_start_new_goad_id(goad_id);
+}
+
+/********************* CORBA Stuff *******************/
 
 
 static CORBA_PanelSpot
 s_panel_add_applet(POA_GNOME_Panel *servant,
-		   CORBA_Applet panel_applet,
+		   GNOME_Applet panel_applet,
 		   CORBA_char *goad_id,
 		   CORBA_char ** cfgpath,
 		   CORBA_char ** globcfgpath,
@@ -357,7 +358,7 @@ s_panel_add_applet(POA_GNOME_Panel *servant,
 
 static CORBA_PanelSpot
 s_panel_add_applet_full(POA_GNOME_Panel *servant,
-			CORBA_Applet panel_applet,
+			GNOME_Applet panel_applet,
 			CORBA_char *goad_id,
 			CORBA_short panel,
 			CORBA_short pos,
@@ -394,7 +395,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 				info->type = APPLET_EXTERN_RESERVED;
 				*wid=GDK_WINDOW_XWINDOW(socket->window);
 
-				panelspot_servant = (POA_GNOME_Panel *)ext;
+				panelspot_servant = (POA_GNOME_PanelSpot *)ext;
 				acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, &ev);
 				g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 
@@ -407,7 +408,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 	  have already reserved a spot for it*/
 	ext = g_new(Extern,1);
 
-	panelspot_servant = (POA_GNOME_Panel *)ext;
+	panelspot_servant = (POA_GNOME_PanelSpot *)ext;
 	panelspot_servant->_private = NULL;
 	panelspot_servant->vepv = &panelspot_vepv;
 
@@ -575,7 +576,7 @@ s_panelspot_register_us(POA_GNOME_PanelSpot *servant,
 	orientation_change(info,panel);
 	back_change(info,panel);
 
-	GNOME_Applet_set_tooltips_state(ext->obj,
+	GNOME_Applet_set_tooltips_state(ext->applet,
 					global_config.tooltips_enabled, &ev);
 	if(ev._major)
 		panel_clean_applet(info);

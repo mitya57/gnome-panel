@@ -76,10 +76,10 @@ applet_callback_callback(GtkWidget *widget, gpointer data)
 			CORBA_Environment ev;
 			Extern *ext = menu->info->data;
 			g_assert(ext);
-			g_assert(ext->obj);
+			g_assert(ext->applet);
 
 			CORBA_exception_init(&ev);
-			GNOME_Applet_do_callback(ext->obj, menu->name, &ev);
+			GNOME_Applet_do_callback(ext->applet, menu->name, &ev);
 			if(ev._major)
 				panel_clean_applet(ext->info);
 			CORBA_exception_free(&ev);
@@ -136,7 +136,7 @@ applet_get_callback(GList *user_menu, char *name)
 }
 
 void
-applet_add_callback(AppletWidget *info,
+applet_add_callback(AppletInfo *info,
 		    char *callback_name,
 		    char *stock_item,
 		    char *menuitem_text)
