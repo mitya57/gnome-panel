@@ -1163,6 +1163,8 @@ basep_widget_change_params(BasePWidget *basep,
 	
 	if (state != basep->state) {
 		basep->state = state;
+		if (state != BASEP_AUTO_HIDDEN)
+			basep_widget_autoshow (basep);
 		gtk_signal_emit(GTK_OBJECT(basep),
 				basep_widget_signals[STATE_CHANGE_SIGNAL],
 				state);
@@ -1415,11 +1417,6 @@ basep_widget_autohide (gpointer data)
 
 	if (basep->autohide_inhibit)
 		return TRUE;
-
-	if (basep->leave_notify_timer_tag != 0) {
-		gtk_timeout_remove (basep->leave_notify_timer_tag);
-		basep->leave_notify_timer_tag = 0;
-	}
 	
 	if (basep->state == BASEP_MOVING) {
 #ifdef PANEL_DEBUG
@@ -1429,6 +1426,7 @@ basep_widget_autohide (gpointer data)
 	}
 
 	if ( (basep->state != BASEP_SHOWN) ||
+	     (basep->mode != BASEP_AUTO_HIDE) ||
 	     (panel_widget_is_cursor(PANEL_WIDGET(basep->panel), 0)) ) {
 		basep->leave_notify_timer_tag = 0;
 		return TRUE;

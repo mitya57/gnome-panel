@@ -1,5 +1,20 @@
 1999-08-19  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
+	* menu.c (make_properties_submenu): added properties for the hide
+	mode, hidebuttons, size, background type  (these are broken though)
+	(change_background): 
+	(change_hidebuttons): 
+	(change_size): 
+	(change_hiding_mode): 
+	(update_back_menu): 
+	(update_size_menu): 
+	(update_hidebutton_menu): 
+	(update_hiding_menu): functions to support this
+	(add_radio_menu): convienence function
+
+	* basep-widget.c (basep_widget_autohide): fixed a bug wrt changing
+	modes
+
 	* aligned-widget.c (aligned_pos_show_hide_right): 
 	(aligned_pos_show_hide_left): 
 	(aligned_pos_class_init): Facilitate jumping to other side of

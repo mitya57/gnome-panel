@@ -33,10 +33,37 @@
 #define REDHAT_MENUDIR "/etc/X11/wmconfig"
 #define DEBIAN_MENUDIR "/var/lib/gnome/Debian/."
 
-#define MENU_TYPE "type_menu"
+#define MENU_TYPES "types_menu"
 #define MENU_TYPE_EDGE "Edge panel"
 #define MENU_TYPE_ALIGNED "Aligned panel"
 #define MENU_TYPE_SLIDING "Sliding panel"
+
+#define MENU_MODES "modes_menu"
+#define MENU_MODE_EXPLICIT_HIDE "Explicit hide"
+#define MENU_MODE_AUTO_HIDE "Auto hide"
+
+#define MENU_HIDEBUTTONS "hidebuttons_menu"
+#define MENU_HIDEBUTTONS_PIXMAP "With pixmap arrow"
+#define MENU_HIDEBUTTONS_PLAIN "Without pixmap"
+#define MENU_HIDEBUTTONS_NONE "None"
+
+/* perhaps into basep-widget.h? */
+enum {
+	HIDEBUTTONS_PIXMAP,
+	HIDEBUTTONS_PLAIN,
+	HIDEBUTTONS_NONE
+};
+
+#define MENU_SIZES "sizes_menu"
+#define MENU_SIZE_TINY "Tiny (24 pixels)"
+#define MENU_SIZE_STANDARD "Standard (48 pixels)"
+#define MENU_SIZE_LARGE "Large (64 pixels)"
+#define MENU_SIZE_HUGE "Huge (80 pixels"
+
+#define MENU_BACKS "background_menu"
+#define MENU_BACK_NONE "Standard"
+#define MENU_BACK_PIXMAP "Pixmap"
+#define MENU_BACK_COLOR "Color"
 
 static char *gnome_folder = NULL;
 
@@ -2659,6 +2686,104 @@ convert_to_panel(GtkWidget *widget, gpointer data)
 	gtk_widget_queue_resize (GTK_WIDGET (basep));
 }
 
+static void
+change_hiding_mode (GtkWidget *widget, gpointer data)
+{
+	BasePWidget *basep;
+
+	g_return_if_fail(current_panel != NULL);
+	if (!GTK_CHECK_MENU_ITEM (widget)->active)
+		return;
+
+	basep = gtk_object_get_data(GTK_OBJECT(current_panel),"panel_parent");
+	g_return_if_fail (IS_BASEP_WIDGET (basep));
+	
+	basep_widget_change_params (basep,
+				    current_panel->orient,
+				    current_panel->sz,
+				    GPOINTER_TO_INT (data),
+				    basep->state,
+				    basep->hidebuttons_enabled,
+				    basep->hidebutton_pixmaps_enabled,
+				    current_panel->back_type,
+				    current_panel->back_pixmap,
+				    current_panel->fit_pixmap_bg,
+				    &current_panel->back_color);
+}
+
+static void
+change_size (GtkWidget *widget, gpointer data)
+{
+	g_return_if_fail(current_panel != NULL);
+	if (!GTK_CHECK_MENU_ITEM (widget)->active)
+		return;
+
+	panel_widget_change_params (current_panel,
+				    current_panel->orient,
+				    GPOINTER_TO_INT (data),
+				    current_panel->back_type,
+				    current_panel->back_pixmap,
+				    current_panel->fit_pixmap_bg,
+				    &current_panel->back_color);
+}
+
+static void
+change_background (GtkWidget *widget, gpointer data)
+{
+	g_return_if_fail(current_panel != NULL);
+
+	if (!GTK_CHECK_MENU_ITEM (widget)->active)
+		return;
+
+	panel_widget_change_params (current_panel,
+				    current_panel->orient,
+				    current_panel->sz,
+				    GPOINTER_TO_INT (data),
+				    current_panel->back_pixmap,
+				    current_panel->fit_pixmap_bg,
+				    &current_panel->back_color);
+}
+
+static void
+change_hidebuttons (GtkWidget *widget, gpointer data)
+{
+	BasePWidget *basep;
+	gboolean hidebutton_pixmaps_enabled, hidebuttons_enabled;
+	g_return_if_fail(current_panel != NULL);
+
+	if (!GTK_CHECK_MENU_ITEM (widget)->active)
+		return;
+
+	basep = gtk_object_get_data(GTK_OBJECT(current_panel),"panel_parent");
+	g_return_if_fail (IS_BASEP_WIDGET (basep));
+
+	hidebuttons_enabled = basep->hidebuttons_enabled;
+	hidebutton_pixmaps_enabled = basep->hidebutton_pixmaps_enabled;
+
+	switch (GPOINTER_TO_INT (data)) {
+	case HIDEBUTTONS_NONE:
+		hidebuttons_enabled = TRUE;
+		break;
+	case HIDEBUTTONS_PLAIN:
+		hidebutton_pixmaps_enabled = TRUE;
+		break;
+	case HIDEBUTTONS_PIXMAP:
+		hidebutton_pixmaps_enabled = TRUE;
+		break;
+	}
+
+	basep_widget_change_params (basep,
+				    current_panel->orient,
+				    current_panel->sz,
+				    basep->mode,
+				    basep->state,
+				    hidebuttons_enabled,
+				    hidebutton_pixmaps_enabled,
+				    current_panel->back_type,
+				    current_panel->back_pixmap,
+				    current_panel->fit_pixmap_bg,
+				    &current_panel->back_color);
+}
 
 #if 0
 void
@@ -2690,25 +2815,113 @@ show_x_on_panels(GtkWidget *menu)
 static void
 update_type_menu (GtkWidget *menu, gpointer data)
 {
-	GtkWidget *menuitem;
+	char *s = NULL;
+	GtkWidget *menuitem = NULL;
 	GtkWidget *basep = gtk_object_get_data(GTK_OBJECT(current_panel),
-					       PANEL_PARENT);	
-	if (IS_EDGE_WIDGET (basep)) {
-		menuitem = gtk_object_get_data (GTK_OBJECT (menu),
-						MENU_TYPE_EDGE);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
-						TRUE);
-	} else if (IS_ALIGNED_WIDGET (basep)) {
-		menuitem = gtk_object_get_data (GTK_OBJECT (menu),
-						MENU_TYPE_ALIGNED);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
-						TRUE);
-	} else if (IS_SLIDING_WIDGET (basep)) {
-		menuitem = gtk_object_get_data (GTK_OBJECT (menu),
-						MENU_TYPE_SLIDING);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
-						TRUE);
+					       PANEL_PARENT);
+	if (IS_EDGE_WIDGET (basep))
+		s = MENU_TYPE_EDGE;
+	else if (IS_ALIGNED_WIDGET (basep))
+		s = MENU_TYPE_ALIGNED;
+	else if (IS_SLIDING_WIDGET (basep))
+		s = MENU_TYPE_SLIDING;
+	else 
+		return;
+	
+	menuitem = gtk_object_get_data (GTK_OBJECT (menu), s);				 
+	
+	if (menuitem)
+		gtk_check_menu_item_set_active (
+			GTK_CHECK_MENU_ITEM (menuitem), TRUE);
+}
+
+static void
+update_size_menu (GtkWidget *menu, gpointer data)
+{
+	GtkWidget *menuitem = NULL;
+	char *s = NULL;
+	switch (current_panel->sz) {
+	case SIZE_TINY:
+		s = MENU_SIZE_TINY;
+		break;
+	case SIZE_STANDARD:
+		s = MENU_SIZE_STANDARD;
+		break;
+	case SIZE_LARGE:
+		s = MENU_SIZE_LARGE;
+		break;
+	case SIZE_HUGE:
+		s = MENU_SIZE_HUGE;
+		break;
+	default:
+		return;
 	}
+
+	menuitem = gtk_object_get_data (GTK_OBJECT (menu), s);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
+					TRUE);
+}
+
+
+static void
+update_back_menu (GtkWidget *menu, gpointer data)
+{
+	GtkWidget *menuitem = NULL;
+	char *s = NULL;
+	switch (current_panel->sz) {
+	case PANEL_BACK_NONE:
+		s = MENU_BACK_NONE;
+		break;
+	case PANEL_BACK_COLOR:
+		s = MENU_BACK_COLOR;
+		break;
+	case PANEL_BACK_PIXMAP:
+		s = MENU_BACK_PIXMAP;
+		break;
+	default:
+		return;
+	}
+
+	menuitem = gtk_object_get_data (GTK_OBJECT (menu), s);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
+					TRUE);
+	menuitem = gtk_object_get_data (GTK_OBJECT (menu), MENU_BACK_PIXMAP);
+	gtk_widget_set_sensitive (menuitem, current_panel->back_pixmap != NULL);
+}
+
+static void
+update_hidebutton_menu (GtkWidget *menu, gpointer data)
+{
+	char *s = NULL;
+	GtkWidget *menuitem = NULL;
+	BasePWidget *basep = gtk_object_get_data(GTK_OBJECT(current_panel),
+						 PANEL_PARENT);
+	if (!basep->hidebuttons_enabled)
+		s = MENU_HIDEBUTTONS_NONE;
+	else if (basep->hidebutton_pixmaps_enabled)
+		s = MENU_HIDEBUTTONS_PIXMAP;
+	else 
+		s = MENU_HIDEBUTTONS_NONE;
+	
+	menuitem = gtk_object_get_data (GTK_OBJECT (menu), s);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
+					TRUE);
+}
+
+static void
+update_hiding_menu (GtkWidget *menu, gpointer data)
+{
+	char *s = NULL;
+	GtkWidget *menuitem = NULL;
+	BasePWidget *basep = gtk_object_get_data(GTK_OBJECT(current_panel),
+					       "panel_parent");
+	s =  (basep->mode == BASEP_EXPLICIT_HIDE)
+		? MENU_MODE_EXPLICIT_HIDE
+		: MENU_MODE_AUTO_HIDE;
+
+	menuitem = gtk_object_get_data (GTK_OBJECT (menu), s);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
+					TRUE);
 }
 
 typedef struct {
@@ -2733,8 +2946,10 @@ add_radios_to_menu (GtkWidget *menu, StringEnumPair *items,
 				 menuitem);
 		gtk_object_set_data (GTK_OBJECT (menu),
 				     items[i].s, menuitem);
-		gtk_check_menu_item_set_show_toggle 
-			(GTK_CHECK_MENU_ITEM (menuitem), TRUE);
+		gtk_check_menu_item_set_show_toggle (
+			GTK_CHECK_MENU_ITEM (menuitem), TRUE);
+		gtk_check_menu_item_set_active (
+			GTK_CHECK_MENU_ITEM (menuitem), FALSE);
 		gtk_signal_connect (GTK_OBJECT (menuitem), "toggled",
 				    GTK_SIGNAL_FUNC (func),
 				    GINT_TO_POINTER (items[i].i));
@@ -2742,26 +2957,70 @@ add_radios_to_menu (GtkWidget *menu, StringEnumPair *items,
 }
 
 static void
-make_properties_submenu (GtkWidget *menu)
+add_radio_menu (GtkWidget *menu, char *menutext, 
+		StringEnumPair *items, char *menu_key,
+		GtkSignalFunc change_func,
+		GtkSignalFunc update_func)
 {
 	GtkWidget *menuitem;
 	GtkWidget *submenu;
-	StringEnumPair types[] = { { N_(MENU_TYPE_EDGE), EDGE_PANEL },
-				   { N_(MENU_TYPE_ALIGNED), ALIGNED_PANEL },
-				   { N_(MENU_TYPE_SLIDING), SLIDING_PANEL },
-				   { NULL, 0 } };
-	
+
 	menuitem = gtk_menu_item_new ();
-	setup_menuitem (menuitem, NULL, _("Type"));
+	setup_menuitem (menuitem, NULL, menutext);
 	gtk_menu_append (GTK_MENU (menu), menuitem);
+	gtk_object_set_data (GTK_OBJECT (menu), menu_key, menuitem);
 
 	submenu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem), submenu);
-	add_radios_to_menu (submenu, types, convert_to_panel);
+	add_radios_to_menu (submenu, items, change_func);
 	gtk_signal_connect (GTK_OBJECT (submenu), "show",
-			    GTK_SIGNAL_FUNC (update_type_menu),
+			    GTK_SIGNAL_FUNC (update_func),
 			    NULL);
 	
+}
+
+static void
+make_properties_submenu (GtkWidget *menu)
+{
+	StringEnumPair types[] = { { N_(MENU_TYPE_EDGE), EDGE_PANEL },
+				   { N_(MENU_TYPE_ALIGNED), ALIGNED_PANEL },
+				   { N_(MENU_TYPE_SLIDING), SLIDING_PANEL },
+				   { NULL, -1 } };
+	
+	StringEnumPair modes[] = { { N_(MENU_MODE_EXPLICIT_HIDE), BASEP_EXPLICIT_HIDE },
+				   { N_(MENU_MODE_AUTO_HIDE), BASEP_AUTO_HIDE },
+				   { NULL, -1 } };
+
+	StringEnumPair hidebuttons[] = { { N_(MENU_HIDEBUTTONS_PIXMAP), HIDEBUTTONS_PIXMAP },
+				       { N_(MENU_HIDEBUTTONS_PLAIN), HIDEBUTTONS_PLAIN },
+				       { N_(MENU_HIDEBUTTONS_NONE), HIDEBUTTONS_NONE },
+				       { NULL, -1 } };
+
+	StringEnumPair sizes[] = { { N_(MENU_SIZE_TINY), SIZE_TINY },
+				   { N_(MENU_SIZE_STANDARD), SIZE_STANDARD },
+				   { N_(MENU_SIZE_LARGE), SIZE_LARGE },
+				   { N_(MENU_SIZE_HUGE), SIZE_HUGE },
+				   { NULL, -1 } };
+
+	StringEnumPair backgrounds[] = { { N_(MENU_BACK_NONE), PANEL_BACK_NONE },
+					 { N_(MENU_BACK_COLOR), PANEL_BACK_COLOR },
+					 { N_(MENU_BACK_PIXMAP), PANEL_BACK_PIXMAP },
+					 { NULL, -1 } };
+
+	add_radio_menu (menu, _("Type"), types, MENU_TYPES,
+			convert_to_panel, update_type_menu);
+
+	add_radio_menu (menu, _("Hiding policy"), modes, MENU_MODES,
+			change_hiding_mode, update_hiding_menu);
+
+	add_radio_menu (menu, _("Hide buttons"), hidebuttons, MENU_HIDEBUTTONS,
+			change_hidebuttons, update_hidebutton_menu);
+
+	add_radio_menu (menu, _("Size"), sizes, MENU_SIZES,
+			change_size, update_size_menu);
+
+	add_radio_menu (menu, _("Background type"), backgrounds, MENU_BACKS,
+			change_background, update_back_menu);
 }
 
 static void
