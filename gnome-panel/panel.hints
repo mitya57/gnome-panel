@@ -22,7 +22,7 @@ sitten kohta "Kirjaudu ulos", joka voi olla myös
 "Työpöytä"-alivalikossa.</Content>
      <Content xml:lang="fr">Pour terminer votre session GNOME,
 cliquez sur l'icône du menu principal et choisissez le sous
-menu 'Clore la session'.</Content>
+menu « Clore la session ».</Content>
     <Content xml:lang="it">Per terminare la sessione GNOME, cliccare sul piede
    per aprire il Menu Principale e selezionate "Esci" dal menu 'Desktop'</Content>
     <Content xml:lang="ja">GNOME¤Î¥»¥Ã¥·¥ç¥ó¤ò½ªÎ»¤¹¤ë¤Ë¤Ï¡¢Â­¤Î¥¢¥¤¥³¥ó¤ò¥¯¥ê¥Ã¥¯
@@ -129,9 +129,9 @@ Rand- oder freie Fläche des Panels, um das globale Menü zu öffnen.</Content>
     <Content xml:lang="fi">Voit avata päävalikon kaltaisen yleisen valikon
 napsauttamalla paneelia hiiren oikealla
 painikkeella.</Content>
-    <Content xml:lang="fr">Vous pouvez ouvrir le Menu Global qui est
-similaire au Menu Principal en cliquant du bouton droit sur un Tableau
-de Bord.</Content>
+    <Content xml:lang="fr">Vous pouvez ouvrir le menu global qui est
+similaire au menu principal en cliquant du bouton droit sur un tableau
+de bord.</Content>
     <Content xml:lang="it">Premere il tasto destro del mouse sul pannello per
 	visualizzare il menu</Content>
     <Content xml:lang="ja">¥Ñ¥Í¥ë¤Î¾å¤Ç¥Þ¥¦¥¹¤Î±¦¥Ü¥¿¥ó¤ò²¡¤¹¤È¡¢¥á¥¤¥ó¥á¥Ë¥å¡¼¤Ë
@@ -179,8 +179,8 @@ Untermenü »Konfiguration« den Punkt »GNOME-Kontrollzentrum«.</Content>
 päävalikon ja valitsemalla alivalikosta
 "Asetukset" kohdan "Gnomen hallintakeskus" .</Content>
     <Content xml:lang="fr">Pour configurer plusieurs aspects de GNOME,
-ouvrez le Menu Principal et sélectionnez 'Centre de Contrôle
-GNOME'.</Content>
+ouvrez le menu principal et sélectionnez « Centre de contrôle
+GNOME ».</Content>
     <Content xml:lang="it">Per modificare l'aspetto di GNOME, aprite il Menu
    Principale e selezionate 'GNOME Control Center', presente nel menu 'Impostazioni'.</Content>
     <Content xml:lang="ja">GNOME¤ò¤¤¤í¤¤¤íÀßÄê¤¹¤ë¤Ë¤Ï¡¢¥á¥¤¥ó¥á¥Ë¥å¡¼¤ò³«¤¤¤Æ
@@ -226,8 +226,8 @@ GNOME êáé Üëëá êåßìåíá ôåêìçñßùóçò.</Content>
 "Ohjeselain" päävalikosta. Voit sen avulla lukea
 Gnome-käyttäjän oppaan sekä muita ohjeita.</Content>
     <Content xml:lang="fr">Pour de l'aide générale sur GNOME,
-sélectionnez 'Système d'Aide' dans le Menu Principal. Là bas
-vous pourrez lire le 'Guide de l'Utilisateur GNOME' ainsi que d'autres
+sélectionnez « Système d'aide » dans le menu principal. Là bas
+vous pourrez lire le « Guide de l'utilisateur GNOME » ainsi que d'autres
 documentations.</Content>
     <Content xml:lang="it">Per aiuto generico su GNOME, selezionate la voce
    'Guida di Gnome' dal Menu Principale, dove sara' possibile sfogliare la Guida
@@ -291,11 +291,11 @@ paneelin sisällä. Voit lisätä sovelman paneeliin
 napsauttamalla paneelia hiiren oikealla
 painikkeella, ja valitsemalla haluamasi kohdan
 "Sovelmat"-valikosta.</Content>
-    <Content xml:lang="fr">Les applets sont de petites applications
-qui s'exécutent à l'intérieur d'un Tableau de Bord. Pour ajouter une
-applet à votre Tableau de Bord, cliquer sur le Tableau de Bord avec le
+    <Content xml:lang="fr">Les applets sont des petites applications
+qui s'exécutent à l'intérieur d'un tableau de bord. Pour ajouter une
+applet à votre tableau de bord, cliquez sur le tableau de bord avec le
 bouton droit de la souris et sélectionnez l'applet à partir du sous
-menu 'Applets'.</Content>
+menu « Applets ».</Content>
     <Content xml:lang="it">Le applet sono piccole applicazioni che vengono
    eseguite all'interno del pannello. Per aggiungere una applet, premete il
    tasto destro del mouse sul pannello, selezionate 'Applets' e scegliete quindi
@@ -357,7 +357,7 @@ Sie mit der rechten Maustaste auf das Objekt.</Content>
 asetuksia, niin napsauta sitä hiiren oikealla
 painikkeella.</Content>
     <Content xml:lang="fr">Pour configurer n'importe quel objet dans un
-Tableau de Bord, cliquez du bouton droit sur l'objet.</Content>
+tableau de bord, cliquez du bouton droit sur l'objet.</Content>
     <Content xml:lang="it">Per manipolare un applet o una icona del pannello,
    premete il tasto destro del mouse su questi</Content>
     <Content xml:lang="ja">¥Ñ¥Í¥ë¾å¤Î¥ª¥Ö¥¸¥§¥¯¥È¤ÎÀßÄê¤ò¤¹¤ë¤Ë¤Ï¡¢¤½¤Î¾å¤Ç±¦¥¯¥ê¥Ã
@@ -403,8 +403,8 @@ sekä muitakin osia päävalikosta paneeliin
 pitämällä hiiren vasenta painiketta pohjassa
 vetäessäsi osaa paikalleen.</Content>
     <Content xml:lang="fr">Vous pouvez faire glisser des applets, des
-lanceurs d'applications, des menus et d'autres objets à partir du Menu
-Principal vers un Tableau de Bord en pressant le bouton gauche de la
+lanceurs d'applications, des menus et d'autres objets à partir du menu
+principal vers un tableau de bord en pressant le bouton gauche de la
 souris.</Content>
   <Content xml:lang="it">E' possibile trascinare applet, pulsanti di avvio, menu
    e altri oggetti dal Menu Principale su di un pannello premendo il tasto
@@ -470,11 +470,11 @@ Jos hiiressäsi on vain kaksi painiketta, paina
 molempia samaan aikaan.
 Toinen tapa on napsauttaa osaa oikealla
 painikkeella ja valita "Siirrä".</Content>
-    <Content xml:lang="fr">Pour déplacer n'importe quel objet du Tableau
-de Bord, presser le bouton central de la souris (ou les deux boutons
-simultannément sur une souris 2 boutons) et faites glisser l'objet, en
+    <Content xml:lang="fr">Pour déplacer n'importe quel objet du tableau
+de bord, pressez le bouton central de la souris (ou les deux boutons
+simultanément sur une souris 2 boutons) et faites glisser l'objet, en
 relachant le bouton quand vous avez fini. Vous pouvez également
-cliquer du bouton droit sur l'objet et choisir 'Déplacer'.</Content>
+cliquer du bouton droit sur l'objet et choisir « Déplacer ».</Content>
     <Content xml:lang="it">Per spostare una applet sul pannello, trascinatela
 	premendo il  tasto centrale del mouse.
 	È possibile anche selezionare la
@@ -534,10 +534,10 @@ dann für eine Panelart.</Content>
 Luodaksesi uuden paneelin napsauta jotakin paneelia
 oikealla painikkeella ja valitse valikoista
 "Paneeli-&gt;Luo paneeli" ja sitten uuden paneelin tyyppi.</Content>
-    <Content xml:lang="fr">Vous pouvez avoir plusieurs Tableaux de Bord.
+    <Content xml:lang="fr">Vous pouvez avoir plusieurs tableaux de bord.
 Pour créer un nouveau tableau de bord, cliquez du bouton droit sur un
-Tableau de Bord existant et sélectionnez 'Panel-&gt;Créer un Tableau de
-Bord' et sélectionnez le type de Tableau de Bord que vous voulez
+tableau de bord existant et sélectionnez « Tableau de bord-&gt;Créer un tableau de
+bord » et sélectionnez le type de tableau de bord que vous voulez
 créer.</Content>
     <Content xml:lang="it">E' possibile utilizzare piu' pannelli
    contemporaneamente. Per aggiungere un nuovo pannello premete con il tasto
@@ -591,7 +591,7 @@ Aktionen zu diesem Eintrag zu sehen.</Content>
 painikkeella, niin saat luettelon sen
 toiminnoista.</Content>
     <Content xml:lang="fr">Cliquez du bouton droit sur n'importe quel
-élément du Menu Principal pour voir une liste d'action pour cet
+élément du menu principal pour voir une liste d'action pour cet
 élément.</Content>
     <Content xml:lang="it">È possibile ottenere informazioni sulle
 	voci del menu, premendo il tasto destro su di esse</Content>
@@ -628,9 +628,9 @@ a la vez las teclas «Alt» y «F1».</Content>
 êñáôÞóôå ðáôçìÝíï ôï ðëÞêôñï 'Alt' êáé ðáôÞóôå ôï ðëÞêôñï 'F1'.</Content>
     <Content xml:lang="fi">Voit avata yleisen valikon pitämällä pohjassa
 Alt-näppäintä, ja painamalla sitten F1.</Content>
-    <Content xml:lang="fr">Pour ouvrir le Menu Global sans utiliser votre
-souris, maintenez le bouton 'Alt' pressé et appuyez sur
-'F1'.</Content>
+    <Content xml:lang="fr">Pour ouvrir le menu global sans utiliser votre
+souris, maintenez le bouton « Alt » pressé et appuyez sur
+« F1 ».</Content>
     <Content xml:lang="it">Per aprire il Menu Principale senza utilizzare il
    mouse è sufficiente tenere premuto il pulsante 'Alt' e premere il pulsante 'F1'.</Content>
     <Content xml:lang="ja">¥Þ¥¦¥¹¤ò»È¤ï¤º¤Ë¥°¥í¡¼¥Ð¥ë¥á¥Ë¥å¡¼¤ò³«¤¯¤Ë¤Ï¡¢
@@ -673,8 +673,8 @@ saa liikutettavan osan työntämään muita osia
 edellään, Control-näppäin vaihtamaan paikkaa
 niiden kanssa ja Alt-näppäin siirtymään niiden
 yli.</Content>
-    <Content xml:lang="fr">Lorsque vous déplacez des objets d'un Tableau
-de Bord, vous pouvez pousser les autres objets en maintenant la touche
+    <Content xml:lang="fr">Lorsque vous déplacez des objets d'un tableau
+de bord, vous pouvez pousser les autres objets en maintenant la touche
 Shift enfoncée, alterner les objets en maintenant la touche Ctrl
 enfoncée, ou sauter des objets en maintenant la touche Alt
 enfoncée.</Content>
@@ -731,11 +731,11 @@ pohjaan, kun hiiren osoitin on tyhjän paneelin
 kohdan yllä, ja pitämällä sen pohjassa.
 Kaksipainikkeisissa hiirissä täytyy painaa molempia
 painikkeita.</Content>
-    <Content xml:lang="fr">Vous pouvez déplacer les Tableaux de Bord
+    <Content xml:lang="fr">Vous pouvez déplacer les tableaux de bord
 exactement de la même manière que les objets. Pressez simplement le
 bouton central de votre souris (ou les 2 boutons simultannément sur
-une souris 2 boutons) sur le Tableau de Bord et maintenez le enfoncé
-pendant que vous déplacez le Tableau de Bord.</Content>
+une souris 2 boutons) sur le tableau de bord et maintenez le enfoncé
+pendant que vous déplacez le tableau de bord.</Content>
    <Content xml:lang="ja">¥Ñ¥Í¥ë¤â¥Ñ¥Í¥ë¥ª¥Ö¥¸¥§¥¯¥È¤Î¤è¤¦¤Ë¥É¥é¥Ã¥°¤¹¤ë¤³¤È¤¬¤Ç¤­
 ¤Þ¤¹¡£¥Þ¥¦¥¹¤Î¿¿Ãæ¤Î¥Ü¥¿¥ó (2¥Ü¥¿¥ó¥Þ¥¦¥¹¤Ê¤éÆ±»þ¤Ëº¸±¦¤Î
 ¥Ü¥¿¥ó) ¤ò²¡¤·¤¿¤Þ¤Þ¥É¥é¥Ã¥°¤·¤Æ¤ß¤Æ¤¯¤À¤µ¤¤¡£</Content>
@@ -780,9 +780,9 @@ Sie »Panel«-&gt;»Panelhandbuch...« vom Hauptmenü aus.</Content>
     <Content xml:lang="fi">Jos haluat tietää lisää paneelista, valitse
 päävalikosta tai yleisestä valikosta kohta
 "Paneeli-&gt;Paneelin ohje...".</Content>
-    <Content xml:lang="fr">Pour en savoir plus sur le Tableau de Bord,
-sélectionnez 'Panel-&gt;Manuel du Tableau de Bord...' à partir du Menu
-Principal.</Content>
+    <Content xml:lang="fr">Pour en savoir plus sur le tableau de bord,
+sélectionnez « Tableau de bord-&gt;Manuel du tableau de bord... » à partir
+du menu principal.</Content>
     <Content xml:lang="ja">¥Ñ¥Í¥ë¤Ë¤Ä¤¤¤Æ¤â¤Ã¤ÈÃÎ¤ê¤¿¤¤¤Ê¤é¤Ð¥á¥¤¥ó¥á¥Ë¥å¡¼¤«
 ¥°¥í¡¼¥Ð¥ë¥á¥Ë¥å¡¼¤«¤é¡Ö¥Ñ¥Í¥ë¢ª¥Ñ¥Í¥ë¥Þ¥Ë¥å¥¢¥ë¡×¤ò
 Áª¤ó¤Ç¤¯¤À¤µ¤¤¡£</Content>
@@ -832,8 +832,8 @@ www-osoittessa http://www.gnome.org, ja napsauta
     <Content xml:lang="fr">Il y a beaucoup d'applets
 GNOME et d'applications qui ne sont pas distribuées
 avec les distributions principales de GNOME. Pour voir
-une liste de celles ci, allez à http://www.gnome.org et
-cliquez sur le lien 'Software Map'.</Content>
+une liste de celles ci, allez à http://www.gnome.org/ et
+cliquez sur le lien « Software Map ».</Content>
     <Content xml:lang="ja">GNOME¤Î¥»¥Ã¥·¥ç¥ó¤ò½ªÎ»¤¹¤ë¤Ë¤Ï¡¢Â­¤Î¥¢¥¤¥³¥ó¤ò¥¯¥ê¥Ã¥¯
 ¤·¤Æ¥á¥¤¥ó¥á¥Ë¥å¡¼¤ò½Ð¤·¡¢¡Ö¥Ç¥¹¥¯¥È¥Ã¥×¡×¥µ¥Ö¥á¥Ë¥å¡¼
 ¤«¤é¡Ö¥í¥°¥¢¥¦¥È¡×¤òÁªÂò¤·¤Æ¤¯¤À¤µ¤¤</Content>
@@ -891,7 +891,7 @@ valitsemalla "Learn to use GNOME".</Content>
     <Content xml:lang="fr">Si vous avez des problèmes
 ou des questions à propos de GNOME, consultez la FAQ
 de GNOME. Vous pouvez la lire en ligne en allant à
-http://www.gnome/org et en sélectionnant 'GNOME FAQ'.</Content>
+http://www.gnome.org/ et en sélectionnant « GNOME FAQ ».</Content>
     <Content xml:lang="ja">GNOME¤Ç²¿¤«ÌäÂê¤¬È¯À¸¤·¤¿¤ê¼ÁÌä¤¬¤¢¤ë¤È¤­¤Ï
 GNOME FAQ¤ò¥Á¥§¥Ã¥¯¤·¤Æ¤ß¤Æ¤¯¤À¤µ¤¤¡£
 http://www.gnome.org/ ¤Ç¡ÖLearn to use GNOME¡×¤ò
