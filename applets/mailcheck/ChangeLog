@@ -1,3 +1,6 @@
+2002-09-30  Sander Vesik <sander.vesik@sun.com>
+	* help/C/clock/clock-C.omf: fix after botched merge
+	
 2002-08-08  Mark McLoughlin  <mark@skynet.ie>
 
 	* Makefile.am: add egg-screen-exec files to the build.
