@@ -587,19 +587,33 @@ panel_widget_reset_focus (GtkContainer *container,
 	PanelWidget *panel = PANEL_WIDGET (container);
 
 	if (container->focus_child == widget) {
-		GtkWidget *panelw = panel->panel_parent;
-		gboolean return_val;
+		GList *l;
 
-		g_signal_emit_by_name (panelw, "focus",
-				       GTK_DIR_TAB_FORWARD,
-				       &return_val);
-		/*
-		 * The last object on the panel has been deleted so
-		 * put focus back on the panel.
-		 */
-		if (!gtk_window_get_focus (GTK_WINDOW (panelw))) {
-			panel_widget_focus (panel);	
-		}
+		l = gtk_container_get_children (container);
+		if (l && l->next) { /* More than one element on the list */
+			/* There are still object on the panel */
+			for (; l; l = l->next) {
+				GtkWidget *child_widget;
+
+				child_widget = l->data;
+				if (child_widget == widget)
+					break;
+			}
+			if (l) {
+				GtkWidget *next_widget;
+
+				if (l->next)
+					next_widget = l->next->data;
+				else
+					next_widget = l->prev->data;
+
+				gtk_widget_child_focus (next_widget,
+						        GTK_DIR_TAB_FORWARD);
+			}
+		} else
+			panel_widget_focus (panel);
+
+		g_list_free (l);
 	}
 }
 
@@ -2072,11 +2086,7 @@ panel_widget_get_cursorloc (PanelWidget *panel)
 
 	gtk_widget_get_pointer (GTK_WIDGET (panel), &x, &y);
 
-	if (panel->orient == GTK_ORIENTATION_HORIZONTAL) {
-		return x;
-	} else {
-		return y;
-	}
+	return panel->orient == GTK_ORIENTATION_HORIZONTAL ? x : y;
 }
 
 /*calculates the value to move the applet by*/
@@ -2286,30 +2296,21 @@ panel_widget_applet_move_to_cursor (PanelWidget *panel)
 			    panel_screen_from_panel_widget (panel) ==
 			    panel_screen_from_panel_widget (new_panel) &&
 			    !g_slist_find (forb, new_panel)) {
-				pos = panel_widget_get_moveby (new_panel, 0,
-							       ad->drag_off);
-				if (pos < 0)
-					pos = 0;
+				pos = panel_widget_get_moveby (new_panel, 0, ad->drag_off);
+
+				if (pos < 0) pos = 0;
+
 				panel_widget_applet_drag_end (panel);
-				/*disable reentrancy into this
-				  function*/
-				if (panel_widget_reparent (panel,
-							   new_panel,
-							   applet,
-							   pos) == -1) {
-					panel_widget_applet_drag_start
-						(panel, applet, ad->drag_off);
-					/*can't find a free pos
-					  so cancel the reparent*/
+
+				/*disable reentrancy into this function*/
+				if (!panel_widget_reparent (panel, new_panel, applet, pos)) {
+					panel_widget_applet_drag_start (panel, applet, ad->drag_off);
 					continue;
 				}
-				panel_widget_applet_drag_start (new_panel,
-								applet,
-								ad->drag_off);
-				/* schedule a move, the thing might have
-				 * gone outside the cursor, thus we need to
-				 * schedule a move */
-				schedule_try_move(new_panel, TRUE);
+
+				panel_widget_applet_drag_start (new_panel, applet, ad->drag_off);
+				schedule_try_move (new_panel, TRUE);
+
 				return;
 			}
 		}
@@ -2731,6 +2732,14 @@ panel_widget_reparent (PanelWidget *old_panel,
 
 	ad = g_object_get_data (G_OBJECT (applet), PANEL_APPLET_DATA);
 	g_return_val_if_fail(ad!=NULL,-1);
+
+	/* Don't try and reparent to an explicitly hidden panel,
+	 * very confusing for the user ...
+	 */
+	if (BASEP_IS_WIDGET (new_panel->panel_parent) &&
+	    (BASEP_WIDGET (new_panel->panel_parent)->state == BASEP_HIDDEN_LEFT ||
+	     BASEP_WIDGET (new_panel->panel_parent)->state == BASEP_HIDDEN_RIGHT))
+		return FALSE;
 	
 	/*we'll resize both panels anyway*/
 	ad->dirty = FALSE;
@@ -2762,7 +2771,7 @@ panel_widget_reparent (PanelWidget *old_panel,
 
 	ad->no_die--;
 
-	return pos;
+	return TRUE;
 }
 
 void

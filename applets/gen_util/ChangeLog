@@ -1,3 +1,26 @@
+2002-07-29  Mark McLoughlin  <mark@skynet.ie>
+
+	* tasklist.c: (minimum_size_changed), (maximum_size_changed):
+	Handle case where spin buttons have already been destroyed.
+	Fixes #89027. Patch from Padraig O'Briain.
+
+2002-07-11  Deepa Chacko Pillai <deepa.chacko@wipro.com>
+
+	* remote-helper.c: Added check for waitpid ()
+	returning -1 and errno EINTR. Fixes bug 88005.
+
+2002-07-29  Mark McLoughlin  <mark@skynet.ie>
+
+	* tasklist.c: (fill_tasklist_applet): handle
+	gconf errors with default values for min/max
+	sizes. Fixes #88422.
+
+2002-07-29  Mark McLoughlin  <mark@skynet.ie>
+
+	* mailcheck.c: (mailcheck_get_animation_menu):
+	unconditionally get the pixmap directory, fixes
+	#88125.
+
 2002-07-15  Mark McLoughlin  <mark@skynet.ie>
 
 	* mailcheck.c:

@@ -797,17 +797,18 @@ static int
 basep_widget_focus_in_event (GtkWidget     *widget,
 			     GdkEventFocus *event)
 {
+#if 0
 	BasePWidget *basep = BASEP_WIDGET (widget);
 
-	if (basep->state == BASEP_AUTO_HIDDEN)
-		basep_widget_autoshow (basep);
-
-#if 0
-        /* FIXME: When we have focus and hit ctrl-alt-tab with
+        /* FIXME: #89180 - we should show explicitly hidden
+	 *	  panels here.
+	 * 
+	 *        When we have focus and hit ctrl-alt-tab with
          *        Metacity, it does a grab and we a FocusChange
          *        event because gdk doesn't ignore NotifyGrab
          *        FocusChange events. See #ifdefed out case
-         *        in gdkevents-x11.c.
+         *        in gdkevents-x11.c. This is detailed in #89179,
+	 *        which blocks #89180.
          */
         else if (basep->state == BASEP_HIDDEN_LEFT ||
                  basep->state == BASEP_HIDDEN_RIGHT)
@@ -1394,6 +1395,7 @@ basep_widget_instance_init (BasePWidget *basep)
 	gtk_widget_show(basep->ebox);
 
 	basep->table = gtk_table_new(3,3,FALSE);
+	gtk_widget_set_direction (basep->table, GTK_TEXT_DIR_LTR);
 	gtk_container_add(GTK_CONTAINER(basep->ebox),basep->table);
 	gtk_widget_show(basep->table);
 

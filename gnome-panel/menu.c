@@ -1458,7 +1458,7 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					   "activate",
 					   G_CALLBACK(edit_dentry),
 					   sim);
-			setup_menuitem (menuitem, NULL, _("Properties"));
+			setup_menuitem (menuitem, NULL, _("_Properties"));
 			gtk_menu_shell_append (GTK_MENU_SHELL (sim->menu), menuitem);
 #endif /* FIXME */
 
@@ -1553,17 +1553,16 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 }
 
 static gboolean
-show_item_menu_mi_cb (GtkWidget *w, GdkEvent *event, ShowItemMenu *sim)
+menuitem_button_press_event (GtkWidget      *menuitem,
+			     GdkEventButton *event,
+			     ShowItemMenu   *sim)
 {
-	GdkEventButton *bevent = (GdkEventButton *)event;
-
 	/* no item menu in commie mode */
 	if (commie_mode)
 		return FALSE;
 	
-	if (event->type == GDK_BUTTON_PRESS &&
-	    bevent->button == 3)
-		show_item_menu (w, bevent, sim);
+	if (event->button == 3)
+		show_item_menu (menuitem, event, sim);
 	
 	return FALSE;
 }
@@ -1712,8 +1711,8 @@ setup_full_menuitem (GtkWidget  *menuitem,
 		sim->mf = mf;
 		sim->menuitem = menuitem;
                 g_object_set_data (G_OBJECT (menuitem), "sim", sim);
-		g_signal_connect (G_OBJECT (menuitem), "event",
-				  G_CALLBACK (show_item_menu_mi_cb),
+		g_signal_connect (menuitem, "button_press_event",
+				  G_CALLBACK (menuitem_button_press_event),
 				  sim);
 		g_signal_connect (G_OBJECT (menuitem), "destroy",
 				  G_CALLBACK (destroy_item_menu),
@@ -2149,9 +2148,8 @@ create_menuitem (GtkWidget *menu,
 		*add_separator = FALSE;
 	}
 	
-	if(fr->comment)
-		gtk_tooltips_set_tip (panel_tooltips, menuitem,
-				      fr->comment, NULL);
+	if (fr->comment && fr->comment [0])
+		gtk_tooltips_set_tip (panel_tooltips, menuitem, fr->comment, NULL);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 
 	if(!sub) {
@@ -4164,7 +4162,7 @@ load_menu_applet (const char  *params,
 
 		menu->info = info;
 
-		panel_applet_add_callback (info, "help", GTK_STOCK_HELP, _("Help"));
+		panel_applet_add_callback (info, "help", GTK_STOCK_HELP, _("_Help"));
 	}
 }
 
@@ -4439,6 +4437,7 @@ panel_menu_key_press_handler (GtkWidget   *widget,
 	if (event->keyval == GDK_F10 && event->state == GDK_SHIFT_MASK) {
 		GtkMenuShell *menu_shell = GTK_MENU_SHELL (widget);
 
+		retval = TRUE;
 		if (menu_shell->active_menu_item &&
 		    GTK_MENU_ITEM (menu_shell->active_menu_item)->submenu == NULL) {
 			ShowItemMenu* sim;
@@ -4451,7 +4450,6 @@ panel_menu_key_press_handler (GtkWidget   *widget,
 				bevent.button = 3;
 				bevent.time = GDK_CURRENT_TIME;
 				show_item_menu (menu_item, &bevent, sim);
-				retval = TRUE;
 			}
 		}
 		

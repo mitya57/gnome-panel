@@ -182,15 +182,22 @@ drag_data_received_cb (GtkWidget        *widget,
 }
 
 static void
-destroy_launcher (GtkWidget *widget, gpointer data)
+destroy_launcher (GtkWidget *widget,
+		  Launcher  *launcher)
 {
-	Launcher *launcher = data;
-	GtkWidget *prop_dialog = launcher->prop_dialog;
+	launcher_properties_destroy (launcher);
+}
 
+void
+launcher_properties_destroy (Launcher *launcher)
+{
+	GtkWidget *dialog;
+
+	dialog = launcher->prop_dialog;
 	launcher->prop_dialog = NULL;
 
-	if (prop_dialog != NULL)
-		gtk_widget_destroy (prop_dialog);
+	if (dialog)
+		gtk_widget_destroy (dialog);
 }
 
 static void
@@ -749,9 +756,9 @@ load_launcher_applet_full (const char       *params,
 		panel_applet_add_callback (launcher->info,
 					   "properties",
 					   GTK_STOCK_PROPERTIES,
-					   _("Properties"));
+					   _("_Properties"));
 
-	panel_applet_add_callback (launcher->info, "help", GTK_STOCK_HELP, _("Help"));
+	panel_applet_add_callback (launcher->info, "help", GTK_STOCK_HELP, _("_Help"));
 
 	/* setup button according to ditem */
 	setup_button (launcher);
@@ -992,6 +999,8 @@ launcher_get_unique_uri (void)
 			g_free (full);
 			return uri;
 		}
+		
+		g_free (full);
 	}
 
 	g_assert_not_reached ();

@@ -542,6 +542,9 @@ panel_remove_applets (PanelWidget *panel)
 		if (info && info->type == APPLET_BONOBO)
 			panel_applet_frame_set_clean_remove (
 					PANEL_APPLET_FRAME (info->data), TRUE);
+		else if (info && info->type == APPLET_LAUNCHER)
+			launcher_properties_destroy (info->data);
+			
 	}
 }
 
@@ -1060,6 +1063,7 @@ drop_urilist (PanelWidget *panel, int pos, char *urilist,
 			g_free (menu_uri);
 		} else if (mimetype != NULL &&
 			   (strcmp(mimetype, "application/x-gnome-app-info") == 0 ||
+			    strcmp(mimetype, "application/x-desktop") == 0 ||
 			    strcmp(mimetype, "application/x-kde-app-info") == 0)) {
 			Launcher *launcher;
 			

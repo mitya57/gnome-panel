@@ -169,13 +169,13 @@ panel_applet_frame_load (const gchar *iid,
 
 	frame = panel_applet_frame_new (panel, iid, real_key);
 
-	if (!frame)
+	if (!frame) {
+		g_free (real_key);
 		return;
+	}
 	
 	gtk_widget_show_all (frame);
 
-	/* Pass frame as 2nd argument, since it is used in
-	 * panel_remove_applets()  */
 	info = panel_applet_register (frame, frame, NULL, panel, position,
 				      exactpos, APPLET_BONOBO, real_key);
 
@@ -628,11 +628,19 @@ panel_applet_frame_reload_response (GtkWidget        *dialog,
 				    int               response,
 				    PanelAppletFrame *frame)
 {
-	AppletInfo *info = frame->priv->applet_info;
+	AppletInfo *info;
 
-	if (response == GTK_RESPONSE_NO)
-		panel_applet_clean (info, TRUE);
-	else {
+	g_return_if_fail (PANEL_IS_APPLET_FRAME (frame));
+
+	if (!GTK_WIDGET (frame)->parent) {
+		g_object_unref (frame);
+		gtk_widget_destroy (dialog);
+		return;
+	}
+
+	info = frame->priv->applet_info;
+
+	if (response == GTK_RESPONSE_YES) {
 		PanelWidget *panel;
 		char        *iid;
 		char        *gconf_key;
@@ -649,8 +657,10 @@ panel_applet_frame_reload_response (GtkWidget        *dialog,
 
 		g_free (iid);
 		g_free (gconf_key);
-	}
+	} else
+		panel_applet_clean (info, TRUE);
 
+	g_object_unref (frame);
 	gtk_widget_destroy (dialog);
 }
 
@@ -725,7 +735,7 @@ panel_applet_frame_cnx_broken (PanelAppletFrame *frame)
 
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (panel_applet_frame_reload_response),
-			  frame);
+			  g_object_ref (frame));
 
 	gtk_widget_show (dialog);
 	g_free (applet_name);
@@ -934,6 +944,19 @@ panel_applet_frame_construct (PanelAppletFrame *frame,
 			_("<b>There was a problem loading applet '%s'</b>\n\n"
 			  "Details: %s"),
 			iid, err);
+
+		/* FIXME: 2.2.x addition: #89173
+		 * 
+		 * Instead of automatically removing the applet from the
+		 * configuration the above dialog should read:
+		 *
+		 * There was a problem loading applet 'blah'.
+		 * 
+		 * Remove this applet from you configuration ?
+		 *
+		 *                              [Don't Remove] [[Remove]]
+		 */
+		panel_applet_clean_gconf (APPLET_BONOBO, gconf_key, TRUE);
 
 		CORBA_exception_free (&ev);
 

@@ -1,3 +1,84 @@
+2002-07-30  Mark McLoughlin  <mark@skynet.ie>
+
+	* menu.c:
+	(menuitem_button_press_event): rename from show_item_menu_mi_cb.
+	(setup_full_menuitem): only connect to "button_press_event"
+	not "event".
+
+2002-07-30  Mark McLoughlin  <mark@skynet.ie>
+
+	Don't allow moving objects to explicitly hidden panels. It
+	makes little sense and is less confusing. Fixes #89317.
+
+	* panel-widget.c:
+	(panel_widget_applet_move_to_cursor): don't check for
+	-1 return value from reparent - it returns a bool.
+	(panel_widget_reparent): return FALSE and canel the
+	reparent if trying to move to an explicitly hidden
+	panel. Also, return TRUE (not the position) if reparent
+	succeeds.
+
+2002-07-29  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-screenshot.glade: set "directory_entry"
+	flag on the file selector to false. Fixes #89037.
+
+2002-07-29  Mark McLoughlin  <mark@skynet.ie>
+
+	* menu.c: (create_menuitem): Check if fr->comment
+	is an empty string before setting tooltip. Pointed
+	out by Arvind, #88484.
+
+2002-07-27  Mark McLoughlin  <mark@skynet.ie>
+
+	* basep-widget.c: (basep_widget_focus_in_event): update
+	blurb about unhiding explicitly hidden panels to include
+	pointers to #89179 and #89180.
+
+2002-07-27  Mark McLoughlin  <mark@skynet.ie>
+
+	* basep-widget.c: (basep_widget_focus_in_event): remove
+	bogus autoshowing on focus that was supposed to fix
+	#81041. Ths solution for this needs a lot more 
+	consideration - see #83476 for issues.
+
+2002-07-27  Mark McLoughlin  <mark@skynet.ie>
+
+	* applet.c:
+	(panel_applet_clean_gconf): don't take AppletInfo as an
+	arg so we can clean an unregistered applet. Don't free
+	the gconf key here.
+	(panel_applet_clean): upd for above.
+
+	* panel-applet-frame.c:
+	(panel_applet_frame_construct): if loading fails, delete
+	applet from the configuration - fixes #89051. This should
+	be optional but will have to wait until 2.2.x - see #89713.
+
+2002-07-26  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-screenshot.c:
+	(nibble_on_file), (save_to_file), (gimme_file): sanity
+	checks so we don't crash on Solaris trying to do
+	printf ("%s", NULL);
+
+2002-07-25 Padraig O'Briain  <padraig.obriain@sun.com>
+
+	* panel-widget.c (panel_widget_reset_focus): This function is called
+	when object is deleted from panel. Reimplement function to ensure 
+	that focus goes to PanelWidget if no objects remaining on panel and 
+	goes to next or previous object if there are remaining objects.
+	(bug #88938)
+
+2002-07-24 Padraig O'Briain  <padraig.obriain@sun.com>
+
+	* drawer.c (key_press_drawer): Allow any arrow key to move focus to
+	object in drawer when focus is on drawer icon. Ensure that arrow keys 
+	have no effect if drawer is closed. (bug #88782)
+
+	* menu.c (panel_menu_key_press_handler): Ensure that Shift+F10 has
+	no effect for menus without context menus. (bug #88861)
+
 2002-07-23  Mark McLoughlin  <mark@skynet.ie>
 
 	* drawer.c: (properties_apply_callback): kill unused (apart
@@ -19,6 +100,87 @@
 
 	* foobar-widget.c: (append_actions_menu): use panel_menuitem_lock.
 
+2002-07-23  Frank Worsley  <fworsley@shaw.ca>
+
+	* gnome-panel-screenshot.glade:
+	don't expand the options frame when resizing
+
+	* launcher.c: (launcher_get_unique_uri):
+	fix memory leak
+	
+2002-07-23 Padraig O'Briain  <padraig.obriain@sun.com>
+
+	* drawer.c (key_press_drawer_widget): New key-press-event handler for
+	DrawerWidget to support Esc closing the drawer and Shift+Esc moving
+	focus to drawer button without closing drawer when focus is in
+	drawer. (bug #87839)
+
+2002-07-23  Mark McLoughlin  <mark@skynet.ie>
+
+	* drawer.c: (properties_apply_callback): kill unused (apart
+	from freeing whatever random data it points too) variable.
+	Fixes #88427.
+
+2002-07-19  Deepa Natarajan  <deepa.natarajan@wipro.com>
+
+	* logout.c, menu.c, drawer.c, launcher.c: Add mnemonics for right
+	click popup menus of : Launcher, Drawer, Log Out Button, Lock button
+	& gnome foot menu. Fixes bug #88503.
+
+2002-07-19  Deepa Natarajan <deepa.natarajan@wipro.com>
+
+	* applet.c, GNOME_Panel_Popup.xml: Add mnemonics for Move and Remove
+	From Panel popup menu options. Fixes bug #86501.
+
+2002-07-22  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-applet-frame.c:
+	(panel_applet_reload_response): if our parent has disappeared
+	forget about reloading.
+	(panel_applet_frame_cnx_broken): take a ref on the frame. #88432.
+
+	* panel-util.[ch]: (panel_signal_connect_while_alive),
+	(panel_signal_connect_object_while_alive): upd signatures
+	to be more gobject like.
+
+2002-07-22  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-applet-frame.c: (panel_applet_frame_reload_response): 
+	Only reload the applet on GTK_RESPONSE_YES. #88098.
+
+2002-07-19  Mark McLoughlin  <mark@skynet.ie>
+
+	Based on patch from Arvind to fix #88430.
+
+	* launcher.[ch]:
+	(launcher_properties_destroy): impl to destroy the properties dialog.
+	(destroy_launcher): use it.
+
+	* panel.c: (panel_remove_applets): ditto.
+
+2002-07-19  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-preferences.glade: fix clash in mnemonics.
+
+2002-07-18  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-config-global.c: include panel-gconf.h to
+	fix warning.
+
+Tue Jul 16 12:29:31 2002  George Lebl <jirka@5z.com>
+
+	* panel-config.c, basep-widget.c: Two more RTL language fixes.  First
+	  the position widget for the panel position can't be switched and
+	  second the table in the basep is also visual rather then logical.
+	  This fixes all the RTL issues I could find when playing with an
+	  arabic panel (it's hard to test something if you don't speak the
+	  language :)
+
+Tue Jul 16 12:18:02 2002  George Lebl <jirka@5z.com>
+
+	* foobar-widget.c: set the direction of the foobar hbox to be LTR
+	  as otherwise it is completely whacked in RTL locales.
+
 2002-07-15  Mark McLoughlin  <mark@skynet.ie>
 
 	* button-widget.c:
@@ -26,6 +188,13 @@
 	error dialogs on the default screen.
 
 	* menu.c: (remove_panel_query): remove #ifdef HAVE_GTK_MULTIHEAD.
+
+2002-07-14  Frank Worsley  <fworsley@shaw.ca>
+
+	* gnome-run.c: (launch_selected), (run_dialog_response): 
+	always save command in history (fix #83891)
+	(fill_list): check item not null before adding to list (fix #85762)
+	(update_contents): display 5 items in list by default (fix #81930)
 
 Fri Jul 12 10:06:16 2002  George Lebl <jirka@5z.com>
 

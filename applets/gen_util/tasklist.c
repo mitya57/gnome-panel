@@ -419,7 +419,12 @@ minimum_size_changed (GConfClient *client, guint cnxn_id,
 {
     	WnckTasklist *wncktl = WNCK_TASKLIST (tasklist->tasklist);
 	gint value;
-	GtkSpinButton *button = GTK_SPIN_BUTTON (tasklist->minimum_size_spin);
+	GtkSpinButton *button;
+
+	if (!tasklist->minimum_size_spin)
+		return;
+
+	button = GTK_SPIN_BUTTON (tasklist->minimum_size_spin);
 
 	if (!entry->value || entry->value->type != GCONF_VALUE_INT)
 		return;
@@ -439,8 +444,12 @@ maximum_size_changed (GConfClient  *client, guint cnxn_id,
                       GConfEntry   *entry, TasklistData *tasklist)
 {
 	gint value;
-	GtkSpinButton *button = GTK_SPIN_BUTTON (tasklist->maximum_size_spin);
+	GtkSpinButton *button;
 
+	if (!tasklist->maximum_size_spin)
+		return;
+
+	button = GTK_SPIN_BUTTON (tasklist->maximum_size_spin);
 	if (!entry->value || entry->value->type != GCONF_VALUE_INT)
 		return;
 	
@@ -613,24 +622,25 @@ fill_tasklist_applet(PanelApplet *applet)
 
 	/* get size preferences */
 	error = NULL;
-	sizepref = panel_applet_gconf_get_int (applet, "minimum_size", 
-					       &error);
-        if (error == NULL) {
-		if (tasklist->orientation == GTK_ORIENTATION_HORIZONTAL)
-			wnck_tasklist_set_minimum_width (WNCK_TASKLIST (tasklist->tasklist), sizepref);	  
-		else
-			wnck_tasklist_set_minimum_height (WNCK_TASKLIST (tasklist->tasklist), sizepref);	  
-	}
-	else
+	sizepref = panel_applet_gconf_get_int (applet, "minimum_size", &error);
+	if (error) {
+		sizepref = 50; /* Default value */
 		g_error_free (error);
+	}
+
+	if (tasklist->orientation == GTK_ORIENTATION_HORIZONTAL)
+		wnck_tasklist_set_minimum_width (WNCK_TASKLIST (tasklist->tasklist), sizepref);	  
+	else
+		wnck_tasklist_set_minimum_height (WNCK_TASKLIST (tasklist->tasklist), sizepref);	  
 
 	error = NULL;
-	sizepref = panel_applet_gconf_get_int (applet, "maximum_size", 
-					       &error);
-        if (error == NULL) 
-	        tasklist->maximum_size = sizepref;
-	else
+	sizepref = panel_applet_gconf_get_int (applet, "maximum_size", &error);
+	if (error) {
+		sizepref = 4096; /* Default value */
 		g_error_free (error);
+	}
+
+	tasklist->maximum_size = sizepref;
 
 	g_signal_connect (G_OBJECT (tasklist->tasklist), "destroy",
 			  G_CALLBACK (destroy_tasklist),
