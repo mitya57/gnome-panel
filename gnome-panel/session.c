@@ -76,8 +76,9 @@ apply_global_config(void)
 	set_show_small_icons();
 	set_show_dot_buttons();
 	send_tooltips_state(global_config.tooltips_enabled);
-	button_widget_tile_enable(global_config.tiles_enabled);
+
 	for(i=0;i<LAST_TILE;i++) {
+		button_widget_tile_enable(i, global_config.tiles_enabled[i]);
 		button_widget_load_tile(i, global_config.tile_up[i],
 					global_config.tile_down[i],
 					global_config.tile_border[i],
@@ -436,10 +437,10 @@ do_session_save(GnomeClient *client,
 				      global_config.disable_animations);
 		gnome_config_set_int("applet_padding",
 				     global_config.applet_padding);
-		gnome_config_set_bool("tiles_enabled",
-				      global_config.tiles_enabled);
 		for(i=0;i<LAST_TILE;i++) {
 			char buf[256];
+			g_snprintf(buf,256,"tiles_enabled_%d",i);
+			gnome_config_set_bool(buf,global_config.tiles_enabled[i]);
 			g_snprintf(buf,256,"tile_up_%d",i);
 			gnome_config_set_string(buf,global_config.tile_up[i]);
 			g_snprintf(buf,256,"tile_down_%d",i);
@@ -842,8 +843,8 @@ init_user_panels(void)
 				CornerPos pos;
 				PanelOrientation orient;
 				CornerState state;
-				int hidebutton_enabled;
-				int hidebutton_pixmap_enabled;
+				int hidebuttons_enabled;
+				int hidebutton_pixmaps_enabled;
 				
 				g_snprintf(buf,256,"pos=%d", CORNER_NE);
 				pos=gnome_config_get_int(buf);
@@ -855,10 +856,10 @@ init_user_panels(void)
 				g_snprintf(buf,256,"state=%d", CORNER_SHOWN);
 				state=gnome_config_get_int(buf);
 
-				hidebutton_enabled =
-					gnome_config_get_bool("hidebutton_enabled=TRUE");
-				hidebutton_pixmap_enabled =
-					gnome_config_get_bool("hidebutton_pixmap_enabled=TRUE");
+				hidebuttons_enabled =
+					gnome_config_get_bool("hidebuttons_enabled=TRUE");
+				hidebutton_pixmaps_enabled =
+					gnome_config_get_bool("hidebutton_pixmaps_enabled=TRUE");
 				
 				panel = corner_widget_new(pos,
 							  orient,
@@ -935,10 +936,10 @@ load_up_globals(void)
 
 	global_config.applet_padding=gnome_config_get_int("applet_padding=3");
 
-	global_config.tiles_enabled =
-		gnome_config_get_bool("tiles_enabled=TRUE");
-	
 	for(i=0;i<LAST_TILE;i++) {
+		g_snprintf(buf,256,"tiles_enabled_%d=TRUE",i);
+		global_config.tiles_enabled[i] = gnome_config_get_bool(buf);
+
 		g_free(global_config.tile_up[i]);
 		g_snprintf(buf,256,"tile_up_%d=tiles/tile-%s-up.png",
 			   i, tile_def[i]);

@@ -672,10 +672,10 @@ snapped_widget_set_hidebuttons(SnappedWidget *snapped)
 		gtk_widget_hide(snapped->hidebutton_s);
 		/*in case the panel was hidden, show it, since otherwise
 		  we wouldn't see it anymore*/
-		if(snapped->mode == SNAPPED_HIDDEN_RIGHT) {
+		if(snapped->state == SNAPPED_HIDDEN_RIGHT) {
 			snapped_widget_pop_show(snapped,FALSE);
 			snapped_widget_queue_pop_down(snapped);
-		} else if(snapped->mode == SNAPPED_HIDDEN_LEFT) {
+		} else if(snapped->state == SNAPPED_HIDDEN_LEFT) {
 			snapped_widget_pop_show(snapped,TRUE);
 			snapped_widget_queue_pop_down(snapped);
 		}

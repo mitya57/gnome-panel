@@ -566,9 +566,9 @@ corner_widget_set_hidebuttons(CornerWidget *corner)
 		gtk_widget_hide(corner->hidebutton_s);
 		/*in case the panel was hidden, show it, since otherwise
 		  we wouldn't see it anymore*/
-		if(corner->mode == CORNER_HIDDEN_RIGHT)
+		if(is_right(corner))
 			corner_widget_pop_show(corner,FALSE);
-		else if(snapped->mode == CORNER_HIDDEN_LEFT)
+		else
 			corner_widget_pop_show(corner,TRUE);
 	/* horizontal and enabled */
 	} else if(PANEL_WIDGET(corner->panel)->orient == PANEL_HORIZONTAL) {
