@@ -230,7 +230,7 @@ applet_drag_stop(AppletInfo *info)
 
 CORBA_PanelSpot
 add_applet (CORBA_Applet applet_obj, const char *goad_id, char **cfgpath,
-		   char **globcfgpath, guint32 * winid)
+	    char **globcfgpath, guint32 * winid)
 {
 	GList *li;
 	int i;
@@ -415,6 +415,8 @@ static CORBA_short
 s_panel_add_applet_full(POA_GNOME_Panel *servant,
 			CORBA_Applet panel_applet,
 			CORBA_char *goad_id,
+			CORBA_short panel,
+			CORBA_short pos,
 			CORBA_char ** cfgpath,
 			CORBA_char ** globcfgpath,
 			CORBA_unsigned_long* wid,
@@ -535,4 +537,179 @@ static POA_GNOME_Panel__vepv panelspot_vepv = { &panelspot_base_epv, &panelspot_
 static POA_GNOME_Panel panelspot_servant = { NULL, &panelspot_vepv };
 
 
+static CORBA_short
+s_panel_add_applet(POA_GNOME_Panel *servant,
+		   CORBA_Applet panel_applet,
+		   CORBA_char *goad_id,
+		   CORBA_char ** cfgpath,
+		   CORBA_char ** globcfgpath,
+		   CORBA_unsigned_long* wid,
+		   CORBA_Environment *ev)
+{
+	return s_panel_add_applet_full(servant,panel_applet,goad_id,0,0,
+				       cfgpath,globcfgpath,wid,ev);
+}
+
+static CORBA_short
+s_panel_add_applet_full(POA_GNOME_Panel *servant,
+			CORBA_Applet panel_applet,
+			CORBA_char *goad_id,
+			CORBA_short panel,
+			CORBA_short pos,
+			CORBA_char ** cfgpath,
+			CORBA_char ** globcfgpath,
+			CORBA_unsigned_long* wid,
+			CORBA_Environment *ev)
+{
+	GList *li;
+	int i;
+	Extern *ext;
+	char *p;
+	
+	for(li=applets;li!=NULL;li=g_list_next(li)) {
+		AppletInfo *info = li->data;
+		if(info && info->type == APPLET_EXTERN_PENDING) {
+			Extern *ext = info->data;
+			g_assert(ext);
+			if(strcmp(ext->goad_id,goad_id)==0) {
+				/*we started this and already reserved a spot
+				  for it, including the socket widget*/
+				GtkWidget *socket =
+					GTK_BIN(info->widget)->child;
+				g_return_val_if_fail(GTK_IS_SOCKET(socket),-1);
+
+				ext->applet = panel_applet;
+				*cfgpath = CORBA_string_dup(ext->cfg);
+				g_free(ext->cfg);
+				ext->cfg = NULL;
+				*globcfgpath = CORBA_string_dup(old_panel_cfg_path);
+				info->type = APPLET_EXTERN_RESERVED;
+				*wid=GDK_WINDOW_XWINDOW(socket->window);
+				/*FIXME: return a reference to panel spot here*/
+				return ext->blablabla;
+			}
+		}
+	}
+	
+	/*this is an applet that was started from outside, otherwise we would
+	  have already reserved a spot for it*/
+	ext = g_new(Extern,1);
+
+	/*FIXME: we have to init the panel spot object here*/
+	ext->applet = applet_obj;
+	ext->goad_id = g_strdup(goad_id);
+	ext->cfg = NULL;
+	extern_applets = g_list_prepend(extern_applets,ext);
+
+	/*select the nth panel*/
+	if(panel)
+		li = g_list_nth(panels,panel);
+	else
+		li = NULL;
+	if(!li)
+		li = panels;
+
+	*winid = reserve_applet_spot (ext, li->data, pos,
+				      APPLET_EXTERN_RESERVED);
+	if(*winid == 0) {
+		extern_clean(ext);
+		*globcfgpath = NULL;
+		*cfgpath = NULL;
+		return CORBA_OBJECT_NIL;
+	}
+	p = g_copy_strings(old_panel_cfg_path,"Applet_Dummy/",NULL);
+	*cfgpath = CORBA_string_dup(p);
+	g_free(p);
+	*globcfgpath = CORBA_string_dup(old_panel_cfg_path);
+
+	/*FIXME: return a reference to panel spot here*/
+	return ext->blablabla;
+}
+
+static void
+s_panel_quit(POA_GNOME_Panel *servant, CORBA_Environment *ev)
+{
+	panel_quit();
+}
+
+static CORBA_boolean
+s_panel_get_in_drag(POA_GNOME_Panel *servant, CORBA_Environment *ev)
+{
+	return panel_applet_in_drag;
+}
+
+
+
+/*** PanelSpot stuff ***/
+
+static CORBA_char *
+s_panelspot_get_tooltip(POA_GNOME_PanelSpot *servant,
+			CORBA_Environment *ev)
+{
+	/*FIXME: get the tooltip text*/
+}
+
+static void
+s_panelspot_set_tooltip(POA_GNOME_PanelSpot *servant,
+			CORBA_char *val,
+			CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	if(val && *val)
+		applet_set_tooltip(ext->info, val);
+	else
+		applet_set_tooltip(ext->info, NULL);
+}
+
+static CORBA_short
+s_panelspot_get_parent_panel(POA_GNOME_PanelSpot *servant,
+			     CORBA_Environment *ev);
+
+static CORBA_short
+s_panelspot_get_spot_pos(POA_GNOME_PanelSpot *servant,
+			 CORBA_Environment *ev);
+
+static GNOME_Panel_OrientType
+s_panelspot_get_parent_orient(POA_GNOME_PanelSpot *servant,
+			      CORBA_Environment *ev);
+
+static void
+s_panelspot_register(POA_GNOME_PanelSpot *servant,
+		     CORBA_Environment *ev);
+
+static void
+s_panelspot_unregister(POA_GNOME_PanelSpot *servant,
+		       CORBA_Environment *ev);
+
+static void
+s_panelspot_abort_load(POA_GNOME_PanelSpot *servant,
+		       CORBA_Environment *ev);
+
+static void
+s_panelspot_show_menu(POA_GNOME_PanelSpot *servant,
+		      CORBA_Environment *ev);
+
+static void
+s_panelspot_drag_start(POA_GNOME_PanelSpot *servant,
+		       CORBA_Environment *ev);
+
+static void
+s_panelspot_drag_stop(POA_GNOME_PanelSpot *servant,
+		      CORBA_Environment *ev);
+
+static void
+s_panelspot_add_callback(POA_GNOME_PanelSpot *servant,
+			 CORBA_char *callback_name,
+			 CORBA_char *stock_item,
+			 CORBA_char *menuitem_text,
+			 CORBA_Environment *ev);
+
+static void
+s_panelspot_remove_callback(POA_GNOME_PanelSpot *servant,
+			    CORBA_char *callback_name,
+			    CORBA_Environment *ev);
+
+static void
+s_panelspot_sync_config(POA_GNOME_PanelSpot *servant,
+			CORBA_Environment *ev);
 
