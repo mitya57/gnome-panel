@@ -1,3 +1,9 @@
+[gen_util_applet]
+type=exe
+repo_id=IDL:GNOME/GenericFactory:1.0
+description=internal
+location_info=gen_util_applet
+
 [gen_util_mailcheck]
 type=exe
 repo_id=IDL:GNOME/Applet:1.0

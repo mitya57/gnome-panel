@@ -34,6 +34,8 @@ make_new_applet(const gchar *goad_id)
 		return make_printer_applet(goad_id);
 	else if(strstr(goad_id,"gen_util_clock"))
 		return make_clock_applet(goad_id);
+
+	return NULL;
 }
 
 /*when we get a command to start a new widget*/
@@ -46,9 +48,8 @@ applet_start_new_applet(const gchar *goad_id, const char **params, int nparams)
 int
 main(int argc, char **argv)
 {
-	gchar *goad_id;
+	const gchar *goad_id;
 	char *argstr = NULL;
-	GList *list = NULL;
 
 	/*this is needed for printer applet*/
 	struct sigaction sa;
@@ -62,19 +63,15 @@ main(int argc, char **argv)
         bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 	
-	list = g_list_append(list,"gen_util_clock");
-	list = g_list_append(list,"gen_util_mailcheck");
-	list = g_list_append(list,"gen_util_printer");
-
 	applet_widget_init("gen_util_applet", VERSION, argc, argv,
 			   NULL, 0, NULL);
-	applet_factory_new("gen_util_applet", applet_start_new_applet);
-	g_list_free(list);
+	applet_factory_new("gen_util_applet", NULL, applet_start_new_applet);
 
 	goad_id = goad_server_activation_id();
 	if(!goad_id)
 	  goad_id = "gen_util_clock"; /* badhack */
-	make_new_applet(goad_id);
+	if(strcmp(goad_id, "gen_util_applet")) /* Only do if factory wasn't requested (odd) */
+	  make_new_applet(goad_id);
 
 	applet_widget_gtk_main();
 

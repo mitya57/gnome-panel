@@ -7,7 +7,9 @@
 AUTOMAKE_OPTIONS = 1.3
 
 INCLUDES = -I. -I$(srcdir) \
-	-I$(top_srcdir)/intl -I$(top_builddir)/intl \
+	-I$(top_srcdir)/intl \
+	-I$(top_builddir)/intl \
+	-I$(top_builddir)/panel \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir) $(GNOME_INCLUDEDIR) $(ORB_CFLAGS)
 
