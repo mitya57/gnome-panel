@@ -120,23 +120,14 @@ edge_pos_get_pos (BasePWidget *basep, gint16 *x, gint16 *y,
 {
 	*x = *y = 0;
 	switch (BORDER_POS(basep->pos)->edge) {
-	case BORDER_RIGHT:
-		*x = gdk_screen_width() - 
-			((basep->state == BASEP_AUTO_HIDDEN)
-			 ? pw_minimized_size : w);
-		/* fall through */
 	case BORDER_LEFT:
-		if (basep->state == BASEP_HIDDEN_RIGHT)
-			*y += h - basep->hidebutton_s->allocation.height;
+	case BORDER_TOP:
+		break;
+	case BORDER_RIGHT:
+		*x = gdk_screen_width() - w;
 		break;
 	case BORDER_BOTTOM:
-		*y = gdk_screen_height() - 
-			((basep->state == BASEP_AUTO_HIDDEN)
-			 ? pw_minimized_size : h);
-		/* fall through */
-	case BORDER_TOP:
-		if (basep->state == BASEP_HIDDEN_RIGHT)
-			*x += w - basep->hidebutton_e->allocation.width;
+		*y = gdk_screen_height() - h;
 		break;
 	}
 }

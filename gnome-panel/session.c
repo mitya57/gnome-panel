@@ -15,6 +15,8 @@
 
 #include "panel-include.h"
 
+/*#define PANEL_DEBUG 1*/
+
 int config_sync_timeout = 0;
 int applets_to_sync = FALSE;
 int panels_to_sync = FALSE;
@@ -32,8 +34,10 @@ extern GnomeClient *client;
 
 GlobalConfig global_config;
 
+#if 0
 char *panel_cfg_path=NULL;
 char *old_panel_cfg_path=NULL;
+#endif
 
 /*list of all panel widgets created*/
 extern GSList *panel_list;
@@ -276,7 +280,7 @@ save_applet_configuration(AppletInfo *info)
 	g_return_val_if_fail(info!=NULL,TRUE);
 
 	buf = g_string_new(NULL);
-	g_string_sprintf(buf, "%sApplet_Config/Applet_%d/", panel_cfg_path, info->applet_id+1);
+	g_string_sprintf(buf, "%sApplet_Config/Applet_%d/", PANEL_CONFIG_PATH, info->applet_id+1);
 	gnome_config_clean_section(buf->str);
 	gnome_config_push_prefix(buf->str);
 
@@ -306,13 +310,13 @@ save_applet_configuration(AppletInfo *info)
 			char *globalcfg;
 			Extern *ext = info->data;
 
-			globalcfg = g_concat_dir_and_file(panel_cfg_path,
+			globalcfg = g_concat_dir_and_file(PANEL_CONFIG_PATH,
 							  "Applet_All_Extern/");
 
 			/*this is the file path we pass to the applet for it's
 			  own config, this is a separate file, so that we */
 			g_string_sprintf(buf, "%sApplet_%d_Extern/",
-					 panel_cfg_path, info->applet_id+1);
+					 PANEL_CONFIG_PATH, info->applet_id+1);
 			gnome_config_clean_file(buf->str);
 			/*just in case the applet times out*/
 			gnome_config_set_string("id", EMPTY_ID);
@@ -371,7 +375,7 @@ save_applet_configuration(AppletInfo *info)
 			/*we set the .desktop to be in the panel config
 			  dir*/
 			g_string_sprintf(buf, "%s/%sApplet_%d.desktop",
-					 gnome_user_dir,panel_cfg_path,
+					 gnome_user_dir,PANEL_CONFIG_PATH,
 					 info->applet_id+1);
 			g_free(launcher->dentry->location);
 			launcher->dentry->location = g_strdup(buf->str);
@@ -412,7 +416,7 @@ save_panel_configuration(gpointer data, gpointer user_data)
 	
 	buf = g_string_new(NULL);
 
-	g_string_sprintf(buf, "%spanel/Panel_%d/", panel_cfg_path, (*num)++);
+	g_string_sprintf(buf, "%spanel/Panel_%d/", PANEL_CONFIG_PATH, (*num)++);
 	gnome_config_clean_section(buf->str);
 
 	gnome_config_push_prefix (buf->str);
@@ -506,6 +510,7 @@ do_session_save(GnomeClient *client,
 	int i;
 	gchar *new_args[] = { "rm", "-r", NULL };
 
+#if 0
 	if (panel_cfg_path)
 		g_free(panel_cfg_path);
 
@@ -513,18 +518,22 @@ do_session_save(GnomeClient *client,
 	    GNOME_CLIENT (client)->restart_style != GNOME_RESTART_NEVER)
 		panel_cfg_path = g_strdup (gnome_client_get_config_prefix (client));
 	else
-		panel_cfg_path = g_strdup ("/panel.d/default/");
+		;
+	panel_cfg_path = g_strdup ("/panel.d/default/");
 
 	new_args[2] = gnome_config_get_real_path (panel_cfg_path);
 	gnome_client_set_discard_command (client, 3, new_args);
+#endif
+
 #ifdef PANEL_DEBUG	
-	printf("Saving to [%s]\n",panel_cfg_path);
+	printf("Saving to [%s]\n",PANEL_CONFIG_PATH);
 
 	printf("Saving session: 1"); fflush(stdout);
 
 	printf(" 2"); fflush(stdout);
 #endif
-	s = g_concat_dir_and_file(panel_cfg_path,"panel/Config/");
+
+	s = g_concat_dir_and_file(PANEL_CONFIG_PATH,"panel/Config/");
 	gnome_config_push_prefix (s);
 	g_free(s);
 
@@ -539,7 +548,7 @@ do_session_save(GnomeClient *client,
 		gnome_config_set_int("panel_count",num-1);
 	}
 #ifdef PANEL_DEBUG
-	printf(" 4"); fflush(stdout);
+	printf(" 4\n"); fflush(stdout);
 #endif
 	if(complete_sync || sync_globals) {
 		GString *buf;
@@ -610,7 +619,7 @@ do_session_save(GnomeClient *client,
 		save_next_applet();
 	}
 
-#ifdef PANEL_DEBUG
+#if 0 /*PANEL_DEBUG*/
 	puts("");
 #endif
 }
@@ -767,7 +776,7 @@ init_user_applets(void)
 
 	buf = g_string_new(NULL);
 	g_string_sprintf(buf,"%spanel/Config/applet_count=0",
-			 old_panel_cfg_path);
+			 PANEL_CONFIG_PATH);
 	count=gnome_config_get_int(buf->str);
 	for(num=1;num<=count;num++) {
 		char *applet_name;
@@ -775,7 +784,7 @@ init_user_applets(void)
 		PanelWidget *panel;
 
 		g_string_sprintf(buf,"%sApplet_Config/Applet_%d/",
-				 old_panel_cfg_path, num);
+				 PANEL_CONFIG_PATH, num);
 		gnome_config_push_prefix(buf->str);
 		applet_name = gnome_config_get_string("id=Unknown");
 		
@@ -813,7 +822,7 @@ init_user_applets(void)
 				/*this is the config path to be passed to the
 				  applet when it loads*/
 				g_string_sprintf(buf,"%sApplet_%d_Extern/",
-						 old_panel_cfg_path,num);
+						 PANEL_CONFIG_PATH,num);
 				load_extern_applet(goad_id,buf->str,panel,pos,TRUE);
 			}
 			g_free(goad_id);
@@ -886,7 +895,7 @@ init_user_panels(void)
 
 	buf = g_string_new(NULL);
 	g_string_sprintf(buf,"%spanel/Config/panel_count=0",
-			 old_panel_cfg_path);
+			 PANEL_CONFIG_PATH);
 	count=gnome_config_get_int(buf->str);
 
 	/*load a default snapped panel on the bottom of the screen,
@@ -928,7 +937,7 @@ init_user_panels(void)
 		int hidebutton_pixmaps_enabled;
 		
 		g_string_sprintf(buf,"%spanel/Panel_%d/",
-				 old_panel_cfg_path, num);
+				 PANEL_CONFIG_PATH, num);
 		gnome_config_push_prefix (buf->str);
 		
 		back_pixmap = gnome_config_get_string ("backpixmap=");
@@ -1065,7 +1074,7 @@ load_up_globals(void)
 
 	/*set up global options*/
 	
-	g_string_sprintf(buf,"%spanel/Config/",old_panel_cfg_path);
+	g_string_sprintf(buf,"%spanel/Config/",PANEL_CONFIG_PATH);
 	gnome_config_push_prefix(buf->str);
 
 	global_config.tooltips_enabled =

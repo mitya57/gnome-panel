@@ -164,9 +164,7 @@ aligned_pos_get_pos (BasePWidget *basep, gint16 *x, gint16 *y,
 	*x = *y = 0;
 	switch (BORDER_POS(basep->pos)->edge) {
 	case BORDER_BOTTOM:
-		*y = gdk_screen_height() - 
-			((basep->state == BASEP_AUTO_HIDDEN)
-			 ? pw_minimized_size : h);
+		*y = gdk_screen_height() - h;
                 /* fall through */
 	case BORDER_TOP:
 		/* if we wanted to be more hackish we could just do: 
@@ -182,13 +180,9 @@ aligned_pos_get_pos (BasePWidget *basep, gint16 *x, gint16 *y,
 			*x = gdk_screen_width() - w;
 			break;
 		}
-		if (basep->state == BASEP_HIDDEN_RIGHT)
-			*x += w - basep->hidebutton_e->allocation.width;
 		break;
 	case BORDER_RIGHT:
-		*x = gdk_screen_width() - 
-			((basep->state == BASEP_AUTO_HIDDEN)
-			 ? pw_minimized_size : w);
+		*x = gdk_screen_width() - w;
 		/* fall through */
 	case BORDER_LEFT:
 		/* could do same as above, with height */
@@ -202,8 +196,6 @@ aligned_pos_get_pos (BasePWidget *basep, gint16 *x, gint16 *y,
 			*y = gdk_screen_height() - h;
 			break;
 		}
-		if (basep->state == BASEP_HIDDEN_RIGHT)
-			*y += h - basep->hidebutton_s->allocation.height;
 		break;
 	}
 }

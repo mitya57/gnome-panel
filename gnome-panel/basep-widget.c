@@ -144,9 +144,11 @@ basep_widget_size_request (GtkWidget *widget,
 				&chreq.height);
 
 	if (basep->state != BASEP_SHOWN) {
-		PanelOrientType hide_orient;
-		klass->get_hidesize (basep, &hide_orient,
-				     &chreq.width, &chreq.height);
+		PanelOrientType hide_orient =
+			klass->get_hide_orient (basep);
+		klass->get_hide_size (basep, hide_orient,
+				      &chreq.width, 
+				      &chreq.height);
 	}
 
 	requisition->width = chreq.width;
@@ -165,45 +167,57 @@ basep_widget_size_allocate (GtkWidget *widget,
 	
 	/*we actually want to ignore the size_reqeusts since they
 	  are sometimes a cube for the flicker prevention*/
+#ifdef PANEL_DEBUG
+	if (basep->state == BASEP_MOVING)
+		g_warning ("size_allocate whilst moving");
+#endif
+
 	gtk_widget_size_request (basep->ebox, &chreq);
 
 	if (klass->get_size)
 		klass->get_size(basep,
 				&chreq.width,
 				&chreq.height);
-
 	if (klass->get_pos)
 		klass->get_pos (basep,
 				&allocation->x,
 				&allocation->y,
 				chreq.width,
 				chreq.height);
-	
+
 	allocation->width = challoc.width = chreq.width;
 	allocation->height = challoc.height = chreq.height;
 	challoc.x = challoc.y = 0;
 
 	basep->shown_alloc = *allocation;
-	
+
 	if (basep->state != BASEP_SHOWN) {
-		PanelOrientType hide_orient = ORIENT_LEFT;
-		g_assert (klass->get_hidesize);
-		
-		klass->get_hidesize (basep, &hide_orient,
+		PanelOrientType hide_orient = 
+			klass->get_hide_orient (basep);
+
+		klass->get_hide_size (basep, hide_orient,
 				     &allocation->width,
 				     &allocation->height);
+
+		klass->get_hide_pos (basep, hide_orient,
+				     &allocation->x,
+				     &allocation->y,
+				     basep->shown_alloc.width,
+				     basep->shown_alloc.height);
+
 		basep_widget_get_position (basep, hide_orient,
 					   &challoc.x, &challoc.y,
 					   allocation->width,
 					   allocation->height);
 	}
 
-	if (basep->keep_in_screen && 
-	    basep->state == BASEP_SHOWN) {
-		allocation->x = CLAMP (allocation->x, 0,
-				       gdk_screen_width () - allocation->width);
-		allocation->y = CLAMP (allocation->y, 0, 
-				       gdk_screen_height () - allocation->height);
+	if (basep->keep_in_screen) {
+		gint16 max = gdk_screen_width () - allocation->width;
+		allocation->x = CLAMP (allocation->x, 0, max);
+
+		max = gdk_screen_height () - allocation->height;
+		allocation->y = CLAMP (allocation->y, 0, max);
+				       
 	}
 
 	widget->allocation = *allocation;
@@ -303,11 +317,66 @@ static int basep_pos_signals[POS_LAST_SIGNAL] = { 0 };
 #endif
 
 static void
+basep_pos_get_hide_size (BasePWidget *basep, 
+			 PanelOrientType hide_orient,
+			 guint16 *w, guint16 *h)
+{
+	switch (hide_orient) {
+	case ORIENT_UP:
+		*h = (basep->state == BASEP_AUTO_HIDDEN)
+			? pw_minimized_size
+			: basep->hidebutton_n->allocation.height;
+		break;
+	case ORIENT_RIGHT:
+		*w = (basep->state == BASEP_AUTO_HIDDEN)
+			? pw_minimized_size
+			: basep->hidebutton_w->allocation.width;
+		break;
+	case ORIENT_DOWN:
+		*h = (basep->state == BASEP_AUTO_HIDDEN)
+			? pw_minimized_size
+			: basep->hidebutton_s->allocation.height;
+		break;
+	case ORIENT_LEFT:
+		*w = (basep->state == BASEP_AUTO_HIDDEN)
+			? pw_minimized_size
+			: basep->hidebutton_e->allocation.width;
+		break;
+	}
+	*w = MAX (*w, 1);
+	*h = MAX (*h, 1);
+}
+
+static void
+basep_pos_get_hide_pos (BasePWidget *basep,
+			PanelOrientType hide_orient,
+			gint16 *x, gint16 *y,
+			guint16 w, guint16 h)
+{
+	switch (hide_orient) {
+	case ORIENT_UP:
+	case ORIENT_LEFT:
+		break;
+	case ORIENT_RIGHT:
+		*x += w - ((basep->state == BASEP_AUTO_HIDDEN)
+			    ? pw_minimized_size : basep->hidebutton_w->allocation.width);
+		break;
+	case ORIENT_DOWN:
+		*y += h - ((basep->state == BASEP_AUTO_HIDDEN)
+			   ? pw_minimized_size : basep->hidebutton_s->allocation.height);
+		break;
+	}
+}
+		
+static void
 basep_pos_class_init (BasePPosClass *klass)
 {
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS(klass);
 
 	basep_pos_parent_class = gtk_type_class(gtk_object_get_type ());
+
+	klass->get_hide_size = basep_pos_get_hide_size;
+	klass->get_hide_pos = basep_pos_get_hide_pos;
 }	
 
 /* nothing to see here... */
@@ -322,6 +391,13 @@ basep_leave_notify(BasePWidget *basep,
 		   GdkEventCrossing *event,
 		   gpointer data)
 {
+#ifdef PANEL_DEBUG
+	if (basep->state == BASEP_MOVING)
+		g_warning ("moving in leave_notify");
+
+	if (basep->leave_notify_timer_tag != 0)
+		g_warning ("timeout already queued");
+#endif
 	if (event->detail == GDK_NOTIFY_INFERIOR)
 		return FALSE;
 	
@@ -335,25 +411,24 @@ basep_enter_notify(BasePWidget *basep,
 		   GdkEventCrossing *event,
 		   gpointer data)
 {
-	if ((basep->state != BASEP_AUTO_HIDDEN) ||
-	    (event->detail == GDK_NOTIFY_INFERIOR) ||
-	    (basep->mode != BASEP_AUTO_HIDE))
-		return FALSE;
+	if (basep->state == BASEP_AUTO_HIDDEN &&
+	    event->detail != GDK_NOTIFY_INFERIOR) {
 
-	if (basep->moving) {
-		return FALSE;
-	}
+		g_assert (basep->mode == BASEP_AUTO_HIDE);
+#ifdef PANEL_DEBUG
+		g_print ("detail: %d\n", event->detail);
+#endif
+		if (basep->leave_notify_timer_tag != 0) {
+			gtk_timeout_remove (basep->leave_notify_timer_tag);
+			basep->leave_notify_timer_tag = 0;
+		}
+
+		basep_widget_autoshow (basep);
+	}  
 
 	if (!gnome_win_hints_wm_exists() &&
 	    global_config.autoraise)
 		gdk_window_raise(GTK_WIDGET(basep)->window);
-
-	if (basep->leave_notify_timer_tag != 0) {
-		gtk_timeout_remove (basep->leave_notify_timer_tag);
-		basep->leave_notify_timer_tag = 0;
-	}
-
-	basep_widget_autoshow (basep);
 
 	return FALSE;
 }
@@ -435,32 +510,6 @@ move_step(int src, int dest, long start_time, long end_time, long cur_time)
 	}
 }
 
-static void
-start_moving (BasePWidget *basep)
-{
-	g_assert (!basep->moving);
-#if 0
-	gtk_signal_handler_block (GTK_OBJECT (basep),
-				  basep->enter_handler);
-	gtk_signal_handler_block (GTK_OBJECT (basep),
-				  basep->leave_handler);
-#endif
-	basep->moving = TRUE;
-}
-
-static void
-end_moving (BasePWidget *basep)
-{
-	g_assert (basep->moving);
-#if 0	
-	gtk_signal_handler_unblock (GTK_OBJECT (basep),
-				    basep->enter_handler);
-	gtk_signal_handler_unblock (GTK_OBJECT (basep),
-				    basep->leave_handler);
-#endif
-	basep->moving = FALSE;
-}
-
 void
 basep_widget_do_hiding(BasePWidget *basep, PanelOrientType hide_orient,
 		       int leftover, int step)
@@ -474,8 +523,10 @@ basep_widget_do_hiding(BasePWidget *basep, PanelOrientType hide_orient,
 	g_return_if_fail(basep != NULL);
 	g_return_if_fail(IS_BASEP_WIDGET(basep));
 
-	if (!basep->moving) {
+	if (basep->state != BASEP_MOVING) {
+#ifdef PANEL_DEBUG
 		g_warning ("do_hiding whilst not moving");
+#endif
 		return;
 	}
 
@@ -573,51 +624,46 @@ basep_widget_do_showing(BasePWidget *basep, PanelOrientType hide_orient,
 			int leftover, int step)
 {
 	GtkWidget *wid;
-	int ox,oy,ow,oh;
-	int x,y,w,h;
-	int dx,dy,dw,dh;
+	int x,y, dx,dy, ox,oy;
+	int w,h, dw,dh, ow,oh;
 	int diff;
 
 	g_return_if_fail(basep != NULL);
 	g_return_if_fail(IS_BASEP_WIDGET(basep));
 
-	if (!basep->moving) {
+	if (basep->state != BASEP_MOVING) {
+#ifdef PANEL_DEBUG
 		g_warning ("do_showing whilst not moving");
+#endif
 		return;
 	}
 
 	wid = GTK_WIDGET(basep);
 	
-	ox = x = basep->shown_alloc.x;
-	oy = y = basep->shown_alloc.y;
+	ox = dx = x = basep->shown_alloc.x;
+	oy = dy = y = basep->shown_alloc.y;
 	dw = basep->shown_alloc.width;
 	dh = basep->shown_alloc.height;
-	
+			      
 	switch(hide_orient) {
 	case ORIENT_UP:
-		dx = x;
-		dy = y;
 		ow = w = dw;
 		oh = h = leftover;
 		diff = dh-leftover;
 		break;
 	case ORIENT_DOWN:
-		dx = x;
-		dy = y - dh + leftover;
+		oy = y + dh - leftover;
 		ow = w = dw;
 		oh = h = leftover;
 		diff = dh-leftover;
 		break;
 	case ORIENT_LEFT:
-		dx = x;
-		dy = y;
 		ow = w = leftover;
 		oh = h = dh;
 		diff = dw-leftover;
 		break;
 	case ORIENT_RIGHT:
-		dx = x - dw + leftover;
-		dy = y;
+		ox = x + dw - leftover;
 		ow = w = leftover;
 		oh = h = dh;
 		diff = dw-leftover;
@@ -749,7 +795,12 @@ basep_widget_init (BasePWidget *basep)
 	GTK_WINDOW(basep)->allow_shrink = TRUE;
 	GTK_WINDOW(basep)->allow_grow = TRUE;
 	GTK_WINDOW(basep)->auto_shrink = TRUE;
+
+	/*don't let us close the window*/                                       
 	
+	gtk_signal_connect(GTK_OBJECT(basep),"delete_event",                    
+			   GTK_SIGNAL_FUNC(gtk_true),NULL);                     
+
 	basep->shown_alloc.x = basep->shown_alloc.y =
 		basep->shown_alloc.width = basep->shown_alloc.height = 0;
 	
@@ -957,7 +1008,7 @@ basep_widget_construct (BasePWidget *basep,
 
 	gtk_widget_show(basep->panel);
 
-	if(back_type == PANEL_BACK_NONE || !global_config.hide_panel_frame) {
+	if(back_type == PANEL_BACK_NONE && !global_config.hide_panel_frame) {
 		gtk_widget_show(basep->frame);
 		gtk_container_add(GTK_CONTAINER(basep->frame),basep->panel);
 	} else {
@@ -1025,8 +1076,12 @@ basep_widget_construct (BasePWidget *basep,
 	basep->state = state;
 
 	basep->pos->basep = basep;
+
+	if (state == BASEP_AUTO_HIDDEN &&
+	    mode != BASEP_AUTO_HIDE)
+		basep->state = BASEP_SHOWN;
 	       
-	if (klass->get_size)
+	if (klass->get_pos)
 		klass->get_pos (basep, &x, &y, 
 				PANEL_MINIMUM_WIDTH,
 				PANEL_MINIMUM_WIDTH);
@@ -1062,6 +1117,10 @@ basep_widget_change_params(BasePWidget *basep,
 		basep_widget_convert_to (basep, type);
 #endif
 
+	if (state == BASEP_AUTO_HIDDEN &&
+	    mode != BASEP_AUTO_HIDE)
+		state = BASEP_SHOWN;
+
 	if (mode != basep->mode) {
 		basep->mode = mode;
 		if (mode == BASEP_AUTO_HIDE)
@@ -1070,10 +1129,6 @@ basep_widget_change_params(BasePWidget *basep,
 				basep_widget_signals[MODE_CHANGE_SIGNAL],
 				mode);
 	}
-	
-	if (state == BASEP_AUTO_HIDDEN &&
-	    mode != BASEP_AUTO_HIDE)
-		state = BASEP_SHOWN;
 	
 	if (state != basep->state) {
 		basep->state = state;
@@ -1185,12 +1240,12 @@ basep_widget_explicit_hide (BasePWidget *basep, BasePState state)
 	if((basep->state != BASEP_SHOWN))
 		return;
 
-	if (basep->moving) {
+	if (basep->state == BASEP_MOVING) {
+#ifdef PANEL_DEBUG
 		g_warning ("explicit_hide whilst moving");
+#endif
 		return;
 	}
-
-	start_moving (basep);
 
 	gnome_triggers_vdo("", NULL, supinfo);
 	
@@ -1202,25 +1257,29 @@ basep_widget_explicit_hide (BasePWidget *basep, BasePState state)
 				  WIN_LAYER_ONTOP:
 				  WIN_LAYER_ABOVE_DOCK);
 #endif
-	basep->state = state;
-
 	if (GTK_WIDGET_REALIZED(GTK_WIDGET(basep))) {
+		BasePPosClass *klass = basep_widget_get_pos_class (basep);
 		PanelOrientType hide_orient;
 		guint16 w, h, size;
 
-		basep_widget_get_hidesize (basep,
-					    &hide_orient,
-					    &w, &h);
+		basep->state = state;
+		
+		hide_orient = klass->get_hide_orient (basep);
+		basep_widget_get_size (basep, &w, &h);
+		klass->get_hide_size (basep,
+				      hide_orient,
+				      &w, &h);
 
 		size = (hide_orient == ORIENT_UP ||
 			hide_orient == ORIENT_DOWN) ?
 			h : w;
-
+		
+		basep->state = BASEP_MOVING;
 		basep_widget_do_hiding (basep, hide_orient,
 					size, pw_explicit_step);
 	}
 
-	end_moving (basep);
+	basep->state = state;
 
 	gtk_signal_emit(GTK_OBJECT(basep),
 			basep_widget_signals[STATE_CHANGE_SIGNAL],
@@ -1237,27 +1296,32 @@ basep_widget_explicit_show (BasePWidget *basep)
 	      basep->state != BASEP_HIDDEN_RIGHT))
 		return;
  
-	if (basep->moving) {
+	if (basep->state == BASEP_MOVING) {
+#ifdef PANEL_DEBUG
 		g_warning ("explicit_show whilst moving");
+#endif
 		return;
 	}
-
-	start_moving (basep);
 
 	gnome_triggers_vdo("", NULL, supinfo);
 
 	if (GTK_WIDGET_REALIZED(GTK_WIDGET(basep))) {
+		BasePPosClass *klass = basep_widget_get_pos_class (basep);
 		PanelOrientType hide_orient;
 		guint16 w, h, size;
 
-		basep_widget_get_hidesize (basep,
-					   &hide_orient,
-					   &w, &h);
+		hide_orient = klass->get_hide_orient (basep);
+		basep_widget_get_size (basep, &w, &h);
+		klass->get_hide_size (basep,
+				      hide_orient,
+				      &w, &h);
 
 		size = (hide_orient == ORIENT_UP ||
 			hide_orient == ORIENT_DOWN) ?
 			h : w;
 
+		basep->state = BASEP_MOVING;
+		
 		basep_widget_do_showing (basep, hide_orient,
 					 size, pw_explicit_step);
 	}
@@ -1273,8 +1337,6 @@ basep_widget_explicit_show (BasePWidget *basep)
 #endif
 	basep->state = BASEP_SHOWN;
 
-	end_moving (basep);
-
 	gtk_signal_emit(GTK_OBJECT(basep),
 			basep_widget_signals[STATE_CHANGE_SIGNAL],
 			BASEP_SHOWN);
@@ -1283,34 +1345,35 @@ basep_widget_explicit_show (BasePWidget *basep)
 void
 basep_widget_autoshow (BasePWidget *basep)
 {
-	BasePPosClass *klass;
-
 	g_return_if_fail (IS_BASEP_WIDGET(basep));
+
+	if (basep->state == BASEP_MOVING) {
+#ifdef PANEL_DEBUG
+		g_warning ("autoshow whilst moving");
+#endif
+		return;
+	}
 	
 	if ( (basep->mode != BASEP_AUTO_HIDE) ||
 	     (basep->state != BASEP_AUTO_HIDDEN))
 		return;
 
-	if (basep->moving) {
-		g_warning ("autoshow whilst moving");
-		return;
-	}
-
-	start_moving (basep);
-	
-	klass = basep_widget_get_pos_class (basep);
-
 	if (GTK_WIDGET_REALIZED(basep)) {
+		BasePPosClass *klass = basep_widget_get_pos_class (basep);
 		PanelOrientType hide_orient;
 		guint16 w, h, size;
 
-		basep_widget_get_hidesize (basep, 
-					   &hide_orient,
-					   &w, &h);
+		hide_orient = klass->get_hide_orient (basep);
+		basep_widget_get_size (basep, &w, &h);
+		klass->get_hide_size (basep, 
+				      hide_orient,
+				      &w, &h);
 
 		size = (hide_orient == ORIENT_UP ||
 			hide_orient == ORIENT_DOWN) ?
 			h : w;
+
+		basep->state = BASEP_MOVING;
 
 		basep_widget_do_showing (basep,
 					 hide_orient,
@@ -1318,8 +1381,6 @@ basep_widget_autoshow (BasePWidget *basep)
 					 pw_auto_step);
 	}
 
-	end_moving (basep);
-	
 	basep->state = BASEP_SHOWN;
 	gtk_signal_emit (GTK_OBJECT(basep),
 			 basep_widget_signals[STATE_CHANGE_SIGNAL],
@@ -1337,8 +1398,15 @@ basep_widget_autohide (gpointer data)
 	if (basep->autohide_inhibit)
 		return TRUE;
 
-	if (basep->moving) {
+	if (basep->leave_notify_timer_tag != 0) {
+		gtk_timeout_remove (basep->leave_notify_timer_tag);
+		basep->leave_notify_timer_tag = 0;
+	}
+	
+	if (basep->state == BASEP_MOVING) {
+#ifdef PANEL_DEBUG
 		g_warning ("autohide whilst moving");
+#endif
 		return TRUE;
 	}
 
@@ -1351,22 +1419,25 @@ basep_widget_autohide (gpointer data)
 	if (panel_applet_in_drag || basep->drawers_open>0)
 		return TRUE;
 
-	start_moving (basep);
-	
 	gnome_triggers_vdo("", NULL, supinfo);
 
-	basep->state = BASEP_AUTO_HIDDEN;
-
 	if (GTK_WIDGET_REALIZED(basep)) {
+		BasePPosClass *klass = basep_widget_get_pos_class (basep);
 		PanelOrientType hide_orient;
 		guint16 w, h, size;
+
+		basep->state = BASEP_AUTO_HIDDEN;
 		
-		basep_widget_get_hidesize (basep, 
-					   &hide_orient,
-					   &w, &h);
+		hide_orient = klass->get_hide_orient (basep);
+		basep_widget_get_size (basep, &w, &h);
+		klass->get_hide_size (basep, 
+				      hide_orient,
+				      &w, &h);
 		size =  (hide_orient == ORIENT_UP ||
 			 hide_orient == ORIENT_DOWN) 
 			? h : w;
+
+		basep->state = BASEP_MOVING;
 
 		basep_widget_do_hiding (basep,
 					hide_orient,
@@ -1374,7 +1445,9 @@ basep_widget_autohide (gpointer data)
 					pw_auto_step);
 	}
 
-	end_moving (basep);
+
+	basep->state = BASEP_AUTO_HIDDEN;
+
 	gtk_signal_emit(GTK_OBJECT(basep),
 			basep_widget_signals[STATE_CHANGE_SIGNAL],
 			BASEP_AUTO_HIDDEN);
@@ -1386,20 +1459,29 @@ basep_widget_autohide (gpointer data)
 void
 basep_widget_queue_autohide(BasePWidget *basep)
 {
-
-        if ((basep->mode != BASEP_AUTO_HIDE) ||
-            (basep->state != BASEP_SHOWN))
-                return;
-        
         /* check if there's already a timeout set, and delete it if 
          * there was */
-        if (basep->leave_notify_timer_tag != 0)
-                gtk_timeout_remove (basep->leave_notify_timer_tag);
-        
-	if (basep->moving)
-		return;
+	if (basep->state == BASEP_MOVING) {
+		g_print ("return 2");
+		return; 
+	}
 
-        /* set up our delay for popup. */
+        if (basep->leave_notify_timer_tag != 0) {
+                gtk_timeout_remove (basep->leave_notify_timer_tag);
+#ifdef PANEL_DEBUG
+		g_print ("<timeout removed>\n");
+#endif
+	}
+
+        if ((basep->mode != BASEP_AUTO_HIDE) ||
+            (basep->state != BASEP_SHOWN)) {
+#ifdef PANEL_DEBUG
+		g_print ("return 1\n");
+#endif
+                return;
+	}
+                
+       /* set up our delay for popup. */
         basep->leave_notify_timer_tag =
                 gtk_timeout_add (pw_minimize_delay,
                                  basep_widget_autohide, basep);
@@ -1426,7 +1508,6 @@ basep_drag_motion (PanelWidget        *panel,
 	}
 
 	basep_widget_autoshow(basep);
-	basep_widget_queue_autohide(basep);
 
 	return TRUE;
 }
@@ -1470,23 +1551,59 @@ basep_widget_get_applet_orient (BasePWidget *basep)
 	return klass->get_applet_orient(basep);
 }
 
+#if 0
 void
-basep_widget_get_hidesize (BasePWidget *basep,
-			   PanelOrientType *hide_orient,
-			   guint16 *w, guint16 *h)
+basep_widget_get_hide_size (BasePWidget *basep,
+			    PanelOrientType hide_orient,
+			    guint16 *w, guint16 *h)
 {
-	BasePPosClass *klass = 
-		basep_widget_get_pos_class(basep);
+	BasePPosClass *klass = basep_widget_get_pos_class(basep);
 
-	*hide_orient = -1;
 	basep_widget_get_size(basep, w, h);
 
-	if (basep->state == BASEP_SHOWN)
+	if (basep->state == BASEP_SHOWN) {
+		g_warning ("get_hide_size() called on shown BasePWidget");
 		return;
+	}
 	
-	g_return_if_fail (klass && klass->get_hidesize);
-	klass->get_hidesize (basep, hide_orient, w, h);
+	g_return_if_fail (klass && klass->get_hide_size);
+	klass->get_hide_size (basep, hide_orient, w, h);
 }
+
+void
+basep_widget_get_hide_orient (BasePWidget *basep,
+			      PanelOrientType *hide_orient)
+{
+	BasePPosClass *klass = basep_widget_get_pos_class(basep);
+
+	*hide_orient = -1;
+	if (basep->state == BASEP_SHOWN) {
+		g_warning ("get_hide_orient() called on shown BasePWidget");
+		return;
+	}
+	
+	g_return_if_fail (klass && klass->get_hide_size);
+	klass->get_hide_orient (basep, hide_orient);
+}
+
+void
+basep_widget_get_hide_pos (BasePWidget *basep,
+			   PanelOrientType hide_orient,
+			   gint16 *x, gint16 *y)
+{
+	BasePPosClass *klass = basep_widget_get_pos_class(basep);
+	guint16 w, h;
+
+	if (basep->state == BASEP_SHOWN) {
+		g_warning ("get_hide_pos() called on shown BasePWidget");
+		return;
+	}
+	
+	basep_widget_get_hide_size (basep, hide_orient, &w, &h);
+	g_return_if_fail (klass && klass->get_hide_size);
+	klass->get_hide_orient (basep, hide_orient);
+}
+#endif
 
 void
 basep_widget_get_size (BasePWidget *basep,

@@ -19,9 +19,11 @@ static void drawer_pos_init (DrawerPos *pos);
 static void drawer_pos_set_hidebuttons (BasePWidget *basep);
 static PanelOrientType drawer_pos_get_applet_orient (BasePWidget *basep);
 
-static void drawer_pos_get_hidesize (BasePWidget *basep,
-				     PanelOrientType *hide_orient,
-				     guint16 *w, guint16 *h);
+static PanelOrientType drawer_pos_get_hide_orient (BasePWidget *basep);
+static void drawer_pos_get_hide_pos (BasePWidget *basep,
+				     PanelOrientType hide_orient,
+				     gint16 *x, gint16 *y,
+				     guint16 w, guint16 h);
 
 static void drawer_pos_get_pos(BasePWidget *basep,
 			       gint16 *x, gint16 *y,
@@ -99,7 +101,8 @@ drawer_pos_class_init (DrawerPosClass *klass)
 	pos_class->set_hidebuttons = drawer_pos_set_hidebuttons;
 	pos_class->get_applet_orient = drawer_pos_get_applet_orient;
 	pos_class->get_size = NULL; /* the default is ok */
-	pos_class->get_hidesize = drawer_pos_get_hidesize;
+	pos_class->get_hide_orient = drawer_pos_get_hide_orient;
+	pos_class->get_hide_pos = drawer_pos_get_hide_pos;
 	pos_class->get_pos = drawer_pos_get_pos;
 	pos_class->get_menu_pos = drawer_pos_get_menu_pos;
 	pos_class->realize = drawer_pos_realize;
@@ -197,63 +200,36 @@ drawer_pos_get_applet_orient (BasePWidget *basep)
 	return orient;
 }
 
-static void
-drawer_pos_get_hidesize (BasePWidget *basep, 
-			 PanelOrientType *hide_orient,
-			 guint16 *w, guint16 *h)
+static PanelOrientType
+drawer_pos_get_hide_orient (BasePWidget *basep)
 {
-	DrawerPos *pos = DRAWER_POS(basep->pos);
-	PanelWidget *panel = PANEL_WIDGET(basep->panel);
+	DrawerPos *pos = DRAWER_POS (basep->pos);
+	PanelWidget *panel = PANEL_WIDGET (basep->panel);
 
 	switch (basep->state) {
 	case BASEP_AUTO_HIDDEN:
 		switch (pos->orient) {
-		case ORIENT_UP:
-			*h = pw_minimized_size;
-			*hide_orient = ORIENT_DOWN;
-			break;
-		case ORIENT_RIGHT:
-			*w = pw_minimized_size;
-			*hide_orient = ORIENT_LEFT;
-			break;
-		case ORIENT_DOWN:
-			*h = pw_minimized_size;
-			*hide_orient = ORIENT_UP;
-			break;
-		case ORIENT_LEFT:
-			*w = pw_minimized_size;
-			*hide_orient = ORIENT_RIGHT;
-			break;
+		case ORIENT_UP: return ORIENT_DOWN;
+		case ORIENT_RIGHT: return ORIENT_LEFT;
+		case ORIENT_DOWN: return ORIENT_UP;
+		case ORIENT_LEFT: return ORIENT_RIGHT;
 		}
+		g_assert_not_reached ();
+		break;
 	case BASEP_HIDDEN_LEFT:
-		if (panel->orient == PANEL_HORIZONTAL) {
-			*w = pw_minimized_size; /*basep->hidebutton_e->allocation.width;*/
-			*hide_orient = ORIENT_LEFT;
-		} else {
-			*h = pw_minimized_size; /*basep->hidebutton_s->allocation.height;*/
-			*hide_orient = ORIENT_UP;
-		}
-		break;
+		return (panel->orient == PANEL_HORIZONTAL)
+			? ORIENT_LEFT : ORIENT_UP;
 	case BASEP_HIDDEN_RIGHT:
-		if (panel->orient == PANEL_HORIZONTAL) {
-			*w = pw_minimized_size; /*basep->hidebutton_w->allocation.width;*/
-			*hide_orient = ORIENT_RIGHT;
-		} else {
-			*h = pw_minimized_size; /*basep->hidebutton_n->allocation.height;*/
-			*hide_orient = ORIENT_DOWN;
-		}
-		break;
-	case BASEP_SHOWN:
-		g_assert_not_reached();
+		return (panel->orient == PANEL_HORIZONTAL)
+			? ORIENT_RIGHT : ORIENT_DOWN;
+	default:
+		g_assert_not_reached ();
 		break;
 	}
-
-	/*just sanity checking*/
-	if(*w<1) *w=1;
-	if(*h<1) *h=1;
-
+	g_assert_not_reached ();
+	return -1;
 }
-
+	
 void
 drawer_widget_open_drawer (DrawerWidget *drawer, BasePWidget *parentp)
 {
@@ -375,16 +351,14 @@ drawer_pos_get_pos(BasePWidget *basep,
 		switch(pos->orient) {
 		case ORIENT_UP:
 			*x = bx+(bw-width)/2;
-			*y = py - ((basep->state == BASEP_HIDDEN_RIGHT) 
-				   ? pw_minimized_size : height);
+			*y = py - height;
 			break;
 		case ORIENT_DOWN:
 			*x = bx+(bw-width)/2;
 			*y = py + ph;
 			break;
 		case ORIENT_LEFT:
-			*x = px - ((basep->state == BASEP_HIDDEN_RIGHT)
-				   ? pw_minimized_size : width);
+			*x = px - width;
 			*y = by+(bh-height)/2;
 			break;
 		case ORIENT_RIGHT:
@@ -393,9 +367,16 @@ drawer_pos_get_pos(BasePWidget *basep,
 			break;
 		}
 	}
-	
+}
+
+static void
+drawer_pos_get_hide_pos (BasePWidget *basep,
+			 PanelOrientType hide_orient,
+			 gint16 *x, gint16 *y,
+			 guint16 w, guint16 h)
+{
 	if (basep->state != BASEP_SHOWN ||
-	    pos->temp_hidden) {
+	    DRAWER_POS (basep->pos)->temp_hidden) {
 		*x = -ABS(*x) - 1;
 		*y = -ABS(*y) - 1;
 	}

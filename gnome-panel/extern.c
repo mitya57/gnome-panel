@@ -368,8 +368,8 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos, in
 	POA_GNOME_PanelSpot *panelspot_servant;
 
 	if(!cfgpath || !*cfgpath)
-		cfgpath = g_strconcat(old_panel_cfg_path,
-					 "Applet_Dummy/",NULL);
+		cfgpath = g_strconcat(PANEL_CONFIG_PATH,
+				      "Applet_Dummy/",NULL);
 	else
 		/*we will free this lateer*/
 		cfgpath = g_strdup(cfgpath);
@@ -473,7 +473,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 				*cfgpath = CORBA_string_dup(ext->cfg);
 				g_free(ext->cfg);
 				ext->cfg = NULL;
-				*globcfgpath = CORBA_string_dup(old_panel_cfg_path);
+				*globcfgpath = CORBA_string_dup(PANEL_CONFIG_PATH);
 				info->type = APPLET_EXTERN_RESERVED;
 				*wid=GDK_WINDOW_XWINDOW(socket->window);
 #ifdef PANEL_DEBUG
@@ -533,10 +533,10 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 		*cfgpath = NULL;
 		return CORBA_OBJECT_NIL;
 	}
-	p = g_strconcat(old_panel_cfg_path,"Applet_Dummy/",NULL);
+	p = g_strconcat(PANEL_CONFIG_PATH,"Applet_Dummy/",NULL);
 	*cfgpath = CORBA_string_dup(p);
 	g_free(p);
-	*globcfgpath = CORBA_string_dup(old_panel_cfg_path);
+	*globcfgpath = CORBA_string_dup (PANEL_CONFIG_PATH);
 
 	return CORBA_Object_duplicate(acc, ev);
 }
@@ -919,7 +919,7 @@ s_panelspot_done_session_save(POA_GNOME_PanelSpot *servant,
 	
 	ext = info->data;
 	
-	buf = g_strdup_printf("%sApplet_Config/Applet_%d/", panel_cfg_path, info->applet_id+1);
+	buf = g_strdup_printf("%sApplet_Config/Applet_%d/", PANEL_CONFIG_PATH, info->applet_id+1);
 	gnome_config_push_prefix(buf);
 	g_free(buf);
 

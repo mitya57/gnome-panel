@@ -17,9 +17,7 @@ static void border_pos_init (BorderPos *pos);
 static void border_pos_set_hidebuttons (BasePWidget *basep);
 static PanelOrientType border_pos_get_applet_orient (BasePWidget *basep);
 
-static void border_pos_get_hidesize (BasePWidget *basep,
-				     PanelOrientType *hide_orient,
-				     guint16 *w, guint16 *h);
+static PanelOrientType border_pos_get_hide_orient (BasePWidget *basep);
 
 static void border_pos_get_menu_pos (BasePWidget *basep,
 				     GtkWidget *widget,
@@ -92,8 +90,7 @@ border_pos_class_init (BorderPosClass *klass)
 	/* fill out the virtual funcs */
 	pos_class->set_hidebuttons = border_pos_set_hidebuttons;
 	pos_class->get_applet_orient = border_pos_get_applet_orient;
-	pos_class->get_size = NULL; /* the default is ok */
-	pos_class->get_hidesize = border_pos_get_hidesize;
+	pos_class->get_hide_orient = border_pos_get_hide_orient;
 	pos_class->get_menu_pos = border_pos_get_menu_pos;
 	pos_class->realize = border_pos_realize;
 	pos_class->north_clicked = pos_class->west_clicked = 
@@ -139,61 +136,34 @@ border_pos_get_applet_orient (BasePWidget *basep)
 	}
 }
 
-static void
-border_pos_get_hidesize (BasePWidget *basep, 
-			 PanelOrientType *hide_orient,
-			 guint16 *w, guint16 *h)
+static PanelOrientType 
+border_pos_get_hide_orient (BasePWidget *basep)
 {
-	BorderPos *pos = BORDER_POS(basep->pos);
-	PanelWidget *panel = PANEL_WIDGET(basep->panel);
+	BorderPos *pos = BORDER_POS (basep->pos);
+	PanelWidget *panel = PANEL_WIDGET (basep->panel);
 
 	switch (basep->state) {
 	case BASEP_AUTO_HIDDEN:
 		switch (pos->edge) {
-		case BORDER_TOP:
-			*h = pw_minimized_size;
-			*hide_orient = ORIENT_UP;
-			break;
-		case BORDER_RIGHT:
-			*w = pw_minimized_size;
-			*hide_orient = ORIENT_RIGHT;
-			break;
-		case BORDER_BOTTOM:
-			*h = pw_minimized_size;
-			*hide_orient = ORIENT_DOWN;
-			break;
-		case BORDER_LEFT:
-			*w = pw_minimized_size;
-			*hide_orient = ORIENT_LEFT;
-			break;
+		case BORDER_TOP: return ORIENT_UP;
+		case BORDER_RIGHT: return ORIENT_RIGHT;
+		case BORDER_LEFT: return ORIENT_LEFT;
+		case BORDER_BOTTOM: return ORIENT_DOWN;
 		}
+		g_assert_not_reached ();
 		break;
 	case BASEP_HIDDEN_LEFT:
-		if (panel->orient == PANEL_HORIZONTAL) {
-			*w = basep->hidebutton_w->allocation.width;
-			*hide_orient = ORIENT_LEFT;
-		} else {
-			*h = basep->hidebutton_n->allocation.height;
-			*hide_orient = ORIENT_UP;
-		}
-		break;
+		return (panel->orient == PANEL_HORIZONTAL)
+			? ORIENT_LEFT : ORIENT_UP;
 	case BASEP_HIDDEN_RIGHT:
-		if (panel->orient == PANEL_HORIZONTAL) {
-			*w = basep->hidebutton_e->allocation.width;
-			*hide_orient = ORIENT_RIGHT;
-		} else {
-			*h = basep->hidebutton_s->allocation.height;
-			*hide_orient = ORIENT_DOWN;
-		}
-		break;
-	case BASEP_SHOWN:
-		g_assert_not_reached();
+		return (panel->orient == PANEL_HORIZONTAL)
+			? ORIENT_RIGHT : ORIENT_DOWN;
+	default:
+		g_assert_not_reached ();
 		break;
 	}
-
-	/*just sanity checking*/
-	if(*w<1) *w=1;
-	if(*h<1) *h=1;
+	g_assert_not_reached ();
+	return ORIENT_LEFT;
 }
 
 static void
@@ -284,9 +254,6 @@ border_widget_change_params (BorderWidget *border,
 static int
 border_pos_show_hide_left (BasePWidget *basep)
 {
-	if (basep->moving) 
-		return FALSE;
-
 	switch (basep->state) {
 	case BASEP_SHOWN:
 		basep_widget_explicit_hide (basep, BASEP_HIDDEN_LEFT);
@@ -298,6 +265,7 @@ border_pos_show_hide_left (BasePWidget *basep)
 		g_warning (_("weird: north/west clicked while auto hidden"));
 		break;
 	case BASEP_HIDDEN_LEFT:
+	case BASEP_MOVING:
 		g_assert_not_reached ();
 		break;
 	}
@@ -308,9 +276,6 @@ border_pos_show_hide_left (BasePWidget *basep)
 static int
 border_pos_show_hide_right (BasePWidget *basep)
 {
-	if (basep->moving) 
-		return FALSE;
-
 	switch (basep->state) {
 	case BASEP_SHOWN:
 		basep_widget_explicit_hide (basep, BASEP_HIDDEN_RIGHT);
@@ -321,6 +286,7 @@ border_pos_show_hide_right (BasePWidget *basep)
 	case BASEP_AUTO_HIDDEN:
 		g_warning (_("weird: south/east clicked while auto hidden"));
 		break;
+	case BASEP_MOVING:
 	case BASEP_HIDDEN_RIGHT:
 		g_assert_not_reached ();
 		break;

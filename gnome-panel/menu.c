@@ -3563,7 +3563,7 @@ menu_button_pressed(GtkWidget *widget, gpointer data)
 	  done with the menu */
 	if(IS_BASEP_WIDGET(wpanel)) {
 		BASEP_WIDGET(wpanel)->autohide_inhibit = TRUE;
-		/*basep_widget__autohide(BASEP_WIDGET(wpanel));*/
+		basep_widget_autohide(BASEP_WIDGET(wpanel));
 	}
 
 	BUTTON_WIDGET(menu->button)->ignore_leave = TRUE;

@@ -225,12 +225,15 @@ main(int argc, char **argv)
 
 	gnome_client_set_priority(client,40);
 
+#if 0
 	if (gnome_client_get_flags(client) & GNOME_CLIENT_RESTORED)
 		old_panel_cfg_path = g_strdup (gnome_client_get_config_prefix (client));
 	else
 		old_panel_cfg_path = g_strdup ("/panel.d/default/");
+#endif
+	
+	gnome_client_set_global_config_prefix (client, PANEL_CONFIG_PATH);
 
-	gnome_client_set_global_config_prefix (client, "/panel.d/Session/");
 	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
 			    GTK_SIGNAL_FUNC (panel_session_save), NULL);
 	gtk_signal_connect (GTK_OBJECT (client), "die",

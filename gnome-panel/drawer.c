@@ -188,6 +188,9 @@ drawer_click(GtkWidget *w, Drawer *drawer)
 	case BASEP_HIDDEN_RIGHT:
 		drawer_widget_open_drawer (drawerw, BASEP_WIDGET (panelw));
 		break;
+	case BASEP_MOVING:
+		g_assert_not_reached ();
+		break;
 	}
 }
 
@@ -210,11 +213,13 @@ enter_notify_drawer(GtkWidget *widget, GdkEventCrossing *event, gpointer data)
 
 	if (!gnome_win_hints_wm_exists())
 		gdk_window_raise(drawer->drawer->window);
+
+	if (basep->state == BASEP_MOVING)
+		return FALSE;
 	
 	if ((basep->state != BASEP_AUTO_HIDDEN) ||
 	    (event->detail == GDK_NOTIFY_INFERIOR) ||
-	    (basep->mode != BASEP_AUTO_HIDE) ||
-	    basep->moving)
+	    (basep->mode != BASEP_AUTO_HIDE))
 		return FALSE;
 
 	if (basep->leave_notify_timer_tag != 0) {

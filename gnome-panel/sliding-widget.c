@@ -226,28 +226,20 @@ sliding_pos_get_pos (BasePWidget *basep, gint16 *x, gint16 *y,
 
 	switch (BORDER_POS (basep->pos)->edge) {
 	case BORDER_BOTTOM:
-		*y = gdk_screen_height () -
-			((basep->state == BASEP_AUTO_HIDDEN)
-			 ? pw_minimized_size : h);
+		*y = gdk_screen_height () - h;
 		/* fall through */
 	case BORDER_TOP:
 		*x = (pos->anchor == SLIDING_ANCHOR_LEFT)
 			? pos->offset
 			: gdk_screen_width () - pos->offset - w;
-		if (basep->state == BASEP_HIDDEN_RIGHT)
-			*x += w - basep->hidebutton_e->allocation.width;
 		break;
 	case BORDER_RIGHT:
-		*x = gdk_screen_width () -
-			((basep->state == BASEP_AUTO_HIDDEN)
-			 ? pw_minimized_size : w);
+		*x = gdk_screen_width () - w;
                 /* fall through */
 	case BORDER_LEFT:
 		*y = (pos->anchor == SLIDING_ANCHOR_LEFT)
 			? pos->offset
 			: gdk_screen_height () - pos->offset - h;
-		if (basep->state == BASEP_HIDDEN_RIGHT)
-			*y += h - basep->hidebutton_s->allocation.height;
 		break;
 	}
 }

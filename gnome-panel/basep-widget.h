@@ -36,9 +36,10 @@ typedef enum {
 
 typedef enum {
         BASEP_SHOWN,
+	BASEP_MOVING,
+	BASEP_AUTO_HIDDEN,
 	BASEP_HIDDEN_LEFT,
-	BASEP_HIDDEN_RIGHT,
-	BASEP_AUTO_HIDDEN
+	BASEP_HIDDEN_RIGHT
 } BasePState;
 
 struct _BasePWidget
@@ -72,8 +73,9 @@ struct _BasePWidget
 	int                     drawers_open;
 
 	gboolean                request_cube;
-	gboolean                moving;
 	gboolean                keep_in_screen;
+
+	guint32                 autohide_complete;
 };
 
 struct _BasePWidgetClass
@@ -121,9 +123,16 @@ struct _BasePPosClass {
 	void (*get_size)                  (BasePWidget *basep,
 					   guint16 *w, guint16 *h);
 
-	void (*get_hidesize)              (BasePWidget *basep,
-					   PanelOrientType *hide_orient,
-					   guint16 *w, guint16 *h);
+	PanelOrientType (*get_hide_orient) (BasePWidget *basep);
+
+	void (*get_hide_size)              (BasePWidget *basep,
+					    PanelOrientType hide_orient,
+					    guint16 *w, guint16 *h);
+
+	void (*get_hide_pos)               (BasePWidget *basep,
+					    PanelOrientType hide_orient,
+					    gint16 *x, gint16 *y,
+					    guint16 w, guint16 h);
 
 	void (*get_menu_pos)              (BasePWidget *basep,
 					   GtkWidget *widget,
@@ -230,8 +239,14 @@ void            basep_widget_get_pos           (BasePWidget *basep,
 void            basep_widget_get_size          (BasePWidget *basep,
 						guint16 *w, guint16 *h);
 
-void            basep_widget_get_hidesize      (BasePWidget *basep,
-						PanelOrientType *hide_orient,
+PanelOrientType basep_widget_get_hide_orient   (BasePWidget *basep);
+
+void            basep_widget_get_hide_size      (BasePWidget *basep,
+						 PanelOrientType hide_orient,
+						 guint16 *w, guint16 *h);
+
+void            basep_widget_get_hide_pos      (BasePWidget *basep,
+						PanelOrientType hide_orient,
 						guint16 *w, guint16 *h);
 
 void            basep_widget_pre_convert_hook (BasePWidget *basep);

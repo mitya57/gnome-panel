@@ -1,5 +1,18 @@
 1999-08-18  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
+	* *.c: store config in ~/.gnome/panel.d/default/ instead of
+	~/.gnome/panel.d/Session-asd09n09sda/  (don't know if this is
+	done right though)
+	
+	* *-widget.c: general fixes to clean up resizing when hidden
+
+Wed Aug 18 10:54:31 1999  George Lebl  <jirka@5z.com>
+
+	* basep-widget.c: don't allow closing the window with a window
+	  manager
+
+1999-08-18  Jacob Berkman  <jberkman@andrew.cmu.edu>
+
 	* panel_config.c (update_config_back): fix stupid typo by me
 
 	* panel-widget.c (panel_widget_new): g_strdup (NULL) == NULL
