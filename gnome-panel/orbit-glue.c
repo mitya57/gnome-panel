@@ -16,30 +16,31 @@ extern int globals_to_sync;
 extern int need_complete_save;
 
 static CORBA_short
-server_applet_request_id(POA_GNOME_Panel *servant,
-			 CORBA_char *goad_id,
-			 CORBA_char ** cfgpath,
-			 CORBA_char ** globcfgpath,
-			 CORBA_unsigned_long* wid,
-			 CORBA_Environment *ev);
+server_add_applet(POA_GNOME_Panel *servant,
+		  CORBA_Applet panel_applet,
+		  CORBA_char *goad_id,
+		  CORBA_char ** cfgpath,
+		  CORBA_char ** globcfgpath,
+		  CORBA_unsigned_long* wid,
+		  CORBA_Environment *ev);
 
 static void
-server_applet_register(POA_GNOME_Panel *servant,
-		       CORBA_Object obj,
-		       CORBA_short applet_id,
-		       CORBA_char *goad_id,
-		       CORBA_char *goad_ids,
-		       CORBA_Environment *ev);
+server_quit(POA_GNOME_Panel *servant,
+	    CORBA_Environment *ev);
 
 static void
-server_applet_abort_id(POA_GNOME_Panel *servant,
-		       CORBA_short applet_id,
-		       CORBA_Environment *ev);
+server_register(POA_GNOME_PanelSpot *servant,
+		CORBA_Environment *ev);
 
 static void
-server_applet_remove_from_panel(POA_GNOME_Panel *servant,
-				CORBA_short applet_id,
-				CORBA_Environment *ev);
+server_unregister(POA_GNOME_Panel *servant,
+		  CORBA_Environment *ev);
+
+static void
+server_abort_load(POA_GNOME_PanelSpot *servant,
+		  CORBA_Environment *ev);
+
+/************************/
 
 static CORBA_short
 server_applet_get_panel(POA_GNOME_Panel *servant,
@@ -104,10 +105,6 @@ static void
 server_sync_config(POA_GNOME_Panel *servant,
 		   CORBA_short applet_id,
 		   CORBA_Environment *ev);
-
-static void
-server_quit(POA_GNOME_Panel *servant,
-	    CORBA_Environment *ev);
 
 static PortableServer_ServantBase__epv base_epv = {
   NULL, /* _private */

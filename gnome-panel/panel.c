@@ -227,6 +227,9 @@ panel_realize(GtkWidget *widget, gpointer data)
 		snapped_widget_enable_buttons(SNAPPED_WIDGET(widget));
 	else if(IS_CORNER_WIDGET(widget))
 		corner_widget_enable_buttons(CORNER_WIDGET(widget));
+	/*FIXME: this seems to fix the panel size problems on startup
+	  (from a report) but I don't think it's right*/
+	gtk_widget_queue_resize(GTK_WIDGET(widget));
 }
 
 /*we call this recursively*/
