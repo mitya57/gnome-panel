@@ -204,7 +204,7 @@ extern_start_new_goad_id(Extern *e)
         CORBA_Environment ev;
 	if(!goad_id_starting) {
 		CORBA_exception_init(&ev);
-		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_NEW_ONLY|GOAD_ACTIVATE_ASYNC, NULL),&ev);
+		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_ASYNC, NULL),&ev);
 		CORBA_exception_free(&ev);
 		goad_id_starting = g_strdup(e->goad_id);
 	} else {
@@ -331,6 +331,7 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 	PortableServer_POA_activate_object_with_id(thepoa, &objid, panelspot_servant, &ev);
 	g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 
+	ext->pspot = CORBA_OBJECT_NIL; /*will be filled in during add_applet*/
 	ext->applet = CORBA_OBJECT_NIL;
 	ext->goad_id = g_strdup(goad_id);
 	ext->cfg = cfgpath;
@@ -396,7 +397,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 				g_return_val_if_fail(GTK_IS_SOCKET(socket),
 						     NULL);
 
-				ext->applet = panel_applet;
+				ext->applet = CORBA_Object_duplicate(panel_applet, ev);
 				*cfgpath = CORBA_string_dup(ext->cfg);
 				g_free(ext->cfg);
 				ext->cfg = NULL;
@@ -406,6 +407,8 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 
 				panelspot_servant = (POA_GNOME_PanelSpot *)ext;
 				acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, ev);
+				g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
+				ext->pspot = CORBA_Object_duplicate(acc, ev);
 				g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
 
 				return acc;
@@ -429,7 +432,11 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 	acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, ev);
 	g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
 
-	ext->applet = panel_applet;
+	ext->pspot = CORBA_Object_duplicate(acc, ev);
+
+	g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
+
+	ext->applet = CORBA_Object_duplicate(panel_applet, ev);
 	ext->goad_id = g_strdup(goad_id);
 	ext->cfg = NULL;
 	extern_applets = g_list_prepend(extern_applets,ext);

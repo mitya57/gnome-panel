@@ -13,6 +13,7 @@ BEGIN_GNOME_DECLS
 typedef struct _Extern Extern;
 struct _Extern {
 	POA_GNOME_PanelSpot servant;
+	GNOME_PanelSpot pspot;
         GNOME_Applet applet;
 
 	char *goad_id;
