@@ -122,7 +122,7 @@ update_config_back(PanelWidget *pw)
 
 	if (toggle)
 		gtk_toggle_button_set_active(
-			GTK_TOGGLE_BUTTON(ppc->pix), TRUE);
+			GTK_TOGGLE_BUTTON(toggle), TRUE);
 }
 
 void

@@ -1,5 +1,9 @@
 1999-08-18  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
+	* panel_config.c (update_config_back): fix stupid typo by me
+
+	* panel-widget.c (panel_widget_new): g_strdup (NULL) == NULL
+
 	* session.c (apply_global_config): call the new function
 
 	* basep-widget.c (basep_update_frame): added function so that
