@@ -52,7 +52,7 @@ discard_session (char *id)
 {
 	char *sess;
 
-	sess = g_copy_strings (gnome_user_dir,"/panel.d/Session-", id, NULL);
+	sess = g_strconcat (gnome_user_dir,"/panel.d/Session-", id, NULL);
 	remove_directory(sess,FALSE);
 	g_free (sess);
 
@@ -122,7 +122,6 @@ try_config_sync(gpointer data)
 int
 main(int argc, char **argv)
 {
-	char buf[256];
 	CORBA_ORB orb;
 	CORBA_Environment ev;
 	
@@ -161,7 +160,7 @@ main(int argc, char **argv)
 
 		if(session_id) {
 			g_free(old_panel_cfg_path);
-			old_panel_cfg_path = g_copy_strings("/panel.d/Session-",
+			old_panel_cfg_path = g_strconcat("/panel.d/Session-",
 							    session_id,"/",
 							    NULL);
 		}
