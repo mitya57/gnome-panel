@@ -55,7 +55,6 @@ struct _PanelAppletFramePrivate {
 
 	gchar                          *iid;
 	gboolean			moving_focus_out;
-	gboolean			clean_remove;
 
 	GtkAllocation                   child_allocation;
 	GdkRectangle                    handle_rect;
@@ -116,7 +115,9 @@ popup_handle_remove (BonoboUIComponent *uic,
 		     PanelAppletFrame  *frame,
 		     const gchar       *verbname)
 {
-	AppletInfo *info = frame->priv->applet_info;
+	AppletInfo *info;
+
+	info = frame->priv->applet_info;
 	frame->priv->applet_info = NULL;
 
 	panel_applet_clean (info, TRUE);
@@ -285,6 +286,14 @@ panel_applet_frame_get_background_string (PanelAppletFrame *frame,
 	case PANEL_BACK_PIXMAP: {
 		GdkNativeWindow pixmap_xid;
 
+		/* If we don't actually have a pixmap background,
+		 * then don't force the applet to copy from our
+		 * window.
+		 */
+		if (!panel->backpixmap)
+			return panel_applet_frame_get_background_string (
+					frame, panel, PANEL_BACK_NONE);
+
 		pixmap_xid = gdk_x11_drawable_get_xid (
 				GDK_DRAWABLE (GTK_WIDGET (panel)->window));
 
@@ -336,19 +345,6 @@ panel_applet_frame_set_info (PanelAppletFrame *frame,
 			     AppletInfo       *info)
 {
 	frame->priv->applet_info = info;
-}
-
-void
-panel_applet_frame_set_clean_remove (PanelAppletFrame *frame,
-				     gboolean          clean_remove)
-{
-	frame->priv->clean_remove = clean_remove;
-}
-
-gboolean
-panel_applet_frame_get_clean_remove (PanelAppletFrame *frame)
-{
-	return frame->priv->clean_remove;
 }
 
 static void
@@ -776,7 +772,6 @@ panel_applet_frame_instance_init (PanelAppletFrame      *frame,
 	frame->priv->orient           = PANEL_ORIENT_UP;
 	frame->priv->applet_info      = NULL;
 	frame->priv->moving_focus_out = FALSE;
-	frame->priv->clean_remove     = FALSE;
 }
 
 GType

@@ -102,17 +102,24 @@ struct _ShowItemMenu {
 };
 
 typedef struct {
-	GtkWidget *pixmap;
-	char *stock_id;
-	char *image;
-	char *fallback_image;
-	gboolean force_image;
-	guint size;
+	GtkWidget  *pixmap;
+	const char *stock_id;
+	char       *image;
+	char       *fallback_image;
+	gboolean    force_image;
+	guint       size;
 } IconToLoad;
+
+typedef struct {
+	GtkWidget  *image;
+	const char *stock_id;
+	GdkPixbuf  *pixbuf;
+} IconToAdd;
 
 static guint load_icons_id = 0;
 static GHashTable *loaded_icons = NULL;
 static GList *icons_to_load = NULL;
+static GList *icons_to_add = NULL;
 
 static GSList *image_menu_items = NULL;
 
@@ -752,7 +759,6 @@ icon_to_load_free (IconToLoad *icon)
 		return;
 
 	g_object_unref (icon->pixmap); icon->pixmap = NULL;
-	g_free (icon->stock_id);       icon->stock_id = NULL;
 	g_free (icon->image);          icon->image = NULL;
 	g_free (icon->fallback_image); icon->fallback_image = NULL;
 	g_free (icon);
@@ -769,11 +775,11 @@ icon_to_load_copy (IconToLoad *icon)
 	retval = g_new0 (IconToLoad, 1);
 
 	retval->pixmap         = g_object_ref (icon->pixmap);
-	retval->stock_id       = g_strdup (icon->stock_id);
 	retval->image          = g_strdup (icon->image);
 	retval->fallback_image = g_strdup (icon->fallback_image);
 	retval->force_image    = icon->force_image;
 	retval->size           = icon->size;
+	retval->stock_id       = icon->stock_id;
 
 	return retval;
 }
@@ -878,6 +884,33 @@ panel_make_menu_icon (const char *icon,
 	return pb;
 }
 
+static void
+do_icons_to_add (void)
+{
+	while (icons_to_add) {
+		IconToAdd *icon_to_add = icons_to_add->data;
+
+		icons_to_add = g_list_delete_link (icons_to_add, icons_to_add);
+
+		if (icon_to_add->stock_id)
+			gtk_image_set_from_stock (
+				GTK_IMAGE (icon_to_add->image),
+				icon_to_add->stock_id,
+				panel_menu_icon_get_size ());
+		else {
+			g_assert (icon_to_add->pixbuf);
+
+			gtk_image_set_from_pixbuf (
+				GTK_IMAGE (icon_to_add->image),
+				icon_to_add->pixbuf);
+
+			g_object_unref (icon_to_add->pixbuf);
+		}
+
+		g_free (icon_to_add);
+	}
+}
+
 static gboolean
 load_icons_handler (gpointer data)
 {
@@ -888,6 +921,8 @@ load_icons_handler_again:
 
 	if (!icons_to_load) {
 		load_icons_id = 0;
+		do_icons_to_add ();
+
 		return FALSE;
 	}
 
@@ -904,12 +939,17 @@ load_icons_handler_again:
 		goto load_icons_handler_again;
 	}
 
-	if (icon->stock_id)
-		gtk_image_set_from_stock (GTK_IMAGE (icon->pixmap),
-					  icon->stock_id,
-					  panel_menu_icon_get_size ());
+	if (icon->stock_id) {
+		IconToAdd *icon_to_add;
 
-	else {
+		icon_to_add           = g_new (IconToAdd, 1);
+		icon_to_add->image    = icon->pixmap;
+		icon_to_add->stock_id = icon->stock_id;
+		icon_to_add->pixbuf   = NULL;
+
+		icons_to_add = g_list_prepend (icons_to_add, icon_to_add);
+	} else {
+		IconToAdd *icon_to_add;
 		GdkPixbuf *pb;
 
 		pb = panel_make_menu_icon (icon->image,
@@ -927,9 +967,13 @@ load_icons_handler_again:
 				 * this is fun, don't go back to main loop */
 				goto load_icons_handler_again;
 		}
-	
-		gtk_image_set_from_pixbuf (GTK_IMAGE (icon->pixmap), pb);
-		g_object_unref (pb);
+
+		icon_to_add           = g_new (IconToAdd, 1);
+		icon_to_add->image    = icon->pixmap;
+		icon_to_add->stock_id = NULL;
+		icon_to_add->pixbuf   = pb;
+
+		icons_to_add = g_list_prepend (icons_to_add, icon_to_add);
 	}
 
 	icon_to_load_free (icon);
@@ -944,11 +988,8 @@ load_icons_handler_again:
 }
 
 static void
-add_new_app_to_menu (GtkWidget    *widget,
-		     ShowItemMenu *sim)
+add_new_app_to_menu (GtkWidget *widget, ShowItemMenu *sim)
 {
-	g_return_if_fail (sim->mf != NULL);
-
 	panel_new_launcher (sim->mf->menudir,
 			    menuitem_to_screen (sim->menuitem));
 }
@@ -1567,6 +1608,13 @@ drag_end_menu_cb (GtkWidget *widget, GdkDragContext     *context)
    */
   parent = widget->parent;
   xgrab_shell = NULL;
+
+  /* FIXME: workaround for a possible gtk+ bug
+   *    See bugs #92085(gtk+) and #91184(panel) for details.
+   */
+  if (global_config.tooltips_enabled)
+    gtk_tooltips_enable (panel_tooltips);
+
   while (parent)
     {
       gboolean viewable = TRUE;
@@ -1612,15 +1660,26 @@ drag_end_menu_cb (GtkWidget *widget, GdkDragContext     *context)
 }
 
 static void  
-drag_data_get_menu_cb (GtkWidget *widget, GdkDragContext     *context,
-		       GtkSelectionData   *selection_data, guint info,
-		       guint time, char *item_loc)
+drag_data_get_menu_cb (GtkWidget        *widget,
+		       GdkDragContext   *context,
+		       GtkSelectionData *selection_data,
+		       guint             info,
+		       guint             time,
+		       char             *item_loc)
 {
-	gchar *uri_list = g_strconcat (item_loc, "\r\n", NULL);
+	char *uri_list;
+
+	uri_list = g_strconcat (item_loc, "\r\n", NULL);
+
 	gtk_selection_data_set (selection_data,
 				selection_data->target, 8, (guchar *)uri_list,
 				strlen (uri_list));
 	g_free (uri_list);
+
+	/* FIXME: workaround for a possible gtk+ bug
+	 *    See bugs #92085(gtk+) and #91184(panel) for details.
+	 */
+	gtk_tooltips_disable (panel_tooltips);
 }
 
 static void  
@@ -2963,13 +3022,49 @@ create_add_launcher_menu (GtkWidget *menu, gboolean fake_submenus)
 }
 
 static void
-remove_panel_accept (GtkWidget *w, int response, GtkWidget *panelw)
+remove_panel_accept (GtkWidget *w,
+		     int        response,
+		     GtkWidget *panel)
 {
 	if (response == GTK_RESPONSE_OK) {
+
+		/* Destroy the drawers button before destroying the drawer */
+		if (DRAWER_IS_WIDGET (panel)) {
+			PanelWidget *panel_widget = NULL;
+
+			if (BASEP_IS_WIDGET (panel))
+				panel_widget = PANEL_WIDGET (BASEP_WIDGET (panel)->panel);
+
+			else if (FOOBAR_IS_WIDGET (panel))
+				panel_widget = PANEL_WIDGET (FOOBAR_WIDGET (panel)->panel);
+
+			if (panel_widget && panel_widget->master_widget) {
+				AppletInfo *info;
+
+				info = g_object_get_data (
+						G_OBJECT (panel_widget->master_widget),
+						"applet_info");
+				((Drawer *) info->data)->drawer = NULL;
+				panel_applet_clean (info, TRUE);
+
+				g_assert (panel_widget->master_widget == NULL);
+			}
+		}
+
 		panel_push_window_busy (w);
-		gtk_widget_destroy (panelw);
+
+		if (BASEP_IS_WIDGET (panel))
+			panel_remove_from_gconf (
+				PANEL_WIDGET (BASEP_WIDGET (panel)->panel));
+
+		else if (FOOBAR_IS_WIDGET (panel))
+			panel_remove_from_gconf (
+				PANEL_WIDGET (FOOBAR_WIDGET (panel)->panel));
+
+		gtk_widget_destroy (panel);
 		panel_pop_window_busy (w);
 	}
+
 	gtk_widget_destroy (w);
 }
 
@@ -4176,7 +4271,7 @@ panel_load_menu_image_deferred_with_size (GtkWidget  *image_menu_item,
   icon->pixmap = g_object_ref (G_OBJECT (image));
   gtk_object_sink (GTK_OBJECT (image));
 
-  icon->stock_id = g_strdup (stock_id);
+  icon->stock_id = stock_id;
   icon->image = g_strdup (image_filename);
   icon->fallback_image = g_strdup (fallback_image_filename);
   icon->force_image = force_image;

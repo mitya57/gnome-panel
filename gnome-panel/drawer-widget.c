@@ -262,8 +262,8 @@ drawer_pos_get_pos(BasePWidget *basep,
 
 	/* we are shown but we are hidden, life is full of ironies */
 	if (pos->temp_hidden) {
-		*x = -width - 1;
-		*y = -height - 1;
+		*x = -ABS (width) - 1;
+		*y = -ABS (height) - 1;
 		return;
 	}
 
@@ -510,6 +510,5 @@ drawer_widget_new (char          *panel_id,
 				stretch_pixmap_bg,
 				rotate_pixmap_bg,
 				back_color);
-	GTK_WIDGET_UNSET_FLAGS (BASEP_WIDGET (drawer)->panel, GTK_CAN_FOCUS);
 	return GTK_WIDGET (drawer);
 }

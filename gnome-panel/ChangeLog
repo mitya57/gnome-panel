@@ -1,3 +1,176 @@
+2002-10-04  Mark McLoughlin  <mark@skynet.ie>
+
+	* menu-fentry.c: (fr_read_dir): if there's no
+	.directory then use the uri basename as the
+	fullname. Fixes new folder not being sorted
+	correctly in #91810.
+
+	* menu-fentry.h: kill fr_force_reread.
+
+2002-10-03  Alex Graveley  <alex@ximian.com>
+
+	* menu.c (add_new_app_to_menu): The user data passed here is a
+	ShowItemMenu not a uri.  Fixes creating launchers from the panel.
+
+2002-09-19  Arvind Samptur <arvind.samptur@wipro.com>
+	* gnome-panel-screenshot.c: waitpid could fail
+	due to a interuptted system call, loop till you
+	succeed. Fixes #92651
+
+2002-09-19  Mark McLoughlin  <mark@skynet.ie>
+
+	* launcher.c: Change the launchers icon when the
+	icon loader's 'changed' signal is emitted. Based
+	on patch from Rajkumar Sivasamy <rajkumar.siva@wpiro.com>.
+	Fixes #92598.
+
+2002-09-03 Padraig O'Briain  <padraig.obriain@sun.com>
+
+	* basep-widget.[ch]:
+	Add action signal "popup-panel-menu"; bind it to Ctrl+F10; add
+	basep_widget_popup_panel_menu() to pop up the panel's menu.
+
+	* foobar-widget.[ch]:
+	Add action signal "popup-panel-menu"; bind it to Ctrl+F10; add
+	foobar_widget_popup_panel_menu() to pop up the panel's menu.
+
+	* panel-widget.[ch]:
+	Remove action signal "popup-panel-menu".
+
+	These changes fix bug #92134, cause Ctrl+F10 to display panel's menu
+	when focus is on a show/hide button.
+
+2002-09-03 Padraig O'Briain  <padraig.obriain@sun.com>
+
+	* basep-widget.[ch]:
+	Add action signal "popup-panel-menu"; bind it to Ctrl+F10; add
+	basep_widget_popup_panel_menu() to pop up the panel's menu.
+
+	* foobar-widget.[ch]:
+	Add action signal "popup-panel-menu"; bind it to Ctrl+F10; add
+	foobar_widget_popup_panel_menu() to pop up the panel's menu.
+
+	* panel-widget.[ch]:
+	Remove action signal "popup-panel-menu".
+
+	These changes fix bug #92134, cause Ctrl+F10 to display panel's menu
+	when focus is on a show/hide button.
+
+2002-09-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* menu.c:
+	(icon_to_load_copy), (icon_to_load_free),
+	(panel_load_menu_image_deferred_with_size): don't
+	bother strdup-ing the stock ids.
+
+2002-09-12  Soeren Sandmann  <sandmann@daimi.au.dk>
+
+	* menu.c:
+	(do_icons_to_add), (load_icons_handler):
+	Delay actually setting the icon on the GtkImage
+	until we have loaded all the icons. This fixes
+	a nasty performance issue where the menu's
+	allocation was being continually recalculated as
+	each icon was set.
+
+2002-09-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* drawer-widget.c: (drawer_pos_get_pos):
+	* panel.c: (state_hide_foreach): use the
+	absolute value for the width and height when
+	hidding the drawer in case the width or height
+	is negative. Should fix #91636.
+
+2002-09-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-config.[ch]:
+	(update_config_back): just set the history on the
+	option menu, don't activate the menu item. Also,
+	just use the PanelBackType enum for the history ids.
+	(background_type_changed): rename from set_back() and
+	kill the crack.
+	(background_page): fix broken use of menuitem's 'activate'
+	signal instead of the option menu's 'changed' signal.
+	Fixes #91378.
+
+2002-08-21  Havoc Pennington  <hp@pobox.com>
+
+	* gnome-run.c (show_run_dialog): remove GTK_WIN_POS_MOUSE, it's a
+	load of crack
+	(browse): ditto
+
+2002-09-11  Arvind Samptur <arvind.samptur@wipro.com>
+
+	* gnome-panel-screenshot.c: Avoid the defunct process
+	by doing waitpid at  the point you fork. Fixes #92651.
+
+2002-08-28  Arvind Samptur <arvind.samptur@wipro.com>
+
+	* menu.c (drag_data_get_menu_cb): disable the tooltips
+	when the drag is on.
+	(drag_end_menu_cb): enable the tooltips once the drop is
+	done. Fixes #91884
+
+2002-09-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-applet-frame.c:
+	(panel_applet_frame_get_background_string): if we haven't
+	actually rendered a pixmap background then just pretend
+	this is the default background. Fixes #91198.
+
+2002-09-12  Mark McLoughlin  <mark@skynet.ie>
+
+	Fix #90664 by giving focus to the PanelWidget
+	in a newly created drawer.
+	Patch from Padraig O'Briain.
+
+	* drawer-widget.c: (drawer_widget_new): allow the
+	PanelWidget to be focused.
+
+	* drawer.c: (load_drawer_applet): set the focus on
+	the PanelWidget.
+
+2002-09-12  Mark McLoughlin  <mark@skynet.ie>
+
+	Fixes #90317 by explicitly destroying panels on receipt
+	of a Die from the session manager rather than just
+	exiting the mainloop. Apparently embedded out of process
+	embedded windows don't cope with this too well - thanks
+	to Owen for pointing this fact out.
+
+	* applet.c:
+	(panel_applet_clean): do anything required to effect
+	permanent removal of the applet here.
+	(applet_idle_remove): kill set_clean_remove stuff.
+	(panel_applet_destroy): only clear up our data and refs
+	here rather than permanently removing the applet.
+
+	* basep-widget.c: remove some bogus whitepsace.
+
+	* menu.c: (remove_panel_accept): if the panel is a drawer,
+	then also remove the associated applet. Permanently remove
+	the panel here.
+
+	* panel-applet-frame.[ch]:
+	(panel_applet_set_clean_remove),
+	(panel_applet_get_clean_remove), (popup_handle_remove),
+	(panel_applet_frame_instance_init): kill unused 'clean_remove'
+	stuff. No idea how/why that got there.
+
+	* panel-widget.c:
+	(panel_widget_finalize): don't remove the panel from the
+	global list again.
+	(panel_widget_destroy): don't permanently remove the panel
+	from here.
+	* panel.c:
+
+	(panel_remove_applets): kill 'clean_remove' stuff.
+	(panel_destroy): don't remove the applet associated with
+	the drawer here.
+
+	* session.c: (panel_session_die): iterate over a copy of
+	the global list of panels and destroy them.
+
 2002-09-06  Mark McLoughlin  <mark@skynet.ie>
 
 	* gnome-panel-screenshot.c: (take_window_shot), (main):

@@ -1,3 +1,69 @@
+2002-10-04  Pauli Virtanen <pauli.virtanen@hut.fi>
+
+	* fi.po: Updated Finnish translation.
+
+2002-09-30  Stanislav Brabec  <sbrabec@suse.cz>
+
+	* cs.po: Updated Czech translation from Michal Bukovjan
+	<bukm@centrum.cz>.
+
+2002-09-29  Zbigniew Chyla  <cyba@gnome.pl>
+
+	* pl.po: Updated Polish translation by
+	GNOME PL Team <translators@gnome.pl>.
+
+2002-09-26  Christian Neumair  <chris@gnome-de.org>
+
+	* de.po: Updated German translation.
+
+2002-09-26  Stanislav Brabec  <sbrabec@suse.cz>
+
+	* cs.po: Updated Czech translation from Miloslav Trmac
+	<mitr@volny.cz>.
+
+2002-09-25  Mark McLoughlin  <mark@skynet.ie>
+
+	* POTFILES.in: add gnome-panel/panel-stock-icons.c.
+
+	* *.po: run intltool-update over all these.
+
+2002-09-25  Abel Cheung  <maddog@linux.org.hk>
+
+	* zh_TW.po: Updated traditional Chinese translation.
+
+2002-09-21 Hasbullah Bin Pit <sebol@ikhlas.com>
+
+        * ms.po: fixed date format.
+
+2002-09-20  Pablo Saratxaga  <pablo@mandrakesoft.com>
+
+	* vi.po: Updated Vietnamese file
+
+2002-09-13  He Qiangqiang  <carton@linux.net.cn>
+
+	* zh_CN.po: Updated Simplified Chinese translation.
+
+2002-09-13  Christian Rose  <menthos@menthos.com>
+
+	* sv.po: Minor fixes Swedish translation.
+
+2002-09-10  Christian Meyer  <chrisime@gnome.org>
+
+	* de.po: Fixed German translation.
+
+2002-09-09  Takayuki KUSANO  <AE5T-KSN@asahi-net.or.jp>
+
+	* ja.po: Updated Japanese translation from
+	Ryoichi INAGAKI <ryo1@bc.wakwak.com>.
+
+2002-09-06  Marius Andreiana <mandreiana@yahoo.com>
+
+        * ro.po: updated
+
+2002-09-05  Pablo Gonzalo del Campo <pablodc@bigfoot.com>
+
+        * es.po: Updated Spanish translation from Juan Manuel Garcia Molina
+
 2002-09-04  Jordi Mallach  <jordi@sindominio.net>
 
 	* ca.po: Fixes.

@@ -82,7 +82,6 @@ static void panel_widget_free_move_applet   (PanelWidget      *panel,
 static void panel_widget_tab_move           (PanelWidget      *panel,
                                              gboolean          next);
 static void panel_widget_end_move           (PanelWidget      *panel);
-static gboolean panel_widget_popup_panel_menu   (PanelWidget      *panel);
 static gboolean panel_widget_real_focus     (GtkWidget        *widget,
                                              GtkDirectionType  direction);
 
@@ -337,9 +336,6 @@ panel_widget_class_init (PanelWidgetClass *class)
 	GObjectClass *gobject_class = (GObjectClass*) class;
 	GtkWidgetClass *widget_class = (GtkWidgetClass*) class;
 	GtkContainerClass *container_class = (GtkContainerClass*) class;
-	GtkBindingSet *binding_set;
-
-	binding_set = gtk_binding_set_by_class (class);
 
 	panel_widget_signals[ORIENT_CHANGE_SIGNAL] =
                 g_signal_new ("orient_change",
@@ -469,17 +465,6 @@ panel_widget_class_init (PanelWidgetClass *class)
                               G_TYPE_NONE,
                               0);
 
-	panel_widget_signals[POPUP_PANEL_MENU_SIGNAL] =
-		g_signal_new ("popup_panel_menu",
-                              G_TYPE_FROM_CLASS (class),
-                              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-                              G_STRUCT_OFFSET (PanelWidgetClass, popup_panel_menu),
-                              NULL,
-                              NULL,
-                              panel_marshal_BOOLEAN__VOID,
-                              G_TYPE_BOOLEAN,
-                              0);
-
 	class->orient_change = NULL;
 	class->size_change = NULL;
 	class->applet_move = NULL;
@@ -491,7 +476,6 @@ panel_widget_class_init (PanelWidgetClass *class)
 	class->free_move = panel_widget_free_move_applet;
 	class->tab_move = panel_widget_tab_move;
 	class->end_move = panel_widget_end_move;
-	class->popup_panel_menu = panel_widget_popup_panel_menu;
 
 	object_class->destroy = panel_widget_destroy;
 	gobject_class->finalize = panel_widget_finalize;
@@ -505,9 +489,6 @@ panel_widget_class_init (PanelWidgetClass *class)
 
 	container_class->add = panel_widget_cadd;
 	container_class->remove = panel_widget_cremove;
-
-	gtk_binding_entry_add_signal (binding_set, GDK_F10, GDK_CONTROL_MASK,
-				      "popup_panel_menu", 0);
 }
 
 static void
@@ -1742,45 +1723,36 @@ panel_try_to_set_pixmap (PanelWidget *panel, const char *pixmap)
 }
 
 static void
-panel_widget_realize(GtkWidget *w)
+panel_widget_realize (GtkWidget *widget)
 {
 	PanelWidget *panel;
 
-	g_return_if_fail(PANEL_IS_WIDGET(w));
+	g_return_if_fail (PANEL_IS_WIDGET (widget));
 
-	panel = PANEL_WIDGET(w);
+	panel = PANEL_WIDGET (widget);
 
 	if (GTK_WIDGET_CLASS (panel_widget_parent_class)->realize)
-		(* GTK_WIDGET_CLASS (panel_widget_parent_class)->realize) (w);
+		GTK_WIDGET_CLASS (panel_widget_parent_class)->realize (widget);
 	
-	if(panel->back_type == PANEL_BACK_PIXMAP) {
+	if (panel->back_type == PANEL_BACK_PIXMAP) {
 		if (!panel_try_to_set_pixmap (panel, panel->back_pixmap))
 			panel->back_type = PANEL_BACK_NONE;
-	} else if(panel->back_type == PANEL_BACK_COLOR) {
-		panel_try_to_set_back_color(panel, &panel->back_color);
-	}
 
-#ifdef PANEL_WIDGET_DEBUG
-	puts("PANEL_WIDGET_REALIZE");
-#endif
+	} else if (panel->back_type == PANEL_BACK_COLOR)
+		panel_try_to_set_back_color (panel, &panel->back_color);
 }
 
 static void
 panel_widget_finalize (GObject *obj)
 {
 	PanelWidget *panel;
-	GtkWidget *w = GTK_WIDGET (obj);
 
-	g_return_if_fail(PANEL_IS_WIDGET(w));
+	g_return_if_fail (PANEL_IS_WIDGET (obj));
 
-	panel = PANEL_WIDGET(w);
+	panel = PANEL_WIDGET (obj);
 
 	g_free (panel->back_pixmap);
 	panel->back_pixmap = NULL;
-
-	/*remove from panels list*/
-	panels = g_slist_remove(panels,w);
-	panel_remove_from_gconf (panel);
 
 	g_free (panel->unique_id);
 	panel->unique_id = NULL;
@@ -1793,22 +1765,19 @@ static void
 panel_widget_destroy (GtkObject *obj)
 {
 	PanelWidget *panel;
-	GtkWidget *w = GTK_WIDGET (obj);
 
-	g_return_if_fail(PANEL_IS_WIDGET(w));
+	g_return_if_fail (PANEL_IS_WIDGET (obj));
 
-	panel = PANEL_WIDGET(w);
+	panel = PANEL_WIDGET (obj);
 
-	if(panel->backpix)
-		g_object_unref (G_OBJECT (panel->backpix));
+	if (panel->backpix)
+		g_object_unref (panel->backpix);
 	panel->backpix = NULL;
 
 	g_free (panel->back_pixmap);
 	panel->back_pixmap = NULL;
 
-	/*remove from panels list*/
-	panels = g_slist_remove(panels,w);
-	panel_remove_from_gconf (panel);
+	panels = g_slist_remove (panels, panel);
 
 	if (GTK_OBJECT_CLASS (panel_widget_parent_class)->destroy)
 		GTK_OBJECT_CLASS (panel_widget_parent_class)->destroy (obj);
@@ -3061,13 +3030,4 @@ panel_widget_get_applet_orient (PanelWidget *panel)
 		return PANEL_ORIENT_DOWN;
 
 	return basep_widget_get_applet_orient (BASEP_WIDGET (panel->panel_parent));
-}
-
-static gboolean 
-panel_widget_popup_panel_menu (PanelWidget *panel)
-{
-	gboolean ret_val;
-
-	g_signal_emit_by_name (panel, "popup_menu", &ret_val);
-	return ret_val;
 }
