@@ -14,6 +14,7 @@
 #include "panel.h"
 #include "panel-config-global.h"
 #include "panel-util.h"
+#include "egg-screen-exec.h"
 
 #include "multihead-hacks.h"
 
@@ -312,7 +313,7 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 
 		screen = screen_from_event (event);
 
-		if (panel_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
+		if (egg_screen_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
 			panel_error_dialog (screen,
 					    "cannot_exec_ss_program",
 					    _("Can't execute the screenshot program"));
@@ -345,7 +346,7 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 
 		screen = screen_from_event (event);
 
-		if (panel_execute_async (screen, g_get_home_dir (), 2, argv) < 0)
+		if (egg_screen_execute_async (screen, g_get_home_dir (), 2, argv) < 0)
 			panel_error_dialog (screen,
 					    "cannot_exec_ss_program",
 					    _("Can't execute the screenshot program"));

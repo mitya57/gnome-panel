@@ -43,21 +43,6 @@ GtkWidget *	create_icon_entry	(GtkWidget *table,
 					 UpdateFunction func,
 					 gpointer data);
 
-#ifdef HAVE_GTK_MULTIHEAD
-char           *panel_display_string       (GdkScreen    *screen);
-#endif
-
-int             panel_execute_async        (GdkScreen    *screen,
-					    const char   *dir,
-					    int           argc,
-					    char * const  argv []);
-int             panel_execute_shell        (GdkScreen    *screen,
-					    const char   *dir,
-					    const char   *command);
-gboolean        panel_execute_command_line (GdkScreen    *screen,
-					    const char   *dir,
-					    const char   *command,
-					    GError      **error);
 int             panel_ditem_launch         (GdkScreen    *screen,
 					    const GnomeDesktopItem *item,
 					    GList        *file_list,

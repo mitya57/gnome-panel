@@ -1,3 +1,13 @@
+2002-07-03  Mark McLoughlin  <mark@skynet.ie>
+
+	* Makefile.am: add egg-screen-exec.[ch] to build.
+
+	* applet.c, foobar-widget.c, global-keys.c, gnome-run.c,
+	  menu.c: use egg-screen-exec methods instead of the
+	  ones in panel-util.c.
+
+	* panel-util.[ch]: kill screen-exec methods.
+
 2002-06-26  Mark McLoughlin  <mark@skynet.ie>
 
 	* multihead-hacks.h:

@@ -39,6 +39,7 @@
 #include "basep-widget.h"
 #include "foobar-widget.h"
 #include "panel.h"
+#include "egg-screen-exec.h"
 
 #include "multihead-hacks.h"
 
@@ -54,152 +55,6 @@ panel_screen_from_number (int screen)
 			gdk_display_get_default (), screen);
 }
 
-#ifdef HAVE_GTK_MULTIHEAD
-char *
-panel_display_string (GdkScreen *screen)
-{
-	GString    *str;
-	const char *old_display;
-	char       *retval;
-	char       *p;
-
-	old_display = gdk_display_get_name (gdk_display_get_default ());
-
-	str = g_string_new ("DISPLAY=");
-	g_string_append (str, old_display);
-
-	p = strrchr (str->str, '.');
-	if (p && p >  strchr (str->str, ':'))
-		g_string_truncate (str, p - str->str);
-
-	g_string_append_printf (str, ".%d", gdk_screen_get_number (screen));
-
-	retval = str->str;
-
-	g_string_free (str, FALSE);
-
-	return retval;
-}
-
-static char **
-panel_munge_environment (GdkScreen *screen)
-{
-	extern char **environ;
-	char        **retval = NULL;
-	int           display_index = -1;
-	int           i;
-
-	for (i = 0; environ [i]; i++)
-		if (!strncmp (environ [i], "DISPLAY", 7))
-			display_index = i;
-
-	if (display_index == -1)
-		display_index = i++;
-
-	retval = g_new (char *, i + 1);
-
-	for (i = 0; environ [i]; i++)
-		if (i == display_index)
-			retval [i] = panel_display_string (screen);
-		else
-			retval [i] = g_strdup (environ [i]);
-	retval [i] = NULL;	
-
-	return retval;
-}
-#endif
-
-int
-panel_execute_async (GdkScreen    *screen,
-		     const char   *dir,
-		     int           argc,
-		     char * const  argv [])
-{
-#ifdef HAVE_GTK_MULTIHEAD
-	char **envp = NULL;
-	int    envc = 0;
-	int    retval;
-
-	g_return_val_if_fail (GDK_IS_SCREEN (screen), -1);
-
-	if (gdk_screen_get_default () != screen) {
-		envc = 1;
-		envp = g_new0 (char *, 2);
-		envp [0] = panel_display_string (screen);
-	}
-
-	retval = gnome_execute_async_with_env (dir, argc, argv, envc, envp);
-
-	g_strfreev (envp);
-
-	return retval;
-#else
-	return gnome_execute_async (dir, argc, argv);
-#endif
-}
-
-int
-panel_execute_shell (GdkScreen  *screen,
-		     const char *dir,
-		     const char *command)
-{
-#ifdef HAVE_GTK_MULTIHEAD
-	int retval = -1;
-
-	g_return_val_if_fail (GDK_IS_SCREEN (screen), -1);
-
-	if (gdk_screen_get_default () == screen)
-		retval = gnome_execute_shell (dir, command);
-
-	else {
-		char *exec;
-		char *display;
-
-		display = panel_display_string (screen);
-		exec = g_strconcat (display, " ", command, NULL);
-
-		retval = gnome_execute_shell (dir, exec);
-
-		g_free (display);
-		g_free (exec);
-	}
-
-	return retval;
-#else
-	return gnome_execute_shell (dir, command);
-#endif
-}
-
-gboolean
-panel_execute_command_line (GdkScreen   *screen,
-			    const char  *dir,
-			    const char  *command,
-			    GError     **error)
-{
-#ifdef HAVE_GTK_MULTIHEAD
-	gboolean   retval;
-	char     **argv = NULL;
-	char     **envp = NULL;
-
-	g_return_val_if_fail (command != NULL, FALSE);
-
-	if (!g_shell_parse_argv (command, NULL, &argv, error))
-		return FALSE;
-
-	if (gdk_screen_get_default () != screen)
-		envp = panel_munge_environment (screen);
- 
-	retval = g_spawn_async (dir, argv, envp, G_SPAWN_SEARCH_PATH,
-				NULL, NULL, NULL, error);
-	g_strfreev (argv);
-	g_strfreev (envp);
-
-	return retval;
-#else
-	return g_spawn_command_line_async (command, error);
-#endif
-}
-
 int
 panel_ditem_launch (GdkScreen                    *screen,
 		    const GnomeDesktopItem       *item,
@@ -212,7 +67,7 @@ panel_ditem_launch (GdkScreen                    *screen,
 	int    retval;
 
 	if (gdk_screen_get_default () != screen)
-		envp = panel_munge_environment (screen);
+		envp = egg_screen_exec_environment (screen);
 
 	retval = gnome_desktop_item_launch_with_env (
 			item, file_list, flags, envp, error);

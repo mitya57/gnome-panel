@@ -35,6 +35,7 @@
 #include "gnome-run.h"
 #include "multiscreen-stuff.h"
 #include "panel-marshal.h"
+#include "egg-screen-exec.h"
 
 #include "multihead-hacks.h"
 
@@ -141,7 +142,7 @@ foobar_screenshot (GtkWidget    *widget,
 
 	screen = panel_screen_from_number (foo->screen);
 
-	if (panel_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
+	if (egg_screen_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
 		panel_error_dialog (screen,
 				    "cannot_exec_gnome-panel-screenshot",
 				    _("Cannot execute gnome-panel-screenshot"));
@@ -156,7 +157,7 @@ foobar_search (GtkWidget    *widget,
 
 	screen = panel_screen_from_number (foo->screen);
 
-	if (panel_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
+	if (egg_screen_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
 		panel_error_dialog (screen,
 				    "cannot_exec_gnome-search-tool",
 				    _("Cannot execute gnome-search-tool"));

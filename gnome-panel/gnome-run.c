@@ -46,6 +46,7 @@
 #include "panel-gconf.h"
 #include "quick-desktop-reader.h"
 #include "nothing.h"
+#include "egg-screen-exec.h"
 
 #include "multihead-hacks.h"
 
@@ -187,7 +188,7 @@ get_environment (int         *argc,
 #ifdef HAVE_GTK_MULTIHEAD
 	if (!display_found && gdk_screen_get_default () != screen)
 		envar = g_list_append (
-				envar, panel_display_string (screen));
+				envar, egg_screen_exec_display_string (screen));
 #endif
 
 	if (moveby == *argc) {
@@ -475,9 +476,8 @@ run_dialog_response (GtkWidget *w, int response, gpointer data)
 				command = g_strconcat ("nautilus ", path, NULL);
 			}
 			
-			if (!panel_execute_command_line (
-					gtk_window_get_screen (GTK_WINDOW (run_dialog)),
-					g_get_home_dir (), command, &error)) {
+			if (!egg_screen_execute_command_line_async (
+					gtk_window_get_screen (GTK_WINDOW (run_dialog)), command, &error)) {
 				panel_error_dialog (
 					gtk_window_get_screen (GTK_WINDOW (run_dialog)),
 					"run_error",

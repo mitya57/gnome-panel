@@ -61,6 +61,7 @@
 #include "panel-applet-frame.h"
 #include "quick-desktop-reader.h"
 #include "xstuff.h"
+#include "egg-screen-exec.h"
 
 #include "multihead-hacks.h"
 
@@ -315,7 +316,7 @@ about_gnome_cb (GtkWidget *menuitem,
 {
 	GdkScreen *screen = menuitem_to_screen (menuitem);
 
-	if (panel_execute_async (screen, g_get_home_dir (), 1, &program_path) < 0)
+	if (egg_screen_execute_async (screen, g_get_home_dir (), 1, &program_path) < 0)
 		panel_error_dialog (screen,
 				    "cannot_exec_about_gnome",
 				    _("<b>Can't execute 'About GNOME'</b>\n\n"
@@ -3322,7 +3323,7 @@ panel_config_global (GtkWidget *menuitem)
 
 	screen = menuitem_to_screen (menuitem);
 
-	if (panel_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
+	if (egg_screen_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
 		panel_error_dialog (screen,
 				    "cannot_exec_global_props",
 				    _("Cannot execute panel global preferences"));
@@ -3459,7 +3460,7 @@ panel_lock (GtkWidget *menuitem)
 
 	screen = menuitem_to_screen (menuitem);
 
-	if (panel_execute_async (screen, g_get_home_dir (), 2, argv) < 0)
+	if (egg_screen_execute_async (screen, g_get_home_dir (), 2, argv) < 0)
 		panel_error_dialog (screen,
 				    "cannot_exec_xscreensaver",
 				    _("<b>Cannot execute xscreensaver</b>\n\n"
@@ -3608,7 +3609,7 @@ menu_screenshot (GtkWidget *menuitem)
 
 	screen = menuitem_to_screen (menuitem);
 
-	if (panel_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
+	if (egg_screen_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
 		panel_error_dialog (screen,
 				    "cannot_exec_gnome-panel-screenshot",
 				    N_("Cannot execute gnome-panel-screenshot"));
@@ -3622,7 +3623,7 @@ menu_search (GtkWidget *menuitem)
 
 	screen = menuitem_to_screen (menuitem);
 
-        if (panel_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
+        if (egg_screen_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
                 panel_error_dialog (screen,
 				    "cannot_exec_gnome-search-tool",
 				    N_("Cannot execute gnome-search-tool"));

@@ -26,6 +26,7 @@
 #include "panel-config-global.h"
 #include "session.h"
 #include "panel-applet-frame.h"
+#include "egg-screen-exec.h"
 
 #include "multihead-hacks.h"
 
@@ -250,7 +251,7 @@ applet_callback_callback (GtkWidget      *widget,
 			freeit = TRUE;
 		}
 		if (command)
-			panel_execute_shell (
+			egg_screen_execute_shell (
 				applet_user_menu_get_screen (menu),
 				g_get_home_dir (), command);
 		if (freeit)
