@@ -75,9 +75,9 @@ module GNOME {
 		   them synchroniously for speed) also it makes this
 		   applet "savable" otherwise the panel wouldn't save
 		   it's state*/
-		oneway void register();
+		oneway void register_us();
 
-		oneway void unregister();
+		oneway void unregister_us();
 
 		/* if the applet didn't call "register" yet, and wants
 		   to abort itself (the panel will free up it's spot
