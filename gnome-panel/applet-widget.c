@@ -222,57 +222,112 @@ enum {
 static guint applet_widget_signals[LAST_SIGNAL] = {0};
 
 static void
-marshal_signal_save (GtkObject * object,
-		     GtkSignalFunc func,
-		     gpointer func_data,
-		     GtkArg * args)
+marshal_signal_save (GClosure *closure,
+		     GValue *return_value,
+		     guint n_param_values,
+		     const GValue *param_values,
+		     gpointer invocation_hint,
+		     gpointer marshal_data)
 {
-	SaveSignal rfunc;
-	int *retval;
+  register SaveSignal callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
 
-	rfunc = (SaveSignal) func;
+  int v_return;
 
-	retval = GTK_RETLOC_BOOL(args[2]);
+  g_return_if_fail (return_value != NULL);
+  g_return_if_fail (n_param_values == 3);
 
-	*retval = (*rfunc) (object, GTK_VALUE_STRING (args[0]),
-		  	    GTK_VALUE_STRING (args[1]),
-		  	    func_data);
-	
-	/*make applets that forget to do this not fsckup*/
-	gnome_config_sync();
-	gnome_config_drop_all();
+  if (G_CLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+
+  callback = (SaveSignal) (marshal_data ? marshal_data : cc->callback);
+
+  v_return = callback (data1, 
+		       (char *) g_value_get_string (param_values + 1),
+		       (char *) g_value_get_string (param_values + 2),
+		       data2);
+
+  g_value_set_int (return_value, v_return);
+
+  /* make applets that forget to do this not fsckup */
+  gnome_config_sync ();
+  gnome_config_drop_all();
+}
+
+
+static void
+marshal_signal_back  (GClosure *closure,
+		     GValue *return_value,
+		     guint n_param_values,
+		     const GValue *param_values,
+		     gpointer invocation_hint,
+		     gpointer marshal_data)
+{
+  register BackSignal callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+  
+  g_return_if_fail (n_param_values == 4);
+  
+  if (G_CLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+
+  callback = (BackSignal) (marshal_data ? marshal_data : cc->callback);
+
+  callback (data1, 
+	    g_value_get_enum (param_values + 1),
+	    (char *) g_value_get_string (param_values + 2),
+	    g_value_get_pointer (param_values + 3),
+	    data2);
 }
 
 static void
-marshal_signal_back (GtkObject * object,
-		     GtkSignalFunc func,
-		     gpointer func_data,
-		     GtkArg * args)
+marshal_signal_position   (GClosure *closure,
+			   GValue *return_value,
+			   guint n_param_values,
+			   const GValue *param_values,
+			   gpointer invocation_hint,
+			   gpointer marshal_data)
 {
-	BackSignal rfunc;
+  register PositionSignal callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
 
-	rfunc = (BackSignal) func;
+  g_return_if_fail (n_param_values == 3);
 
-	(*rfunc) (object, GTK_VALUE_ENUM (args[0]),
-		  GTK_VALUE_POINTER (args[1]),
-		  GTK_VALUE_POINTER (args[2]),
-		  func_data);
-}
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (PositionSignal) (marshal_data ? marshal_data : cc->callback);
 
-static void
-marshal_signal_position (GtkObject * object,
-			 GtkSignalFunc func,
-			 gpointer func_data,
-			 GtkArg * args)
-{
-	PositionSignal rfunc;
-
-	rfunc = (PositionSignal) func;
-
-	(*rfunc) (object,
-		  GTK_VALUE_INT (args[0]),
-		  GTK_VALUE_INT (args[1]),
-		  func_data);
+  callback (data1,
+            g_value_get_int (param_values + 1),
+            g_value_get_int (param_values + 2),
+            data2);
 }
 
 static void
@@ -287,17 +342,17 @@ applet_widget_class_init (AppletWidgetClass *class)
 	applet_widget_signals[CHANGE_ORIENT_SIGNAL] =
 		gtk_signal_new("change_orient",
 			       GTK_RUN_FIRST,
-			       object_class->type,
+			       GTK_CLASS_TYPE (object_class),
 			       GTK_SIGNAL_OFFSET(AppletWidgetClass,
 			       			 change_orient),
-			       gtk_marshal_NONE__ENUM,
+			       gtk_marshal_VOID__ENUM, /* FIXME: void isn't right here...should by gtk_marshal_NONE */
 			       GTK_TYPE_NONE,
 			       1,
 			       GTK_TYPE_ENUM);
 	applet_widget_signals[CHANGE_PIXEL_SIZE_SIGNAL] =
 		gtk_signal_new("change_pixel_size",
 			       GTK_RUN_FIRST,
-			       object_class->type,
+			       GTK_CLASS_TYPE (object_class),
 			       GTK_SIGNAL_OFFSET(AppletWidgetClass,
 			       			 change_pixel_size),
 			       gtk_marshal_NONE__INT,
@@ -307,7 +362,7 @@ applet_widget_class_init (AppletWidgetClass *class)
 	applet_widget_signals[SAVE_SESSION_SIGNAL] =
 		gtk_signal_new("save_session",
 			       GTK_RUN_LAST,
-			       object_class->type,
+			       GTK_CLASS_TYPE (object_class),
 			       GTK_SIGNAL_OFFSET(AppletWidgetClass,
 			       			 save_session),
 			       marshal_signal_save,
@@ -318,7 +373,7 @@ applet_widget_class_init (AppletWidgetClass *class)
 	applet_widget_signals[BACK_CHANGE_SIGNAL] =
 		gtk_signal_new("back_change",
 			       GTK_RUN_LAST,
-			       object_class->type,
+			       GTK_CLASS_TYPE (object_class),
 			       GTK_SIGNAL_OFFSET(AppletWidgetClass,
 			       			 back_change),
 			       marshal_signal_back,
@@ -330,7 +385,7 @@ applet_widget_class_init (AppletWidgetClass *class)
 	applet_widget_signals[DO_DRAW_SIGNAL] =
 		gtk_signal_new("do_draw",
 			       GTK_RUN_LAST,
-			       object_class->type,
+			       GTK_CLASS_TYPE (object_class),
 			       GTK_SIGNAL_OFFSET(AppletWidgetClass,
 			       			 do_draw),
 			       gtk_signal_default_marshaller,
@@ -339,7 +394,7 @@ applet_widget_class_init (AppletWidgetClass *class)
 	applet_widget_signals[TOOLTIP_STATE_SIGNAL] =
 		gtk_signal_new("tooltip_state",
 			       GTK_RUN_LAST,
-			       object_class->type,
+			       GTK_CLASS_TYPE (object_class),
 			       GTK_SIGNAL_OFFSET(AppletWidgetClass,
 			       			 tooltip_state),
 			       gtk_marshal_NONE__INT,
@@ -349,7 +404,7 @@ applet_widget_class_init (AppletWidgetClass *class)
 	applet_widget_signals[CHANGE_POSITION_SIGNAL] =
 		gtk_signal_new("change_position",
 			       GTK_RUN_LAST,
-			       object_class->type,
+			       GTK_CLASS_TYPE (object_class),
 			       GTK_SIGNAL_OFFSET(AppletWidgetClass,
 			       			 change_position),
 			       marshal_signal_position,
@@ -900,28 +955,28 @@ gnome_panel_applet_corba_init(AppletWidget *applet, const char *goad_id)
 	applet_servant->servant.vepv = &vepv;
 
 	POA_GNOME_Applet__init((POA_GNOME_Applet *)applet_servant, &ev);
-	pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL);
+	/* FIXME: make this work... pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL); */
 
 	applet_servant->poa = poa = (PortableServer_POA)
 		CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
-	pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL);
+	/* FIXME: make this work... pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL); */
 
 	PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
-	pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL);
+	/* FIXME: make this work... pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL); */
 
 	applet_servant->objid =
 		PortableServer_POA_activate_object(poa, applet_servant,
 						   &ev);
-	pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL);
+	/* FIXME: make this work... pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL); */
 
 	applet_servant->obj = applet_obj =
 		PortableServer_POA_servant_to_reference(poa, applet_servant,
 							&ev);
-	pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL);
+	/* FIXME: make this work... pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL); */
 
 	goad_server_register(CORBA_OBJECT_NIL, applet_obj, goad_id,
 			     "server", &ev);
-	pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL);
+	/* FIXME: make this work... pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL); */
 
 	if (panel_client == CORBA_OBJECT_NIL) {
 		panel_client =
@@ -952,7 +1007,7 @@ gnome_panel_applet_corba_init(AppletWidget *applet, const char *goad_id)
 						       &privcfg,&globcfg,
 						       &applet_servant->winid,
 						       &ev);
-	pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL);
+	/* FIXME: make this work... pg_return_val_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION, NULL); */
 
 	if(privcfg && *privcfg)
 		applet->privcfgpath = g_strdup(privcfg);
@@ -2058,10 +2113,10 @@ void applet_factory_new(const char *goad_id, AppletFactoryQuerier qfunc,
 	PortableServer_POAManager_activate
 		(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
 
-	pg_return_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION);
+	/* FIXME: make this work... pg_return_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION); */
 
 	f->objid = PortableServer_POA_activate_object(poa, f, &ev);
-	pg_return_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION);
+	/* FIXME: make this work... pg_return_if_fail(&ev, ev._major == CORBA_NO_EXCEPTION); */
 
 	f->fobj = PortableServer_POA_servant_to_reference(poa, f, &ev);
 

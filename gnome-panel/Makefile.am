@@ -6,7 +6,7 @@
 ## We require new-style dependency handling.
 AUTOMAKE_OPTIONS = 1.3
 
-SUBDIRS = config doc help
+SUBDIRS = config help
 
 INCLUDES = \
 	-I.			\
@@ -19,11 +19,12 @@ INCLUDES = \
 	-DGLADEDIR=\""$(datadir)/gnome/panel"\" \
 	-DGLOBAL_CONFDIR=\""$(sysconfdir)/gnome/panel-config"\" \
 	-I$(includedir)		\
-	$(GNOME_INCLUDEDIR)	\
+	$(GNOME_CFLAGS)		\
+	$(GNOME1COMPAT_CFLAGS)	\
 	$(ORB_CFLAGS)		\
-	$(GNOME_PRINT_CFLAGS)	\
 	$(GLADE_CFLAGS)		\
 	$(PIXBUF_CFLAGS)
+#	$(GNOME_PRINT_CFLAGS)	\
 
 gwmh_dir = $(top_srcdir)/applets/desk-guide
 
@@ -51,8 +52,9 @@ CLEANFILES += $(CORBA_SRCLIST) my_gnome_panel_idl
 
 $(CORBA_SRCLIST): my_gnome_panel_idl
 
+# FIXME: do *not* hardcode /gnome/GNOME20/share/idl BAD BAD BAD!
 my_gnome_panel_idl: $(top_srcdir)/idl/gnome-panel.idl $(ORBIT_IDL)
-	if $(ORBIT_IDL) `@GNOME_CONFIG@ --cflags idl` $< ; then touch my_gnome_panel_idl; else /bin/false; fi
+	if $(ORBIT_IDL) orbit-idl -I/gnome/GNOME20/share/idl/ $< ; then touch my_gnome_panel_idl; else /bin/false; fi
 
 # We need explicit dependencies here for people building out
 # of the tarballs.
@@ -84,8 +86,7 @@ bad_applet_SOURCES = bad-applet.c
 
 bad_applet_LDADD = \
 	libpanel_applet.la	\
-	$(GNOME_LIBDIR) 	\
-	$(GNORBA_LIBS)		\
+	$(GNOME_LIBS) 	\
 	$(INTLLIBS)
 
 GWMH_SRCLIST = \
@@ -189,8 +190,7 @@ panel_SOURCES=\
 
 panel_LDADD = \
 	libpanel_applet.la	\
-	$(GNOME_LIBDIR)		\
-	$(GNORBA_LIBS)		\
+	$(GNOME_LIBS)		\
 	$(ORB_LIBS)		\
 	$(GNOMEUI_LIBS)		\
 	$(INTLLIBS)		\
@@ -207,10 +207,10 @@ gnome_panel_properties_capplet_SOURCES = \
 	$(CORBA_SRCLIST)
 
 gnome_panel_properties_capplet_LDADD = \
-	$(GNOME_LIBDIR)		\
-	$(GNOME_CAPPLET_LIBS)	\
+	$(GNOME_LIBS)		\
 	$(INTLLIBS)		\
 	$(PIXBUF_LIBS)
+#	$(GNOME_CAPPLET_LIBS)	\
 
 gnome_panel_add_launcher_SOURCES = \
 	gnome-panel-add-launcher.c	\
@@ -220,21 +220,20 @@ gnome_panel_screenshot_SOURCES = \
 	gnome-panel-screenshot.c
 
 gnome_panel_add_launcher_LDADD = \
-	$(GNOME_LIBDIR)		\
+	$(GNOME_LIBS)		\
 	$(GNOMEUI_LIBS)		\
-	$(GNORBA_LIBS)		\
 	$(ORB_LIBS)		\
 	$(INTLLIBS)		\
 	$(PIXBUF_LIBS)
 
 gnome_panel_screenshot_LDADD = \
-	$(GNOME_LIBDIR)		\
+	$(GNOME_LIBS)		\
 	$(GNOMEUI_LIBS)		\
 	$(GLADE_LIBS)		\
-	$(GNOME_PRINT_LIBS)	\
 	$(INTLLIBS)		\
 	$(PNG_LIBS)		\
 	$(PIXBUF_LIBS)
+#	$(GNOME_PRINT_LIBS)	\
 
 MAINTAINERCLEANFILES = $(CORBA_SRCLIST)
 
@@ -260,9 +259,8 @@ confexec_DATA = appletsConf.sh dockletsConf.sh
 # Create the appletsConf.sh file from the .sh.in file
 #
 appletsConf.sh: appletsConf.sh.in Makefile
-	sed -e 's?\@GNOME_LIBDIR\@?$(GNOME_LIBDIR)?g' \
+	sed -e 's?\@GNOME_LIBS\@?$(GNOME_LIBS)?g' \
 	    -e 's?\@GNOME_INCLUDEDIR\@?$(GNOME_INCLUDEDIR)?g' \
-	    -e 's?\@GNOMEGNORBA_LIBS\@?$(GNOMEGNORBA_LIBS)?g' \
 	    -e 's?\@VERSION\@?$(VERSION)?g' \
 	    < $(srcdir)/appletsConf.sh.in > appletsConf.tmp \
 	  && mv appletsConf.tmp appletsConf.sh
@@ -271,9 +269,8 @@ appletsConf.sh: appletsConf.sh.in Makefile
 # Create the dockletsConf.sh file from the .sh.in file
 #
 dockletsConf.sh: dockletsConf.sh.in Makefile
-	sed -e 's?\@GNOME_LIBDIR\@?$(GNOME_LIBDIR)?g' \
+	sed -e 's?\@GNOME_LIBS\@?$(GNOME_LIBS)?g' \
 	    -e 's?\@GNOME_INCLUDEDIR\@?$(GNOME_INCLUDEDIR)?g' \
-	    -e 's?\@GNOMEGNORBA_LIBS\@?$(GNOMEGNORBA_LIBS)?g' \
 	    -e 's?\@VERSION\@?$(VERSION)?g' \
 	    < $(srcdir)/dockletsConf.sh.in > dockletsConf.tmp \
 	  && mv dockletsConf.tmp dockletsConf.sh
