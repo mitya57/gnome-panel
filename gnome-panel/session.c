@@ -313,7 +313,6 @@ save_applet_configuration(AppletInfo *info)
 			g_free(launcher->dentry->location);
 			launcher->dentry->location = g_strdup(buf->str);
 			gnome_desktop_entry_save(launcher->dentry);
-
 			gnome_config_set_string("id", LAUNCHER_ID);
 			gnome_config_set_string("parameters", buf->str);
 			break;

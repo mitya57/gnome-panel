@@ -9,6 +9,13 @@
 #define SMALL_ICON_SIZE 20
 #define BIG_ICON_SIZE   48
 
+/* The 50% gray stipple for selected icons 
+   BTW: stolen from gmc*/
+#define gray50_width 2
+#define gray50_height 2
+static char gray50_bits[] = { 0x02, 0x01 };
+
+
 static void button_widget_class_init	(ButtonWidgetClass *klass);
 static void button_widget_init		(ButtonWidget      *button);
 static void button_widget_size_request  (GtkWidget         *widget,
@@ -347,7 +354,7 @@ button_widget_draw(ButtonWidget *button, GdkPixmap *pixmap, int offx, int offy)
 			gdk_gc_set_clip_origin (gc, 0, 0);
 		}
 	}
-
+	
 	if (pixmaps_enabled[button->tile]) {
 		if (button->mask) {
 			gdk_gc_set_clip_mask (gc, button->mask);
@@ -365,6 +372,9 @@ button_widget_draw(ButtonWidget *button, GdkPixmap *pixmap, int offx, int offy)
 					 widget->allocation.y+i+off-offy,
 					 BIG_ICON_SIZE-i-off-border,
 					 BIG_ICON_SIZE-i-off-border);
+		}
+
+		for(i=0;i<BIG_ICON_SIZE;i+=2) {
 		}
 
 		if (button->mask) {
@@ -423,7 +433,6 @@ button_widget_draw(ButtonWidget *button, GdkPixmap *pixmap, int offx, int offy)
 
 	
 	if(button->arrow) {
-		int i;
 		GdkPoint points[3];
 		draw_arrow(points,button->orient);
 		for(i=0;i<3;i++) {
@@ -434,6 +443,23 @@ button_widget_draw(ButtonWidget *button, GdkPixmap *pixmap, int offx, int offy)
 		gdk_draw_polygon(pixmap,gc,TRUE,points,3);
 		gdk_gc_set_foreground(gc,&pwidget->style->black);
 		gdk_draw_polygon(pixmap,gc,FALSE,points,3);
+	}
+
+	if (button->darken) {
+		GdkBitmap *stip;
+		stip = gdk_bitmap_create_from_data (NULL,
+						    gray50_bits,
+						    gray50_width,
+						    gray50_height);
+		gdk_gc_set_fill(gc,GDK_STIPPLED);
+		gdk_gc_set_stipple (gc, stip);
+		gdk_gc_set_foreground(gc,&pwidget->style->white);
+		gdk_draw_rectangle(pixmap,gc,TRUE,
+				   widget->allocation.x-offx,
+				   widget->allocation.y-offy,
+				   BIG_ICON_SIZE,
+				   BIG_ICON_SIZE);
+		gdk_bitmap_unref(stip);
 	}
 	
 	gdk_gc_destroy(gc);
@@ -587,6 +613,21 @@ button_widget_leave_notify (GtkWidget *widget, GdkEventCrossing *event)
 	}
 
 	return FALSE;
+}
+
+void
+button_widget_lighten(ButtonWidget *button)
+{
+	button->darken = FALSE;
+	panel_widget_draw_icon(PANEL_WIDGET(GTK_WIDGET(button)->parent),
+			       button);
+}
+void
+button_widget_darken(ButtonWidget *button)
+{
+	button->darken = TRUE;
+	panel_widget_draw_icon(PANEL_WIDGET(GTK_WIDGET(button)->parent),
+			       button);
 }
 
 

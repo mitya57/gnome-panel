@@ -925,6 +925,11 @@ panel_widget_dnd_drop_internal (GtkWidget *widget,
 				NULL,
 				NULL
 			  };
+			  char *classes[3] = {
+			  	"Navigator",
+			  	"Netscape",
+				NULL
+			  };
 			  char *p;
 
 		          exec[1] = ltmp->data;
@@ -932,6 +937,7 @@ panel_widget_dnd_drop_internal (GtkWidget *widget,
 					      (char *)ltmp->data);
 			  load_launcher_applet_from_info(ltmp->data,
 							 p,exec,2,
+							 classes,2,
 							 "netscape.png",
 							 panel,pos);
 			  g_free(p);
@@ -970,12 +976,18 @@ panel_widget_dnd_drop_internal (GtkWidget *widget,
 			NULL,
 			NULL
 		};
+		char *classes[3] = {
+			"Navigator",
+			"Netscape",
+			NULL
+		};
 		char *p;
 		
          	exec[1] = selection_data->data;
 		p = g_strdup_printf("Open URL: %s",selection_data->data);
 		load_launcher_applet_from_info(selection_data->data,p,exec,2,
-					       "netscape.png",panel,pos);
+					       classes,2,"netscape.png",
+					       panel,pos);
 		g_free(p);
 		break;
 	}

@@ -18,12 +18,17 @@ BEGIN_GNOME_DECLS
 typedef struct {
 	GtkWidget         *button;
 	GtkObject	  *dedit;
+	int		   darken_timeout;
+	int		   darken_timeout_iter;
+	int		   pid;
 	GnomeDesktopEntry *dentry;
 } Launcher;
 
 void load_launcher_applet(char *params, PanelWidget *panel, int pos);
 void load_launcher_applet_from_info(char *name, char *comment,
-				    char **exec, int execn, char *icon,
+				    char **exec, int execn,
+				    char **classes, int classesn,
+				    char *icon,
 				    PanelWidget *panel, int pos);
 void launcher_properties(Launcher *launcher);
 

@@ -37,6 +37,7 @@ struct _ButtonWidget
 	
 	guint			tile:2; /*the tile number, only used if tiles are on*/
 	guint			arrow:1; /*0 no arrow, 1 simple arrow, more to do*/
+	guint			darken:1;
 	
 	PanelOrientType		orient;
 
@@ -88,6 +89,8 @@ void		button_widget_set_params	(ButtonWidget *button,
 void		button_widget_clicked		(ButtonWidget *button);
 void		button_widget_down		(ButtonWidget *button);
 void		button_widget_up		(ButtonWidget *button);
+void		button_widget_darken		(ButtonWidget *button);
+void		button_widget_lighten		(ButtonWidget *button);
 
 /*load a tile of a given type/class, note that depth applies to a class
   wheather or not there is a tile or not, so this is basically a class

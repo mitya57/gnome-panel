@@ -11,6 +11,8 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <signal.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <string.h>
@@ -29,13 +31,26 @@ extern int applet_count;
 static char *default_app_pixmap=NULL;
 
 extern GlobalConfig global_config;
+extern GList *check_launchers;
 
+static int
+darken_timeout(gpointer data)
+{
+	Launcher *launcher = data;
+	if((--launcher->darken_timeout_iter)==0 ||
+	   (launcher->pid>0 && kill(launcher->pid,0)<0)) {
+		launcher->darken_timeout = 0;
+		button_widget_lighten(BUTTON_WIDGET(launcher->button));
+		check_launchers = g_list_remove(check_launchers,launcher);
+		return FALSE;
+	}
+	return TRUE;
+}
 
 static void
-launch (GtkWidget *widget, void *data)
+launch (Launcher *launcher, int info, gpointer sel_data)
 {
-	GnomeDesktopEntry *item = data;
-
+	GnomeDesktopEntry *item = launcher->dentry;
 	if(!item->exec) {
 		GtkWidget *dlg;
 		dlg = gnome_message_box_new(_("This launch icon does not "
@@ -48,16 +63,29 @@ launch (GtkWidget *widget, void *data)
 		return;
 	}
 
+	button_widget_darken(BUTTON_WIDGET(launcher->button));
+	
+	if(launcher->darken_timeout)
+		gtk_timeout_remove(launcher->darken_timeout);
+	
+	launcher->darken_timeout_iter = item->wm_classes?8:1;
+	launcher->darken_timeout =
+		gtk_timeout_add(2000, darken_timeout,launcher);
+
+	if(launcher->dentry->wm_classes)
+		check_launchers = g_list_prepend(check_launchers,launcher);
+	
+	launcher->pid = 0;
 	/*UGLY HACK!*/
 	if (item->exec_length > 0
 	    && strstr(item->exec[0], "://"))
 		gnome_url_show(item->exec[0]);
 	else
-		gnome_desktop_entry_launch (item);
+		launcher->pid = gnome_desktop_entry_launch_full (item,0,NULL,info,sel_data);
 	
 	if(global_config.drawer_auto_close) {
 		GtkWidget *parent =
-			gtk_object_get_data(GTK_OBJECT(widget->parent),PANEL_PARENT);
+			gtk_object_get_data(GTK_OBJECT(launcher->button->parent),PANEL_PARENT);
 		g_return_if_fail(parent!=NULL);
 		if(IS_DRAWER_WIDGET(parent)) {
 			BasePWidget *basep = BASEP_WIDGET(parent);
@@ -75,15 +103,38 @@ launch (GtkWidget *widget, void *data)
 }
 
 static void
+launch_cb(GtkWidget *widget, Launcher *launcher)
+{
+	launch(launcher,0,NULL);
+}
+
+static void
 destroy_launcher(GtkWidget *widget, gpointer data)
 {
 	Launcher *launcher = data;
-	GtkWidget *prop_dialog = gtk_object_get_data(GTK_OBJECT(launcher->button),
-						     LAUNCHER_PROPERTIES);
+	GtkWidget *prop_dialog =
+		gtk_object_get_data(GTK_OBJECT(launcher->button),
+				    LAUNCHER_PROPERTIES);
 	if(prop_dialog)
 		gtk_widget_destroy(prop_dialog);
 	gnome_desktop_entry_free(launcher->dentry);
+	if(launcher->darken_timeout)
+		gtk_timeout_remove(launcher->darken_timeout);
+	check_launchers = g_list_remove(check_launchers,launcher);
 	g_free(launcher);
+}
+
+static void
+drag_data_received_cb (GtkWidget        *widget,
+		       GdkDragContext   *context,
+		       gint              x,
+		       gint              y,
+		       GtkSelectionData *selection_data,
+		       guint             info,
+		       guint             time,
+		       Launcher         *launcher)
+{
+	launch(launcher,info,selection_data->data);
 }
 
 static void  
@@ -145,11 +196,12 @@ create_launcher (char *parameters, GnomeDesktopEntry *dentry)
 	}
 	if (!dentry)
 		return NULL; /*button is null*/
-
+	
 	launcher = g_new(Launcher,1);
 
 	launcher->button = NULL;
 	launcher->dedit = NULL;
+	launcher->darken_timeout = 0;
 	icon = dentry->icon;
 	if (icon && *icon) {
 		/* Sigh, now we need to make them local to the gnome install */
@@ -183,14 +235,39 @@ create_launcher (char *parameters, GnomeDesktopEntry *dentry)
 			    drag_targets, 1,
 			    GDK_ACTION_COPY);
 	GTK_WIDGET_SET_FLAGS(launcher->button,GTK_NO_WINDOW);
+	
+
+	gtk_signal_connect(GTK_OBJECT(launcher->button), "drag_data_received",
+			   drag_data_received_cb, launcher);
+
+	if(dentry->dnd_entries) {
+		GtkTargetEntry *drop_targets;
+		GList *li;
+		int i;
+		drop_targets = g_new(GtkTargetEntry,g_list_length(dentry->dnd_entries));
+		for(li=dentry->dnd_entries,i=0;li;li=g_list_next(li),i++) {
+			char **argv = li->data;
+			if(!argv || !argv[0] || !*argv[0]) continue;
+			drop_targets[i].target = argv[0];
+			drop_targets[i].flags = 0;
+			drop_targets[i].info = i;
+		}
+		gtk_drag_dest_set (GTK_WIDGET (launcher->button),
+				   GTK_DEST_DEFAULT_MOTION |
+				   GTK_DEST_DEFAULT_HIGHLIGHT |
+				   GTK_DEST_DEFAULT_DROP,
+				   drop_targets, i,
+				   GDK_ACTION_COPY);
+		g_free(drop_targets);
+	}
 
 	gtk_signal_connect(GTK_OBJECT(launcher->button), "drag_data_get",
 			   drag_data_get_cb, launcher);
 
 	gtk_signal_connect (GTK_OBJECT(launcher->button),
 			    "clicked",
-			    (GtkSignalFunc) launch,
-			    dentry);
+			    (GtkSignalFunc) launch_cb,
+			    launcher);
 	
 	gtk_signal_connect (GTK_OBJECT(launcher->button), "destroy",
 			    GTK_SIGNAL_FUNC(destroy_launcher),
@@ -207,18 +284,19 @@ create_launcher (char *parameters, GnomeDesktopEntry *dentry)
 }
 
 static void
-properties_apply_callback(GtkWidget *widget, int page, gpointer data)
+properties_apply_callback(GtkWidget *widget, int page, Launcher *launcher)
 {
-	Launcher *launcher = data;
 	char *icon;
 	
 	if (page != -1)
 		return;
-	
-	/* remove the old launcher callback */
-	gtk_signal_disconnect_by_func(GTK_OBJECT(launcher->button),
-			(GtkSignalFunc) launch, launcher->dentry);
 
+	check_launchers = g_list_remove(check_launchers,launcher);
+	if(launcher->darken_timeout)
+		gtk_timeout_remove(launcher->darken_timeout);
+	launcher->darken_timeout = 0;
+	button_widget_lighten(BUTTON_WIDGET(launcher->button));
+	
 	gnome_desktop_entry_free(launcher->dentry);
 	launcher->dentry =
 		gnome_dentry_get_dentry(GNOME_DENTRY_EDIT(launcher->dedit));
@@ -226,12 +304,31 @@ properties_apply_callback(GtkWidget *widget, int page, gpointer data)
 		g_free(launcher->dentry->name);
 		launcher->dentry->name=g_strdup("???");
 	}
+	
 
-	/* and install the new one with the right dentry pointer */
-	gtk_signal_connect (GTK_OBJECT(launcher->button),
-			    "clicked",
-			    (GtkSignalFunc) launch,
-			    launcher->dentry);
+	gtk_drag_dest_unset(GTK_WIDGET(launcher->button));
+
+	if(launcher->dentry->dnd_entries) {
+		GtkTargetEntry *drop_targets;
+		GList *li;
+		int i;
+		drop_targets = g_new(GtkTargetEntry,
+				     g_list_length(launcher->dentry->dnd_entries));
+		for(li=launcher->dentry->dnd_entries,i=0;li;li=g_list_next(li),i++) {
+			char **argv = li->data;
+			if(!argv || !argv[0] || !*argv[0]) continue;
+			drop_targets[i].target = argv[0];
+			drop_targets[i].flags = 0;
+			drop_targets[i].info = i;
+		}
+		gtk_drag_dest_set (GTK_WIDGET (launcher->button),
+				   GTK_DEST_DEFAULT_MOTION |
+				   GTK_DEST_DEFAULT_HIGHLIGHT |
+				   GTK_DEST_DEFAULT_DROP,
+				   drop_targets, i,
+				   GDK_ACTION_COPY);
+		g_free(drop_targets);
+	}
 
 	gtk_tooltips_set_tip (panel_tooltips,launcher->button,
 			      launcher->dentry->comment,NULL);
@@ -400,7 +497,9 @@ ask_about_launcher(char *file, PanelWidget *panel, int pos)
 
 void
 load_launcher_applet_from_info(char *name, char *comment,
-			       char **exec, int execn, char *icon,
+			       char **exec, int execn,
+			       char **classes, int classesn,
+			       char *icon,
 			       PanelWidget *panel, int pos)
 {
 	GnomeDesktopEntry *dentry = g_new0(GnomeDesktopEntry,1);
@@ -408,6 +507,8 @@ load_launcher_applet_from_info(char *name, char *comment,
 	dentry->comment = g_strdup(comment);
 	dentry->exec_length = execn;
 	dentry->exec = g_copy_vector(exec);
+	dentry->wm_classes_length = classesn;
+	dentry->wm_classes = g_copy_vector(classes);
 	if(icon && *icon != '/')
 		dentry->icon = gnome_pixmap_file(icon);
 	else
