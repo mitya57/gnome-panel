@@ -45,11 +45,11 @@
 static void properties_apply (Launcher *launcher);
 static void launcher_save    (Launcher *launcher);
 
+static GSList *launchers_to_hoard = NULL;
+
 extern GtkTooltips *panel_tooltips;
 
 extern GSList *applets;
-
-static char *default_app_pixmap = NULL;
 
 extern GlobalConfig global_config;
 extern gboolean commie_mode;
@@ -198,6 +198,8 @@ free_launcher (gpointer data)
 {
 	Launcher *launcher = data;
 
+	launchers_to_hoard = g_slist_remove (launchers_to_hoard, launcher);
+
 	gnome_desktop_item_unref (launcher->ditem);
 	launcher->ditem = NULL;
 
@@ -336,39 +338,44 @@ static Launcher *
 create_launcher (const char *parameters, GnomeDesktopItem *ditem)
 {
 	Launcher *launcher;
+	GError   *error = NULL;
+
         static GtkTargetEntry dnd_targets[] = {
 		{ "application/x-panel-icon-internal", 0, TARGET_ICON_INTERNAL },
 		{ "text/uri-list", 0, TARGET_URI_LIST }
 	};
 
-	if (!default_app_pixmap)
-		default_app_pixmap = panel_pixmap_discovery ("gnome-unknown.png",
-							     FALSE /* fallback */);
-	if (ditem == NULL) {
-		if (parameters == NULL) {
+	if (!ditem) {
+		if (!parameters) {
+			g_printerr (_("No URI provided for panel launcher desktop file\n"));
 			return NULL;
 		}
 
-		ditem = gnome_desktop_item_new_from_uri (parameters,
-							 0 /* flags */,
-							 NULL /* error */);
+		ditem = gnome_desktop_item_new_from_uri (parameters, 0, &error);
+	}
 
-		if (ditem == NULL) {
-			gchar *entry;
+	if (!ditem) {
+		char *entry;
 
-			entry = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_DATADIR, 
-							   parameters, TRUE, NULL);
+		entry = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_DATADIR, 
+						   parameters, TRUE, NULL);
 
-			if (!entry)
-				return NULL;
-
+		if (entry != NULL) {
 			ditem = gnome_desktop_item_new_from_file (entry, 0, NULL);
-
 			g_free (entry);
 		}
 	}
-	if (ditem == NULL)
+
+	if (!ditem) {
+		g_printerr (_("Unable to open desktop file %s for panel launcher%s%s\n"),
+			    parameters,
+			    error ? ": " : "",
+			    error ? error->message : "");
+		if (error)
+			g_error_free (error);
+
 		return NULL; /*button is null*/
+	}
 
 	launcher = g_new0 (Launcher, 1);
 
@@ -432,7 +439,7 @@ setup_button (Launcher *launcher)
 	const char *name;
 	const char *docpath;
 	char *str;
-	char *icon;
+	const char *icon;
 	
 	g_return_if_fail (launcher != NULL);
 
@@ -458,21 +465,17 @@ setup_button (Launcher *launcher)
 	button_widget_set_text (BUTTON_WIDGET (launcher->button), name);
 
 	/* Setup icon */
-	icon = gnome_desktop_item_get_icon (launcher->ditem, panel_icon_loader);
-	if (icon == NULL ||
-	    ! button_widget_set_pixmap (BUTTON_WIDGET (launcher->button),
-					icon, -1))
-		button_widget_set_pixmap (BUTTON_WIDGET (launcher->button),
-					  default_app_pixmap, -1);
-	g_free (icon);
+	icon = gnome_desktop_item_get_string (launcher->ditem,
+					      GNOME_DESKTOP_ITEM_ICON);
+	button_widget_set_pixmap (BUTTON_WIDGET (launcher->button), icon, -1);
 
 	/* Setup help */
 	docpath = gnome_desktop_item_get_string (launcher->ditem,
-						 "DocPath");
+						 "X-GNOME-DocPath");
 
 	panel_applet_remove_callback (launcher->info, "help_on_app");
 
-	if (docpath != NULL) {
+	if (docpath && *docpath != '\0') {
 		char *title;
 
 		title = g_strdup_printf (_("Help on %s Application"), name);
@@ -704,7 +707,11 @@ launcher_load_from_gconf (PanelWidget *panel_widget,
 	temp_key = panel_gconf_full_key (
 			PANEL_GCONF_OBJECTS, profile, gconf_key, "launcher_location");
 	launcher_location = gconf_client_get_string (client, temp_key, NULL);
-
+	if (!launcher_location) {
+		g_printerr (_("Key %s is not set, can't load launcher\n"), temp_key);
+		return;
+	}
+        
 	load_launcher_applet (launcher_location, panel_widget, position, TRUE, gconf_key);
 
 	g_free (launcher_location);
@@ -742,7 +749,7 @@ load_launcher_applet_full (const char       *params,
 		panel_applet_add_callback (launcher->info,
 					   "properties",
 					   GTK_STOCK_PROPERTIES,
-					   _("Properties..."));
+					   _("Properties"));
 
 	panel_applet_add_callback (launcher->info, "help", GTK_STOCK_HELP, _("Help"));
 
@@ -1019,6 +1026,25 @@ launcher_save (Launcher *launcher)
 	}
 }
 
+static gboolean
+launcher_idle_hoard (void)
+{
+	Launcher *launcher;
+
+	if (!launchers_to_hoard)
+		return FALSE;
+
+	launcher = launchers_to_hoard->data;
+	launchers_to_hoard = g_slist_delete_link (
+					launchers_to_hoard, launchers_to_hoard);
+
+	launcher_save (launcher);
+	launcher_save_to_gconf (launcher, launcher->info->gconf_key);
+
+	return launchers_to_hoard ? TRUE : FALSE;
+}
+
+
 void
 launcher_hoard (Launcher *launcher)
 {
@@ -1027,9 +1053,10 @@ launcher_hoard (Launcher *launcher)
 
 	gnome_desktop_item_set_location (launcher->ditem, NULL);
 
-	launcher_save (launcher);
+	if (!launchers_to_hoard)
+		g_idle_add ((GSourceFunc) launcher_idle_hoard, NULL);
 
-	launcher_save_to_gconf (launcher, launcher->info->gconf_key);
+	launchers_to_hoard = g_slist_prepend (launchers_to_hoard, launcher);
 }
 
 Launcher *
@@ -1072,7 +1099,7 @@ launcher_show_help (Launcher *launcher)
 		return;
 
 	docpath = gnome_desktop_item_get_string (
-				launcher->ditem, "DocPath");
+				launcher->ditem, "X-GNOME-DocPath");
 	panel_show_gnome_kde_help (docpath, &error);
 	if (error) {
 		panel_error_dialog (

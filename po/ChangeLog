@@ -1,3 +1,175 @@
+2002-07-14 Hasbullah Bin Pit <sebol@ikhlas.com>
+
+        * ms.po: Updated Malay Translation.
+
+2002-07-13  Peteris Krisjanis <pecisk@inbox.lv>
+
+	* lv.po: Updated Latvian translation.
+
+2002-07-13  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian (bokmål) translation.
+
+2002-07-13  Ole Laursen  <olau@hardworking.dk>
+
+	* da.po: Updated Danish translation.
+
+2002-07-12  Jordi Mallach  <jordi@sindominio.net>
+
+	* ca.po: Updated Catalan translation.
+
+2002-07-12  Christian Rose  <menthos@menthos.com>
+
+	* sv.po: Updated Swedish translation.
+
+2002-07-12  Jordi Mallach  <jordi@sindominio.net>
+
+	* ca.po: Updated Catalan translation.
+
+2002-07-11  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian (bokmål) translation.
+
+2002-07-11  Christian Rose  <menthos@menthos.com>
+
+	* sv.po: Updated Swedish translation.
+
+2002-07-11  Christian Rose  <menthos@menthos.com>
+
+	* POTFILES.in: Added missing file.
+	* sv.po: Updated Swedish translation.
+
+2002-07-10  Dmitry G. Mastrukov  <dmitry@taurussoft.org>
+
+	* ru.po: updated Russian translation.
+
+2002-07-10  Jordi Mallach  <jordi@sindominio.net>
+
+	* ca.po: Updated Catalan translation.
+
+2002-07-09  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian (bokmål) translation.
+
+2002-07-09  Wang Jian  <lark@linux.net.cn>
+
+	* zh_CN.po: Updated Simplified Chinese translation.
+
+2002-07-09  Changwoo Ryu  <cwryu@debian.org>
+
+	* ko.po: Updated Korean translation.
+
+2002-07-09  Christian Rose  <menthos@menthos.com>
+
+	* sv.po: Updated Swedish translation.
+
+2002-07-09 Hasbullah Bin Pit <sebol@ikhlas.com>
+
+	* ms.po: Updated Malay Translation.
+
+2002-07-08  jacob berkman  <jacob@ximian.com>
+
+	* lv.po: revert commit, it busted the build
+
+2002-07-08  Peteris Krisjanis <pecisk@inbox.lv>
+
+	* lv.po: Updated Latvian translation.
+
+2002-07-08  Zbigniew Chyla  <chyla@gnome.pl>
+
+	* pl.po: Updated Polish translation by
+	GNOME PL Team <translators@gnome.pl>.
+
+2002-07-07  Tõivo Leedjärv  <toivo@linux.ee>
+
+	* et.po: Updated Estonian translation.
+
+2002-07-07  Christophe Fergeau <teuf@users.sourceforge.net>
+
+	* fr.po: Updated French translation.
+
+2002-07-06  Christian Rose  <menthos@menthos.com>
+
+	* sv.po: Updated Swedish translation.
+
+2002-07-05  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian (bokmål) translation.
+
+2002-07-05  Pablo Saratxaga  <pablo@mandrakesoft.com>
+
+	* vi.po: Updated Vietnamese file
+
+2002-07-05  Christophe Fergeau <teuf@users.sourceforge.net>
+
+	* fr.po: Updated French translation.
+
+2002-07-04  Daniel Yacob <locales@geez.org>
+
+	* am.po: Updated Amharic translation.
+
+2002-07-04  Christian Rose  <menthos@menthos.com>
+
+	* sv.po: Updated Swedish translation.
+
+2002-07-03  Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>
+
+	* sk.po: Updated Slovak translation.
+
+2002-07-03  Zbigniew Chyla  <chyla@gnome.pl>
+
+	* pl.po: Updated Polish translation by
+	GNOME PL Team <translators@gnome.pl>.
+
+2002-07-03  Jordi Mallach  <jordi@sindominio.net>
+
+	* ca.po: Updated Catalan translation.
+
+2002-07-02  Daniel Yacob <locales@geez.org>
+
+	* am.po: Updated Amharic translation.
+
+2002-07-02  Dmitry G. Mastrukov  <dmitry@taurussoft.org>
+
+	* ru.po: updated Russian translation.
+
+2002-07-02  Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>
+
+	* sk.po: Updated Slovak translation.
+
+2002-07-02  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian (bokmål) translation.
+
+2002-07-02  Zbigniew Chyla  <chyla@gnome.pl>
+
+	* pl.po: Updated Polish translation by
+	GNOME PL Team <translators@gnome.pl>.
+
+2002-07-02  Tõivo Leedjärv  <toivo@linux.ee>
+
+	* et.po: Updated Estonian translation.
+
+2002-07-02  Changwoo Ryu  <cwryu@debian.org>
+
+	* ko.po: Updated Korean translation.
+
+2002-07-01  jacob berkman  <jacob@ximian.com>
+
+	* POTFILES.in: kill menu-properties.c
+
+2002-06-30  Dmitry G. Mastrukov  <dmitry@taurussoft.org>
+
+	* ru.po: updated Russian translation.
+
+2002-06-30  Tõivo Leedjärv  <toivo@linux.ee>
+
+	* et.po: Updated Estonian translation.
+
+2002-06-25  Daniel Yacob <locales@geez.org>
+
+	* am.po: New file for Amharic translations.
+
 2002-06-21  Vincent van Adrighem <V.vanAdrighem@dirck.mine.nu>
 
 	* nl.po: Dutch translation updated by Tino meinen.

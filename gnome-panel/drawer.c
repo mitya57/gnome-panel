@@ -55,24 +55,14 @@ properties_apply_callback(gpointer data)
 	drawer->pixmap = NULL;
 	g_free (drawer->tooltip);
 	drawer->tooltip = NULL;
-	s = gnome_icon_entry_get_filename (GNOME_ICON_ENTRY (pixentry));
-	if (string_empty (s)) {
+	drawer->pixmap = gnome_icon_entry_get_filename (GNOME_ICON_ENTRY (pixentry));
+	if (string_empty (drawer->pixmap) ||
+	    access (drawer->pixmap, R_OK) != 0) {
 		drawer->pixmap = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, 
 							    "panel-drawer.png", TRUE, NULL);
-		button_widget_set_pixmap (BUTTON_WIDGET (drawer->button),
-					  drawer->pixmap,-1);
-	} else {
-		if(button_widget_set_pixmap (BUTTON_WIDGET (drawer->button), s, -1))
-			drawer->pixmap = g_strdup (s);
-		else {
-			drawer->pixmap = gnome_program_locate_file (NULL, 
-								    GNOME_FILE_DOMAIN_PIXMAP, 
-								    "panel-drawer.png",
-								     TRUE, NULL);
-			button_widget_set_pixmap (BUTTON_WIDGET (drawer->button),
-						  drawer->pixmap, -1);
-		}
 	}
+	button_widget_set_pixmap (BUTTON_WIDGET (drawer->button),
+				  drawer->pixmap, -1);
 	g_free(s);
 	cs = gtk_entry_get_text(GTK_ENTRY(gnome_entry_gtk_entry(GNOME_ENTRY(tipentry))));
 	if (string_empty (cs))
@@ -208,23 +198,14 @@ drawer_click(GtkWidget *w, Drawer *drawer)
 	DrawerWidget *drawerw = DRAWER_WIDGET(drawer->drawer);
 	PanelWidget *parent = PANEL_WIDGET(drawer->button->parent);
 	GtkWidget *panelw = parent->panel_parent;
-#ifdef DRAWER_DEBUG
-	printf ("Registering drawer click \n");
-#endif	
 
 	switch (BASEP_WIDGET (drawerw)->state) {
 	case BASEP_SHOWN:
 	case BASEP_AUTO_HIDDEN:
-#ifdef DRAWER_DEBUG
-	printf ("Drawer closing\n");
-#endif
 		drawer_widget_close_drawer (drawerw, panelw);
 		break;
 	case BASEP_HIDDEN_LEFT:
 	case BASEP_HIDDEN_RIGHT:
-#ifdef DRAWER_DEBUG
-	printf ("Drawer opening\n");
-#endif
 		drawer_widget_open_drawer (drawerw, panelw);
 		break;
 	}
@@ -412,10 +393,23 @@ drag_data_get_cb (GtkWidget          *widget,
 	g_free (foo);
 }
 
+static void
+free_drawer (Drawer *drawer)
+{
+	if (drawer->tooltip)
+		g_free (drawer->tooltip);
+
+	if (drawer->pixmap)
+		g_free (drawer->pixmap);
+
+	g_free (drawer);
+}
+
 static Drawer *
-create_drawer_applet(GtkWidget * drawer_panel,
-		     const char *tooltip, const char *pixmap,
-		     PanelOrient orient)
+create_drawer_applet (GtkWidget   *drawer_panel,
+		      const char  *tooltip,
+		      const char  *pixmap,
+		      PanelOrient  orient)
 {
         static GtkTargetEntry dnd_targets[] = {
 		{ "application/x-panel-applet-internal", 0, 0 }
@@ -440,6 +434,10 @@ create_drawer_applet(GtkWidget * drawer_panel,
 	drawer->button = button_widget_new (drawer->pixmap, -1,
 					    TRUE, orient,
 					    _("Drawer"));
+	if (!drawer->button) {
+		free_drawer (drawer);
+		return NULL;
+	}
 
 	/*A hack since this function only pretends to work on window
 	  widgets (which we actually kind of are) this will select
@@ -600,7 +598,7 @@ load_drawer_applet (gchar       *mypanel_id,
 
 		drawer->info = panel_applet_register (
 					drawer->button, drawer,
-					(GDestroyNotify) g_free,
+					(GDestroyNotify) free_drawer,
 					panel, pos, exactpos,
 					APPLET_DRAWER, gconf_key);
 
@@ -633,7 +631,7 @@ load_drawer_applet (gchar       *mypanel_id,
 		panel_applet_add_callback (drawer->info,
 					   "properties",
 					   GTK_STOCK_PROPERTIES,
-					   _("Properties..."));
+					   _("Properties"));
 
 	panel_applet_add_callback (
 		drawer->info, "help", GTK_STOCK_HELP, _("Help"));

@@ -18,7 +18,6 @@
 #include "drawer.h"
 #include "launcher.h"
 #include "logout.h"
-#include "menu-properties.h"
 #include "menu-util.h"
 #include "menu.h"
 #include "panel-config.h"
@@ -218,10 +217,7 @@ applet_callback_callback (GtkWidget      *widget,
 		}
 		break;
 	case APPLET_MENU:
-		if(strcmp(menu->name,"properties")==0)
-			menu_properties(menu->info->data);
-
-		else if (strcmp (menu->name, "help") == 0) {
+		if (strcmp (menu->name, "help") == 0) {
 			panel_show_help ("wgospanel.xml", "gospanel-37");
 		}
 		break;
@@ -679,7 +675,9 @@ applet_destroy (GtkWidget *w, AppletInfo *info)
 
 		location = gnome_desktop_item_get_location (launcher->ditem);
 
-		session_add_dead_launcher (location);
+		/* Launcher may not yet have been hoarded */
+		if (location)
+			session_add_dead_launcher (location);
 	}
 
 
@@ -811,7 +809,11 @@ panel_applet_load_from_unique_id (AppletType   type,
 	temp_key = panel_applet_get_full_gconf_key (
 			type, profile, unique_id, "object_type");
 	type_string = gconf_client_get_string (gconf_client, temp_key, NULL);
-
+	if (!type_string) {
+		g_printerr (_("No object_type set for panel object with ID %s\n"), unique_id);
+		return;
+	}
+        
 	if (!gconf_string_to_enum (object_type_enum_map,
 				   type_string,
 				   (int *) &applet_type)) {
@@ -829,7 +831,11 @@ panel_applet_load_from_unique_id (AppletType   type,
 	temp_key = panel_applet_get_full_gconf_key (
 			type, profile, unique_id, "panel_id");
 	panel_id = gconf_client_get_string (gconf_client, temp_key, NULL);
-
+	if (!panel_id) {
+		g_printerr (_("No panel_id set for panel object with ID %s\n"), unique_id);
+		return;
+	}
+        
 	temp_key = panel_applet_get_full_gconf_key (
 			type, profile, unique_id, "panel_right_stick");
 	right_stick = gconf_client_get_bool (gconf_client, temp_key, NULL);
@@ -965,7 +971,7 @@ panel_applet_save_position (AppletInfo *applet_info,
 	client  = panel_gconf_get_client ();
 	profile = panel_gconf_get_profile ();
 
-	right_stick = panel_applet_get_right_stick (applet_info);
+	right_stick = panel_is_applet_right_stick (applet_info->widget);
 	temp_key = panel_applet_get_full_gconf_key (
 			applet_info->type, profile, gconf_key, "panel_right_stick");
 	gconf_client_set_bool (client, temp_key, right_stick, NULL);
@@ -1208,17 +1214,4 @@ panel_applet_get_panel_id (AppletInfo *applet)
 	panel = PANEL_WIDGET (applet->widget->parent);
 
 	return panel->unique_id;
-}
-
-gboolean
-panel_applet_get_right_stick (AppletInfo *applet)
-{
-	PanelWidget *panel;
-
-	g_return_val_if_fail (applet != NULL, FALSE);
-	g_return_val_if_fail (G_IS_OBJECT (applet->widget), FALSE);
-
-	panel = PANEL_WIDGET (applet->widget->parent);
-
-	return panel_widget_is_applet_stuck (panel, applet->widget);
 }

@@ -559,15 +559,18 @@ panel_applet_expose (GtkWidget      *widget,
         if (GTK_WIDGET_HAS_FOCUS (widget)) {
 		gint focus_width, focus_pad;
 		gint x, y, width, height;
+		gint border_width;
 
 		gtk_widget_style_get (widget,
 				      "focus-line-width", &focus_width,
 				      "focus-padding", &focus_pad,
 				      NULL);
-		x = widget->allocation.x;
-		y = widget->allocation.y;
-		width = widget->allocation.width - (focus_width + focus_pad);
-		height = widget->allocation.height - (focus_width + focus_pad);
+		border_width = GTK_CONTAINER (widget)->border_width;
+
+		x = widget->allocation.x + focus_pad;
+		y = widget->allocation.y + focus_pad;
+		width = widget->allocation.width - 2 * border_width - 0.5 * focus_pad;
+		height = widget->allocation.height - 2 * border_width - 0.5 * focus_pad;
 		gtk_paint_focus (widget->style, widget->window,
                                  GTK_WIDGET_STATE (widget),
                                  &event->area, widget, "panel_applet",
@@ -787,7 +790,13 @@ panel_applet_handle_background_string (PanelApplet  *applet,
  * @color: A #GdkColor to be filled in.
  * @pixmap: Returned #GdkPixmap
  *
- * Returns the current background type and fills in the relevant
+ * Returns the current background type. If the background
+ * type is %PANEL_NO_BACKGROUND both @color and @pixmap will
+ * be unaffected. If the background type is %PANEL_COLOR_BACKGROUND
+ * then @color will contain the current panel background colour.
+ * If the background type is %PANEL_PIXMAP_BACKGROUND, @pixmap will
+ * contain a pointer to a #GdkPixmap which is a copy of the applet's
+ * portion of the panel's background pixmap.
  * 
  * Return value: a #PanelAppletOrient value.
  */
@@ -1290,10 +1299,8 @@ panel_applet_setup (PanelApplet *applet)
 
 /**
  * panel_applet_new:
- * @widget: The widget the contains all the widgetry the applet
- *          wishes to expose.
  *
- * Creates a new #PanelApplet which exposes @widget.
+ * Creates a new #PanelApplet.
  *
  * Return value: A #GtkWidget on success, %NULL on failure.
  */

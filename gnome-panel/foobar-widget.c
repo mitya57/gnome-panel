@@ -204,9 +204,9 @@ append_actions_menu (FoobarWidget *foo,
 	}
 
 	if (panel_is_program_in_path ("gnome-panel-screenshot")) {
-		item = pixmap_menu_item_new (_("Take a Screen Shot..."), "gnome-screenshot.png", FALSE);
+		item = pixmap_menu_item_new (_("Screenshot..."), "gnome-screenshot.png", FALSE);
 		gtk_tooltips_set_tip (panel_tooltips, item,
-			      	      _("Take a screen shot of your desktop"),
+			      	      _("Take a screenshot of your desktop"),
 			              NULL);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
         	g_signal_connect (item, "activate",
@@ -217,7 +217,7 @@ append_actions_menu (FoobarWidget *foo,
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	if (panel_is_program_in_path  ("xscreensaver")) {
-		item = pixmap_menu_item_new (_("Lock Display"), 
+		item = pixmap_menu_item_new (_("Lock Screen"), 
 					     "gnome-lockscreen.png",
 					     FALSE /* force_image */);
 		gtk_tooltips_set_tip (panel_tooltips, item,

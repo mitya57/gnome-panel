@@ -12,7 +12,7 @@
 #include "foobar-widget.h"
 #include "gnome-run.h"
 #include "panel.h"
-#include "panel-config-global.h"
+#include "menu.h"
 #include "panel-util.h"
 #include "egg-screen-exec.h"
 
@@ -266,7 +266,7 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 			return GDK_FILTER_CONTINUE;
 
 		panel_widget = panels->data;
-		menu = make_popup_panel_menu (panel_widget);
+		menu = create_panel_root_menu (panel_widget);
 		panel = panel_widget->panel_parent;
 
 		if (BASEP_IS_WIDGET (panel)) {
@@ -276,7 +276,6 @@ panel_global_keys_filter (GdkXEvent *gdk_xevent,
 
 		gtk_menu_set_screen (GTK_MENU (menu),
 				     panel_screen_from_toplevel (panel));
-
 		gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 				NULL, NULL, 0, GDK_CURRENT_TIME);
 		return GDK_FILTER_REMOVE;

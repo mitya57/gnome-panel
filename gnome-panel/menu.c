@@ -35,6 +35,8 @@
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 
+#include "menu.h"
+
 #include "aligned-widget.h"
 #include "button-widget.h"
 #include "distribution.h"
@@ -47,7 +49,6 @@
 #include "logout.h"
 #include "nothing.h"
 #include "menu-fentry.h"
-#include "menu-properties.h"
 #include "menu-util.h"
 #include "menu-ditem.h"
 #include "multiscreen-stuff.h"
@@ -1086,7 +1087,7 @@ show_help_on (GtkWidget    *widget,
 						&error);
 	if (item != NULL) {
 		const char *docpath = gnome_desktop_item_get_string
-			(item, "DocPath");
+			(item, "X-GNOME-DocPath");
 		if ( ! panel_show_gnome_kde_help (docpath, &error)) {
 			panel_error_dialog (
 				menuitem_to_screen (sim->menuitem),
@@ -1222,7 +1223,7 @@ add_menudrawer_to_panel(GtkWidget *widget, gpointer data)
 	pd = g_object_get_data (G_OBJECT (panel->panel_parent), "PanelData");
 	if (pd != NULL)
 		insertion_pos = pd->insertion_pos;
-	
+
 	add_drawers_from_dir (mf->menudir, mf->dir_name, insertion_pos, panel);
 }
 
@@ -1420,7 +1421,7 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 				 G_CALLBACK(gtk_menu_shell_deactivate),
 				 G_OBJECT(item->parent));
 
-			if (gnome_desktop_item_get_string (ii, "DocPath") != NULL) {
+			if (gnome_desktop_item_get_string (ii, "X-GNOME-DocPath") != NULL) {
 				char *title;
 				const char *name;
 
@@ -1457,7 +1458,7 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					   "activate",
 					   G_CALLBACK(edit_dentry),
 					   sim);
-			setup_menuitem (menuitem, NULL, _("Properties..."));
+			setup_menuitem (menuitem, NULL, _("Properties"));
 			gtk_menu_shell_append (GTK_MENU_SHELL (sim->menu), menuitem);
 #endif /* FIXME */
 
@@ -1532,7 +1533,7 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					    "activate",
 					    G_CALLBACK (edit_direntry),
 					    sim);
-			setup_menuitem (menuitem, NULL, _("Properties..."));
+			setup_menuitem (menuitem, NULL, _("Properties"));
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menuitem);
 #endif /* FIXME */
 		}
@@ -1683,7 +1684,7 @@ setup_full_menuitem (GtkWidget  *menuitem,
 
 	GtkWidget *label;
 
-	label = gtk_label_new (title);
+	label = gtk_label_new_with_mnemonic (title);
 	gtk_misc_set_alignment (GTK_MISC(label), 0.0, 0.5);
 	gtk_widget_show (label);
 	
@@ -2399,7 +2400,7 @@ add_bonobo_applet (GtkWidget  *widget,
 	if (pd != NULL)
 		insertion_pos = pd->insertion_pos;
 
-	panel_applet_frame_load (iid, panel, insertion_pos, NULL);
+	panel_applet_frame_load (iid, panel, insertion_pos, FALSE, NULL);
 }
 
 static const gchar applet_requirements [] = 
@@ -2786,8 +2787,52 @@ create_add_panel_submenu (void)
 	menu = menu_new ();
 
 	menuitem = gtk_image_menu_item_new ();
+	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-corner.png", 
+				   _("C_orner Panel"));
+	gtk_tooltips_set_tip (panel_tooltips, menuitem, 
+			      _("Create corner panel"), NULL);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	g_signal_connect (G_OBJECT(menuitem), "activate",
+			   G_CALLBACK(create_new_panel),
+			   GINT_TO_POINTER(ALIGNED_PANEL));
+
+	menuitem = gtk_image_menu_item_new ();
+	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-edge.png",
+				   _("_Edge Panel"));
+	gtk_tooltips_set_tip (panel_tooltips, menuitem, 
+			      _("Create edge panel"), NULL);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	g_signal_connect (G_OBJECT(menuitem), "activate",
+			   G_CALLBACK(create_new_panel),
+			   GINT_TO_POINTER(EDGE_PANEL));
+
+	menuitem = gtk_image_menu_item_new ();
+	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-floating.png", 
+				   _("_Floating Panel"));
+	gtk_tooltips_set_tip (panel_tooltips, menuitem, 
+			      _("Create floating panel"), NULL);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	g_signal_connect (G_OBJECT(menuitem), "activate",
+			   G_CALLBACK(create_new_panel),
+			   GINT_TO_POINTER(FLOATING_PANEL));
+
+	menuitem = gtk_image_menu_item_new ();
+	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-sliding.png", 
+				   _("_Sliding Panel"));
+	gtk_tooltips_set_tip (panel_tooltips, menuitem, 
+			      _("Create sliding panel"), NULL);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	g_signal_connect (G_OBJECT(menuitem), "activate",
+			   G_CALLBACK(create_new_panel),
+			   GINT_TO_POINTER(SLIDING_PANEL));
+
+	menuitem = add_menu_separator (menu);
+
+	menuitem = gtk_image_menu_item_new ();
 	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-menu.png",
-				   _("Menu Panel"));
+				   _("_Menu Panel"));
+	gtk_tooltips_set_tip (panel_tooltips, menuitem, 
+			      _("Create menu panel"), NULL);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 
 	g_signal_connect (menuitem, "activate",
@@ -2800,41 +2845,9 @@ create_add_panel_submenu (void)
 	if (foobar_widget_exists (0, 0))
 		gtk_widget_hide (menuitem);
 
-	g_signal_connect (menu, "show",
+	g_signal_connect (G_OBJECT (menu), "show",
 			  G_CALLBACK (foobar_item_showhide),
 			  menuitem);
- 	
-	menuitem = gtk_image_menu_item_new ();
-	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-edge.png",
-				   _("Edge Panel"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-	g_signal_connect (G_OBJECT(menuitem), "activate",
-			   G_CALLBACK(create_new_panel),
-			   GINT_TO_POINTER(EDGE_PANEL));
-
-	menuitem = gtk_image_menu_item_new ();
-	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-corner.png", 
-				   _("Corner Panel"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-	g_signal_connect (G_OBJECT(menuitem), "activate",
-			   G_CALLBACK(create_new_panel),
-			   GINT_TO_POINTER(ALIGNED_PANEL));
-
-	menuitem = gtk_image_menu_item_new ();
-	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-sliding.png", 
-				   _("Sliding Panel"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-	g_signal_connect (G_OBJECT(menuitem), "activate",
-			   G_CALLBACK(create_new_panel),
-			   GINT_TO_POINTER(SLIDING_PANEL));
-	
-	menuitem = gtk_image_menu_item_new ();
-	setup_menuitem_try_pixmap (menuitem, "gnome-panel-type-floating.png", 
-				   _("Floating Panel"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-	g_signal_connect (G_OBJECT(menuitem), "activate",
-			   G_CALLBACK(create_new_panel),
-			   GINT_TO_POINTER(FLOATING_PANEL));
 
 	return menu;
 }
@@ -2928,14 +2941,14 @@ create_kde_menu (GtkWidget *menu, gboolean fake_submenus,
 		menu = create_menu_at (menu, 
 				       uri,
 				       launcher_add,
-				       _("KDE menus"), 
+				       _("KDE Menu"), 
 				       pixmap_name,
 				       fake_submenus,
 				       force);
 	} else {
 		menu = create_fake_menu_at (uri,
 					    launcher_add,
-					    _("KDE menus"),
+					    _("KDE Menu"),
 					    pixmap_name);
 	}
 	g_free (pixmap_name);
@@ -3013,10 +3026,17 @@ remove_panel_query (GtkWidget *menuitem,
 	dialog = gtk_message_dialog_new (
 			NULL, 0 /* flags */,
 			GTK_MESSAGE_QUESTION,
-			GTK_BUTTONS_OK_CANCEL,
-			_("When a panel is removed, the panel "
-			"and its\napplet settings are lost. "
+			GTK_BUTTONS_NONE,
+			_("When a panel is deleted, the panel "
+			"and its\n settings are lost. "
 			"Delete this panel?"));
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				GTK_STOCK_DELETE, GTK_RESPONSE_OK,
+				NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+	gtk_window_set_title (GTK_WINDOW (dialog), "Delete Panel");
+
 	gtk_window_set_wmclass (GTK_WINDOW (dialog),
 				"panel_remove_query", "Panel");
 #ifdef HAVE_GTK_MULTIHEAD
@@ -3296,7 +3316,7 @@ make_add_submenu (GtkWidget *menu, gboolean fake_submenus)
 	menuitem = gtk_image_menu_item_new ();
 	setup_menuitem_try_pixmap (menuitem,
 				   "gnome-term-night.png",
-				   _("Log out button"));
+				   _("Log Out Button"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	g_signal_connect (G_OBJECT(menuitem), "activate",
 			   G_CALLBACK(add_logout_to_panel),
@@ -3312,21 +3332,6 @@ make_add_submenu (GtkWidget *menu, gboolean fake_submenus)
 			   G_CALLBACK(add_lock_to_panel),
 			   NULL);
 	setup_internal_applet_drag(menuitem, "LOCK:NEW");
-}
-
-/* just run the gnome-panel-preferences */
-static void
-panel_config_global (GtkWidget *menuitem)
-{
-	GdkScreen *screen;
-	char      *argv [2] = {"gnome-panel-preferences", NULL};
-
-	screen = menuitem_to_screen (menuitem);
-
-	if (egg_screen_execute_async (screen, g_get_home_dir (), 1, argv) < 0)
-		panel_error_dialog (screen,
-				    "cannot_exec_global_props",
-				    _("Cannot execute panel global preferences"));
 }
 
 static void
@@ -3364,15 +3369,17 @@ setup_remove_this_panel(GtkWidget *menu, GtkWidget *menuitem)
 	 * and then the confirm_panel_remove changed, but oh well */
 	if (panel->applet_list != NULL &&
 	    global_config.confirm_panel_remove)
-		gtk_label_set_text(GTK_LABEL(label), _("Delete this panel..."));
+		gtk_label_set_text_with_mnemonic (
+			GTK_LABEL (label), _("_Delete This Panel..."));
 	else
-		gtk_label_set_text(GTK_LABEL(label), _("Delete this panel"));
+		gtk_label_set_text_with_mnemonic (
+			GTK_LABEL (label), _("_Delete This Panel"));
 }
 
 static void
 show_panel_help (GtkWidget *w, gpointer data)
 {
-	panel_show_help ("wgospanel.xml", "gospanel-5");
+	panel_show_help ("wgospanel.xml", "gospanel-1");
 }
 
 static void
@@ -3384,7 +3391,7 @@ make_panel_submenu (GtkWidget *menu, gboolean fake_submenus, gboolean is_basep)
 		menuitem = gtk_image_menu_item_new ();
 		setup_menuitem (menuitem,
 				gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU),
-				_("Add to panel"));
+				_("_Add to Panel"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 
 		submenu = menu_new ();
@@ -3394,18 +3401,10 @@ make_panel_submenu (GtkWidget *menu, gboolean fake_submenus, gboolean is_basep)
 		make_add_submenu (submenu, fake_submenus);
 
 		menuitem = gtk_image_menu_item_new ();
-		setup_menuitem (menuitem, 
-				gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU),
-				_("Create panel"));
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem),
-					   create_add_panel_submenu ());
-
-		menuitem = gtk_image_menu_item_new ();
 
 		setup_menuitem (menuitem, 
 				gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU),
-				_("Delete this panel"));
+				_("_Delete This Panel"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 		g_signal_connect (G_OBJECT (menuitem), "activate",
 				    G_CALLBACK (remove_panel_query),
@@ -3414,14 +3413,12 @@ make_panel_submenu (GtkWidget *menu, gboolean fake_submenus, gboolean is_basep)
 				    G_CALLBACK(setup_remove_this_panel),
 				    menuitem);
 
-		add_menu_separator(menu);
-
 		if (is_basep) {
 			menuitem = gtk_image_menu_item_new ();
 			setup_menuitem (menuitem,
 					gtk_image_new_from_stock (GTK_STOCK_PROPERTIES,
 								  GTK_ICON_SIZE_MENU),
-					_("Properties..."));
+					_("_Properties"));
 
 			gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 			g_signal_connect (G_OBJECT (menuitem), "activate",
@@ -3429,15 +3426,15 @@ make_panel_submenu (GtkWidget *menu, gboolean fake_submenus, gboolean is_basep)
 					    NULL);
 		}
 
+		add_menu_separator (menu);
+
 		menuitem = gtk_image_menu_item_new ();
-		setup_menuitem (menuitem,
-				gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,
-							  GTK_ICON_SIZE_MENU),
-				_("Global Preferences..."));
+		setup_menuitem (menuitem, 
+				gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU),
+				_("_New Panel"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-		g_signal_connect (menuitem, "activate",
-				  G_CALLBACK (panel_config_global), 
-				  NULL);
+		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem),
+					   create_add_panel_submenu ());
 
 		add_menu_separator (menu);
 	}
@@ -3446,7 +3443,7 @@ make_panel_submenu (GtkWidget *menu, gboolean fake_submenus, gboolean is_basep)
 	setup_menuitem (menuitem,
 			gtk_image_new_from_stock (GTK_STOCK_HELP,
 						  GTK_ICON_SIZE_MENU),
-			_("Panel Manual..."));
+			_("_Help"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	g_signal_connect (G_OBJECT (menuitem), "activate",
 			    G_CALLBACK (show_panel_help), NULL);
@@ -3483,7 +3480,7 @@ create_panel_submenu (GtkWidget *menu,
 	menuitem = gtk_image_menu_item_new ();
 	setup_menuitem (menuitem,
 			gtk_image_new_from_stock (GNOME_STOCK_ABOUT, GTK_ICON_SIZE_MENU),
-			_("About the panel..."));
+			_("_About Panels"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	g_signal_connect (menuitem, "activate",
 			  G_CALLBACK (about_cb), NULL);
@@ -3496,7 +3493,7 @@ create_panel_submenu (GtkWidget *menu,
 		menuitem = gtk_image_menu_item_new ();
 		setup_menuitem (menuitem,
 				gtk_image_new_from_stock (GNOME_STOCK_ABOUT, GTK_ICON_SIZE_MENU),
-				_("About GNOME..."));
+				_("About _GNOME"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 		g_signal_connect_data (G_OBJECT (menuitem), "activate",
 				       G_CALLBACK (about_gnome_cb),
@@ -3521,7 +3518,7 @@ create_desktop_menu (GtkWidget *menu, gboolean fake_submenus)
 		menuitem = gtk_image_menu_item_new ();
 		setup_menuitem_try_pixmap (menuitem,
 					   "gnome-lockscreen.png",
-					   _("Lock screen"));
+					   _("Lock Screen"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 		g_signal_connect (menuitem, "activate",
 				  G_CALLBACK (panel_lock), NULL);
@@ -3534,7 +3531,7 @@ create_desktop_menu (GtkWidget *menu, gboolean fake_submenus)
 	menuitem = gtk_image_menu_item_new ();
 	setup_menuitem_try_pixmap (menuitem,
 				   "gnome-term-night.png",
-				   _("Log out"));
+				   _("Log Out"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	g_signal_connect (G_OBJECT (menuitem), "activate",
 			    G_CALLBACK(panel_quit), 0);
@@ -3594,7 +3591,7 @@ add_kde_submenu (GtkWidget *root_menu, gboolean fake_submenus,
 	panel_load_menu_image_deferred (menuitem, "go.png", "exec.xpm",
 					FALSE /* force_image */);
 
-	setup_menuitem (menuitem, NULL, _("KDE menus"));
+	setup_menuitem (menuitem, NULL, _("KDE Menu"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (root_menu), menuitem);
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem), menu);
 	g_signal_connect (G_OBJECT(menu),"show",
@@ -3776,10 +3773,10 @@ create_root_menu (GtkWidget   *root_menu,
 	    panel_is_program_in_path ("gnome-panel-screenshot")) {
 		menuitem = gtk_image_menu_item_new ();
 		setup_menuitem_try_pixmap (menuitem, "gnome-screenshot.png",
-					   _("Take a Screen Shot..."));
+					   _("Screenshot..."));
 		gtk_menu_shell_append (GTK_MENU_SHELL (root_menu), menuitem);
 		gtk_tooltips_set_tip (panel_tooltips, menuitem,
-				      _("Take a screen shot of your desktop"),
+				      _("Take a screenshot of your desktop"),
 				      NULL);
 		g_signal_connect (menuitem, "activate",
 				  G_CALLBACK (menu_screenshot), NULL);
@@ -3787,15 +3784,7 @@ create_root_menu (GtkWidget   *root_menu,
 
 	if (((has_inline && !has_subs) || has_subs) && has_subs2)
 		add_menu_separator (root_menu);
-
-	if (flags & MAIN_MENU_PANEL_SUB) {
-		menu = create_panel_submenu (NULL, fake_submenus, is_basep);
-		menuitem = gtk_image_menu_item_new ();
-		setup_menuitem_try_pixmap (menuitem, "gnome-panel.png", 
-					   _("Panel"));
-		gtk_menu_shell_append (GTK_MENU_SHELL (root_menu), menuitem);
-		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem), menu);
-	}
+	
 	if (flags & MAIN_MENU_DESKTOP_SUB) {
 		menu = create_desktop_menu (NULL, fake_submenus);
 		menuitem = gtk_image_menu_item_new ();
@@ -3807,9 +3796,6 @@ create_root_menu (GtkWidget   *root_menu,
 
 	if (!has_inline2)
 		return root_menu;
-
-	if (has_subs2 || has_subs || has_inline)
-		add_menu_separator (root_menu);
 
 	if (flags & MAIN_MENU_PANEL) {
 		make_panel_submenu (root_menu, fake_submenus, is_basep);
@@ -3883,7 +3869,7 @@ add_menu_widget (Menu *menu,
 				TRUE /* extra_items */);
 
 		gtk_tooltips_set_tip (panel_tooltips, menu->button,
-				      _("Main Menu"), NULL);
+				      _("GNOME Menu"), NULL);
 	} else {
 		char *tooltip;
 
@@ -3911,8 +3897,9 @@ add_menu_widget (Menu *menu,
 					BASEP_IS_WIDGET (panel->panel_parent),
 					TRUE /* extra_items */);
 			gtk_tooltips_set_tip (panel_tooltips, menu->button,
-					      _("Main Menu"), NULL);
+					      _("GNOME Menu"), NULL);
 		}
+
 	}
 
 	/* sink the menu, none of this floating */
@@ -3941,7 +3928,7 @@ menu_button_menu_popup (Menu    *menu,
 	if (menu->menu == NULL) {
 		char *this_menu = get_real_menu_path (menu->path, menu->main_menu);
 		GSList *list = g_slist_append (NULL, this_menu);
-		
+	
 		add_menu_widget (menu, PANEL_WIDGET(menu->button->parent),
 				 list, TRUE);
 		
@@ -4043,7 +4030,6 @@ create_panel_menu (PanelWidget *panel, const char *menudir, gboolean main_menu,
 
 	menu->path = g_strdup (menudir);
 
-
 	menu->custom_icon = custom_icon;
 	if ( ! string_empty (custom_icon_file))
 		menu->custom_icon_file = g_strdup (custom_icon_file);
@@ -4063,6 +4049,11 @@ create_panel_menu (PanelWidget *panel, const char *menudir, gboolean main_menu,
 	/*make the pixmap*/
 	menu->button = button_widget_new (pixmap_name, -1,
 					  TRUE, orient, _("Menu"));
+	g_free (pixmap_name);
+	if (!menu->button) {
+		free_menu (menu);
+		return NULL;
+	}
 
 	/*A hack since this function only pretends to work on window
 	  widgets (which we actually kind of are) this will select
@@ -4102,15 +4093,13 @@ create_panel_menu (PanelWidget *panel, const char *menudir, gboolean main_menu,
 
 	if (main_menu) {
 		gtk_tooltips_set_tip (panel_tooltips, menu->button,
-				      _("Main Menu"), NULL);
+				      _("GNOME Menu"), NULL);
 	} else {
 		char *tooltip = get_menu_tooltip (menu->menu);
 		gtk_tooltips_set_tip (panel_tooltips, menu->button,
 				      tooltip, NULL);
 		g_free (tooltip);
 	}
-
-	g_free (pixmap_name);
 
 	return menu;
 }
@@ -4181,12 +4170,6 @@ load_menu_applet (const char  *params,
 			return;
 
 		menu->info = info;
-
-		if (!commie_mode)
-			panel_applet_add_callback (info, 
-						   "properties",
-						   GTK_STOCK_PROPERTIES,
-						   _("Properties..."));
 
 		panel_applet_add_callback (info, "help", GTK_STOCK_HELP, _("Help"));
 	}
@@ -4417,7 +4400,11 @@ menu_load_from_gconf (PanelWidget *panel_widget,
 	temp_key = panel_gconf_full_key (
 			PANEL_GCONF_OBJECTS, profile, gconf_key, "path");
 	path = gconf_client_get_string (client, temp_key, NULL);
-
+	if (!path) {
+		g_printerr (_("No path set at %s for panel menu object\n"), temp_key);
+		return;
+	}
+        
 	temp_key = panel_gconf_full_key (
 			PANEL_GCONF_OBJECTS, profile, gconf_key, "main-menu");
 	main_menu = gconf_client_get_bool (client, temp_key, NULL);

@@ -1,3 +1,15 @@
+2002-07-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* fish.c: (something_fishy_going_on): impl.
+	(fish_locate_fortune_command), (update_fortune_dialog):
+	warn the user of fishy goings on if we can't either
+	locate the command or execure it. #75783.
+
+2002-07-06  Miguel Rodríguez Pérez  <migrax@terra.es>
+
+	* fish.c (update_fortune_dialog): Convert the fortune string from
+	the user locale to UTF-8. This fixes bug #82254
+
 2002-06-25  Mark McLoughlin  <mark@skynet.ie>
 
 	* fish.c: (fishy_root_window),
@@ -8,6 +20,13 @@
 	(update_fortune_dialog), (change_water),
 	(display_about_dialog): set the screen on which the window
 	is to realize.
+
+2002-06-21  Mark McLoughlin  <mark@skynet.ie>
+  
+  	* fish.c: (load_image_file), (create_fish_widget),
+
+	* fish.c: sanity check speed and frames values.
+	Fixes #70872.
 
 2002-06-21  Mark McLoughlin  <mark@skynet.ie>
 

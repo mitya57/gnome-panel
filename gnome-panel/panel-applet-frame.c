@@ -106,7 +106,7 @@ panel_applet_frame_load_from_gconf (PanelWidget *panel_widget,
 	temp_key = panel_gconf_full_key (PANEL_GCONF_APPLETS, profile, gconf_key, "bonobo_iid");
 	applet_iid = gconf_client_get_string (client, temp_key, NULL);
 
-	panel_applet_frame_load (applet_iid, panel_widget, position, gconf_key);
+	panel_applet_frame_load (applet_iid, panel_widget, position, TRUE, gconf_key);
 
 	g_free (applet_iid);
 }
@@ -151,7 +151,8 @@ static BonoboUIVerb popup_verbs [] = {
 void
 panel_applet_frame_load (const gchar *iid,
 			 PanelWidget *panel,
-			 gint         pos,
+			 int          position,
+			 gboolean     exactpos,
 			 const char  *gconf_key)
 {
 	GtkWidget  *frame = NULL;
@@ -175,8 +176,8 @@ panel_applet_frame_load (const gchar *iid,
 
 	/* Pass frame as 2nd argument, since it is used in
 	 * panel_remove_applets()  */
-	info = panel_applet_register (frame, frame, NULL, panel, pos,
-				      FALSE, APPLET_BONOBO, real_key);
+	info = panel_applet_register (frame, frame, NULL, panel, position,
+				      exactpos, APPLET_BONOBO, real_key);
 
 	if (!info)
 		g_warning (_("Cannot register control widget\n"));
@@ -644,7 +645,7 @@ panel_applet_frame_reload_response (GtkWidget        *dialog,
 
 		panel_applet_clean (info, FALSE);
 
-		panel_applet_frame_load (iid, panel, position, gconf_key);
+		panel_applet_frame_load (iid, panel, position, TRUE, gconf_key);
 
 		g_free (iid);
 		g_free (gconf_key);
@@ -663,7 +664,7 @@ panel_applet_frame_get_name (char *iid)
 	query = g_strdup_printf ("iid == '%s'", iid);
 
 	list = bonobo_activation_query (query, NULL, NULL);
-	if (list) {
+	if (list && list->_length > 0 && list->_buffer) {
 		Bonobo_ServerInfo *info = &list->_buffer [0];
 		const GList       *langs_glist;
 		GSList            *langs_gslist;
@@ -711,7 +712,7 @@ panel_applet_frame_cnx_broken (PanelAppletFrame *frame)
 			  "Reload this applet?\n\n"
 			  "(If you choose not to reload it at this time"
 			  " you can always add it by right clicking on "
-			  "the panel and clicking on the \"Add to panel\""
+			  "the panel and clicking on the \"Add to Panel\""
 			  " submenu)"), applet_name ? applet_name : "");
 
 	dialog = gtk_message_dialog_new (

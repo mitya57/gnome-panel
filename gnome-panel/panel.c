@@ -922,16 +922,6 @@ drop_menu (PanelWidget *panel, int pos, const char *dir)
 	load_menu_applet (dir, FALSE /* main_menu */, flags, TRUE, FALSE, NULL, panel, pos, TRUE, NULL);
 }
 
-static gboolean
-uri_exists (const char *uri)
-{
-	gboolean ret;
-	GnomeVFSURI *vfs_uri = gnome_vfs_uri_new (uri);
-	ret = gnome_vfs_uri_exists (vfs_uri);
-	gnome_vfs_uri_unref (vfs_uri);
-	return ret;
-}
-
 static void
 drop_nautilus_uri (PanelWidget *panel,
 		   int pos,
@@ -965,7 +955,7 @@ drop_directory (PanelWidget *panel, int pos, const char *dir)
 	/* not filename, but path, these are uris, not local
 	 * files */
 	tmp = g_build_path ("/", dir, ".directory", NULL);
-	if (uri_exists (tmp)) {
+	if (panel_uri_exists (tmp)) {
 		g_free (tmp);
 		drop_menu (panel, pos, dir);
 		return;
@@ -973,7 +963,7 @@ drop_directory (PanelWidget *panel, int pos, const char *dir)
 	g_free (tmp);
 
 	tmp = g_build_path ("/", dir, ".order", NULL);
-	if (uri_exists (tmp)) {
+	if (panel_uri_exists (tmp)) {
 		g_free (tmp);
 		drop_menu (panel, pos, dir);
 		return;
@@ -1512,7 +1502,7 @@ drag_data_recieved_cb (GtkWidget	*widget,
 			return;
 		}
 		panel_applet_frame_load ((char *)selection_data->data,
-					 panel, pos, NULL);
+					 panel, pos, TRUE, NULL);
 		break;
 	case TARGET_APPLET_INTERNAL:
 		drop_internal_applet (panel, pos, (char *)selection_data->data,
@@ -2061,7 +2051,7 @@ panel_load_panels_from_gconf (void)
 
 		tmp_str = panel_get_string (
 				profile, panel_id, "panel_background_type", "no_background");
-		gconf_string_to_enum (background_type_enum_map, tmp_str, (gint *) &back_type);
+		gconf_string_to_enum (background_type_enum_map, tmp_str, (int *) &back_type);
 		g_free (tmp_str);
 		
 		fit_pixmap_bg = panel_get_bool (profile, panel_id,
@@ -2097,7 +2087,7 @@ panel_load_panels_from_gconf (void)
 			tmp_str = panel_get_string (profile, panel_id,
 						    "screen_edge", "panel-edge-bottom");
 			gconf_string_to_enum (
-				panel_edge_type_enum_map, tmp_str, (gint *) &edge);
+				panel_edge_type_enum_map, tmp_str, (int *) &edge);
 			g_free (tmp_str);
 			
 			panel = edge_widget_new (panel_id,
@@ -2122,13 +2112,13 @@ panel_load_panels_from_gconf (void)
 			tmp_str = panel_get_string (profile, panel_id,
 						    "screen_edge", "panel-edge-bottom");
 			gconf_string_to_enum (
-				panel_edge_type_enum_map, tmp_str, (gint *) &edge);
+				panel_edge_type_enum_map, tmp_str, (int *) &edge);
 			g_free (tmp_str);
 
 			tmp_str = panel_get_string (profile, panel_id,
 						    "panel_align", "panel-alignment-left");
 			gconf_string_to_enum (
-				panel_alignment_type_enum_map, tmp_str, (gint *) &align);
+				panel_alignment_type_enum_map, tmp_str, (int *) &align);
 			g_free (tmp_str);
 
 			panel = aligned_widget_new (panel_id,
@@ -2156,13 +2146,13 @@ panel_load_panels_from_gconf (void)
 			tmp_str = panel_get_string (profile, panel_id,
 						    "screen_edge", "panel-edge-bottom");
 			gconf_string_to_enum (
-				panel_edge_type_enum_map, tmp_str, (gint *) &edge);
+				panel_edge_type_enum_map, tmp_str, (int *) &edge);
 			g_free (tmp_str);
 
 			tmp_str = panel_get_string (profile, panel_id,
 						    "panel_anchor", "panel-anchor-left");
 			gconf_string_to_enum (
-				panel_anchor_type_enum_map, tmp_str, (gint *) &anchor);
+				panel_anchor_type_enum_map, tmp_str, (int *) &anchor);
 			g_free (tmp_str);
 			
 			offset = panel_get_int (profile, panel_id, "panel_offset", 0);
@@ -2191,7 +2181,7 @@ panel_load_panels_from_gconf (void)
 			tmp_str = panel_get_string (profile, panel_id,
 						    "panel_orient", "panel-orient-up");
 			gconf_string_to_enum (
-				panel_orient_type_enum_map, tmp_str, (gint *) &orient);
+				panel_orient_type_enum_map, tmp_str, (int *) &orient);
 			g_free (tmp_str);
 
 			panel = drawer_widget_new (panel_id,
@@ -2217,7 +2207,7 @@ panel_load_panels_from_gconf (void)
 			tmp_str = panel_get_string (profile, panel_id,
 						    "panel_orient", "panel-orientation-horizontal");
 			gconf_string_to_enum (
-				panel_orientation_type_enum_map, tmp_str, (gint *) &orient);
+				panel_orientation_type_enum_map, tmp_str, (int *) &orient);
 			g_free (tmp_str);
 
 			x = panel_get_int (profile, panel_id, "panel_x_position", 0);
@@ -2541,4 +2531,24 @@ panel_monitor_from_panel_widget (PanelWidget *panel)
 		return BASEP_WIDGET (panel->panel_parent)->monitor;
 	else
 		return FOOBAR_WIDGET (panel->panel_parent)->monitor;
+}
+
+gboolean
+panel_is_applet_right_stick (GtkWidget *applet)
+{
+        PanelWidget *panel;
+
+        g_return_val_if_fail (GTK_IS_WIDGET (applet), FALSE);
+        g_return_val_if_fail (PANEL_IS_WIDGET (applet->parent), FALSE);
+
+        panel = PANEL_WIDGET (applet->parent);
+
+        /* These types of panels are *always* packed */
+        if (ALIGNED_IS_WIDGET (panel->panel_parent) ||
+            BORDER_IS_WIDGET (panel->panel_parent)  ||
+            SLIDING_IS_WIDGET (panel->panel_parent) ||
+            FLOATING_IS_WIDGET (panel->panel_parent))
+                return FALSE;
+
+        return panel_widget_is_applet_stuck (panel, applet);
 }

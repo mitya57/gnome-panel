@@ -162,6 +162,34 @@ static void set_atk_relation (GtkWidget *label, GtkWidget *entry, AtkRelationTyp
 
 #define WANT_BITMAPS(x) (x == REPORT_MAIL_USE_ANIMATION || x == REPORT_MAIL_USE_BITMAP)
 
+static void
+mailcheck_execute_shell (const char *command)
+{
+	GError *error = NULL;
+
+	g_spawn_command_line_async (command, &error);
+	if (error) {
+		GtkWidget *dialog;
+
+		dialog = gtk_message_dialog_new (NULL,
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 _("There was an error executing %s : %s"),
+						 command,
+						 error->message);
+
+		g_signal_connect (dialog, "response",
+				  G_CALLBACK (gtk_widget_destroy),
+				  NULL);
+
+		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+
+		gtk_widget_show (dialog);
+
+		g_error_free (error);
+	}
+}
 
 static G_CONST_RETURN char *
 mail_animation_filename (MailCheck *mc)
@@ -235,6 +263,8 @@ get_remote_password (MailCheck *mc)
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
 	entry = gtk_entry_new ();
+
+	set_atk_name_description (entry, _("Password Entry box"), "");
 	set_atk_relation (entry, label, ATK_RELATION_LABELLED_BY);	
 	gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
@@ -505,7 +535,7 @@ after_mail_check (MailCheck *mc)
 		if (mc->newmail_enabled &&
 		    mc->newmail_cmd && 
 		    (strlen(mc->newmail_cmd) > 0))
-			gnome_execute_shell(NULL, mc->newmail_cmd);
+			mailcheck_execute_shell (mc->newmail_cmd);
 	}
 
 	switch (mc->report_mail_mode) {
@@ -574,8 +604,9 @@ mail_check_timeout (gpointer data)
 			gtk_timeout_remove (mc->mail_timeout);
 			mc->mail_timeout = 0;
 		}
-		if (system(mc->pre_check_cmd) == 127)
-			g_warning("Couldn't execute command");
+
+		mailcheck_execute_shell (mc->pre_check_cmd);
+
 		mc->mail_timeout = gtk_timeout_add(mc->update_freq, mail_check_timeout, mc);
 	}
 
@@ -614,7 +645,7 @@ exec_clicked_cmd (GtkWidget *widget, GdkEventButton *event, gpointer data)
 	if (event->button == 1) {
 		
 		if (mc->clicked_enabled && mc->clicked_cmd && (strlen(mc->clicked_cmd) > 0))
-			gnome_execute_shell(NULL, mc->clicked_cmd);
+			mailcheck_execute_shell (mc->clicked_cmd);
 		
 		if (mc->reset_on_clicked) {
 			mc->newmail = mc->unreadmail = 0;
@@ -1266,6 +1297,8 @@ mailbox_properties_page(MailCheck *mc)
 	gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 0);
   
 	mc->remote_server_entry = l = gtk_entry_new();
+
+	set_atk_name_description (mc->remote_server_entry, _("Mail Server Entry box"), "");
 	set_atk_relation (mc->remote_server_entry, mc->remote_server_label, ATK_RELATION_LABELLED_BY);
 	if (mc->remote_server)
 		gtk_entry_set_text(GTK_ENTRY(l), mc->remote_server);
@@ -1287,6 +1320,7 @@ mailbox_properties_page(MailCheck *mc)
 	if (mc->remote_username)
 		gtk_entry_set_text(GTK_ENTRY(l), mc->remote_username);
 
+	set_atk_name_description (mc->remote_username_entry, _("Username Entry box"), "");
 	set_atk_relation (mc->remote_username_entry, mc->remote_username_label, ATK_RELATION_LABELLED_BY);
   
 	gtk_widget_show(l);
@@ -1302,6 +1336,8 @@ mailbox_properties_page(MailCheck *mc)
 	mc->remote_password_entry = l = gtk_entry_new();
 	if (mc->remote_password)
 		gtk_entry_set_text(GTK_ENTRY(l), mc->remote_password);
+
+	set_atk_name_description (mc->remote_password_entry, _("Password Entry box"), "");
 	set_atk_relation (mc->remote_password_entry, mc->remote_password_label, ATK_RELATION_LABELLED_BY);
 	gtk_entry_set_visibility(GTK_ENTRY (l), FALSE);
 	gtk_widget_show(l);
@@ -1322,6 +1358,7 @@ mailbox_properties_page(MailCheck *mc)
         if (mc->remote_folder)
                 gtk_entry_set_text(GTK_ENTRY(l), mc->remote_folder);
   
+	    set_atk_name_description (mc->remote_folder_entry, _("Folder Entry box"), "");
         set_atk_relation (mc->remote_folder_entry, mc->remote_folder_label, ATK_RELATION_LABELLED_BY);
         gtk_widget_show(l);
         gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 0);
@@ -1340,6 +1377,8 @@ mailbox_properties_page(MailCheck *mc)
 	mc->pre_remote_command_entry = l = gtk_entry_new();
 	if (mc->pre_remote_command)
 		gtk_entry_set_text(GTK_ENTRY(l), mc->pre_remote_command);
+
+	set_atk_name_description (mc->pre_remote_command_entry, _("Command Entry box"), "");
 	set_atk_relation (mc->pre_remote_command_entry, mc->pre_remote_command_label, ATK_RELATION_LABELLED_BY);
   	gtk_widget_show(l);
 	gtk_box_pack_start (GTK_BOX (hbox), l, TRUE, TRUE, 0);      
@@ -1390,7 +1429,7 @@ mailcheck_properties_page (MailCheck *mc)
 	if(mc->pre_check_cmd)
 		gtk_entry_set_text(GTK_ENTRY(mc->pre_check_cmd_entry), 
 				   mc->pre_check_cmd);
-	set_atk_name_description (mc->pre_check_cmd_entry, _("Command to execute"), "");
+	set_atk_name_description (mc->pre_check_cmd_entry, _("Command to execute before each update"), "");
 	set_atk_relation (mc->pre_check_cmd_entry, mc->pre_check_cmd_check, ATK_RELATION_CONTROLLED_BY);
 	set_atk_relation (mc->pre_check_cmd_check, mc->pre_check_cmd_entry, ATK_RELATION_CONTROLLER_FOR);
 	gtk_widget_set_sensitive (mc->pre_check_cmd_entry, mc->pre_check_enabled);
@@ -1413,7 +1452,7 @@ mailcheck_properties_page (MailCheck *mc)
 		gtk_entry_set_text(GTK_ENTRY(mc->newmail_cmd_entry),
 				   mc->newmail_cmd);
 	}
-	set_atk_name_description (mc->newmail_cmd_entry, _("Command to execute"), "");
+	set_atk_name_description (mc->newmail_cmd_entry, _("Command to execute when new mail arrives"), "");
 	set_atk_relation (mc->newmail_cmd_entry, mc->newmail_cmd_check, ATK_RELATION_CONTROLLED_BY);
 	set_atk_relation (mc->newmail_cmd_check, mc->newmail_cmd_entry, ATK_RELATION_CONTROLLER_FOR);
 	gtk_widget_set_sensitive (mc->newmail_cmd_entry, mc->newmail_enabled);
@@ -1436,7 +1475,7 @@ mailcheck_properties_page (MailCheck *mc)
 		gtk_entry_set_text(GTK_ENTRY(mc->clicked_cmd_entry), 
 				   mc->clicked_cmd);
         }
-		set_atk_name_description (mc->clicked_cmd_entry, _("Command to execute"), "");
+		set_atk_name_description (mc->clicked_cmd_entry, _("Command to execute when clicked"), "");
 		set_atk_relation (mc->clicked_cmd_entry, mc->clicked_cmd_check, ATK_RELATION_CONTROLLED_BY);
 		set_atk_relation (mc->clicked_cmd_check, mc->clicked_cmd_entry, ATK_RELATION_CONTROLLER_FOR);
 		gtk_widget_set_sensitive (mc->clicked_cmd_entry, mc->clicked_enabled);
@@ -1469,7 +1508,7 @@ mailcheck_properties_page (MailCheck *mc)
 	g_signal_connect (G_OBJECT (mc->min_spin), "value_changed",
 			  G_CALLBACK (update_spin_changed), mc);			  
 	gtk_box_pack_start (GTK_BOX (hbox), mc->min_spin,  FALSE, FALSE, 0);
-	set_atk_name_description (mc->min_spin, _("minutes"), "");
+	set_atk_name_description (mc->min_spin, _("minutes"), _("Choose time interval in minutes to check mail"));
 	set_atk_relation (mc->min_spin, check_box, ATK_RELATION_CONTROLLED_BY);
 	gtk_widget_show(mc->min_spin);
 	
@@ -1483,7 +1522,7 @@ mailcheck_properties_page (MailCheck *mc)
 	g_signal_connect (G_OBJECT (mc->sec_spin), "value_changed",
 			  G_CALLBACK (update_spin_changed), mc);
 	gtk_box_pack_start (GTK_BOX (hbox), mc->sec_spin,  FALSE, FALSE, 0);
-	set_atk_name_description (mc->sec_spin, _("seconds"), "");
+	set_atk_name_description (mc->sec_spin, _("seconds"), _("Choose time interval in seconds to check mail"));
 	set_atk_relation (mc->sec_spin, check_box, ATK_RELATION_CONTROLLED_BY);
 	gtk_widget_show(mc->sec_spin);
 	
@@ -1631,6 +1670,7 @@ applet_load_prefs(MailCheck *mc)
 	}
 
 	mc->auto_update = panel_applet_gconf_get_bool(mc->applet, "auto_update", NULL);
+	mc->reset_on_clicked = panel_applet_gconf_get_bool (mc->applet, "reset_on_clicked", NULL);
 	mc->update_freq = panel_applet_gconf_get_int(mc->applet, "update_frequency", NULL);
 	mc->pre_check_cmd = panel_applet_gconf_get_string(mc->applet, "exec_command", NULL);
 	mc->pre_check_enabled = panel_applet_gconf_get_bool(mc->applet, "exec_enabled", NULL);
@@ -1648,6 +1688,7 @@ applet_load_prefs(MailCheck *mc)
 	mc->remote_password = panel_applet_gconf_get_string(mc->applet, "remote_password", NULL);
 	mc->remote_folder = panel_applet_gconf_get_string(mc->applet, "remote_folder", NULL);
 	mc->mailbox_type = panel_applet_gconf_get_int(mc->applet, "mailbox_type", NULL);
+	mc->mail_file = panel_applet_gconf_get_string (mc->applet, "mail_file", NULL);
 	mc->play_sound = panel_applet_gconf_get_bool(mc->applet, "play_sound", NULL);
 }
 

@@ -1,3 +1,168 @@
+Fri Jul 12 10:06:16 2002  George Lebl <jirka@5z.com>
+
+	* quick-desktop-reader.c: Apply parts of the patch from
+	  Hidetoshi Tajima that made sense, bug #84074
+
+	* gnome-panel-preferences.desktop.in: add "Encoding=UTF-8" to
+	  conform to standard, damn we don't have this anywhere.
+
+2002-07-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-per-panel-config.schemas.in: fix the gnome-terminal
+	launcher uri and use Nautilus instead of Netscape since
+	we can't be sure of the location of Netscape.
+
+2002-07-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* applet.c: (panel_applet_load_from_unique_id):
+	* launcher.c: (create_launcher), (launcher_load_from_gconf):
+	* menu.c: (menu_load_from_gconf): patch from Havoc to 
+	check for and print warnings about broken gconf settings. #84808.
+
+2002-07-12  Mark McLoughlin  <mark@skynet.ie>
+
+	* launcher.c: (load_launcher_applet_full): revert the disabling
+	of the 'Help' menuitem that Glynn snuck past me in another
+	patch.
+
+Wed Jul 10 20:17:37 2002  George Lebl <jirka@5z.com>
+
+	* button-widget.c: properly handle the empty icon case.  Don't
+	  give an error on empty icon (NULL or "")
+
+Wed Jul 10 17:54:45 2002  George Lebl <jirka@5z.com>
+
+	* launcher.c: fix segfault, and icon errors with adding launchers,
+	  don't free the return from getstring from a ditem, it's constant
+
+Wed Jul 10 16:50:27 2002  George Lebl <jirka@5z.com>
+
+	* button-widget.[ch], launcher.c, logout.c, darawer.c, menu.c,
+	  panel-util.h: redo the icon loading logic a bit and leave more
+	  logic up to the loading code in button_widget.  Failsafe code so
+	  that we always succeed even if we can't find gnome-unknown.png,
+	  in which case we make a white rectangle with a red X thorough it.
+
+Wed Jul 10 15:13:37 2002  George Lebl <jirka@5z.com>
+
+	* quick-desktop-reader.c: revert all the patches that broke
+	  everything and fix #84074 the proper way.  That is by checking
+	  for NULL at the place it crashed, rather then replacing the
+	  functions by other functions that do something completely
+	  different.
+
+2002-07-10  Mark McLoughlin  <mark@skynet.ie>
+
+	* button-widget.c:
+	(button_load_pixbuf): rename and handle GErrors.
+	(button_widget_new): display an error dialog if we
+	can't load the pixbuf.
+	(button_widget_set_pixmap): ditto.
+	* drawer.c:
+	(drawer_click): kill debug.
+	(free_drawer): implement.
+	(create_drawer_applet): if creating button fails, free
+	the drawer and return.
+	(load_drawer_applet): use free_drawer as destroy notify
+	handler.
+
+	* logout.c: (create_logout_widget), (create_lock_widget),
+	(load_lock_applet): return if we failed to create the
+	button.
+
+	* menu.c: (create_panel_menu): ditto.
+
+2002-07-10  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-preferences.desktop.in: patch from Glynn
+	to change tooltip. #87755.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-preferences.glade: centre the animation
+	speed menu. Should fix #84074.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-preferences.glade: give the close button
+	the default focus.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-config.c: slightly modified version of
+	a patch from Glynn to add mnemonics and clean
+	up the panel properties dialog. #85623.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* launcher.c:
+	(free_launcher): remove launcher from hoarding list.
+	(launcher_idle_hoard), (launcher_hoard): hoard launchers
+	in idle. Hopefully fixes #83373.
+
+	* applet.c: (applet_destroy): Don't add dead launcher
+	unless it has been hoarded.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-gconf.[ch]: (panel_gconf_string_to_enum): impl
+	with a fallback argument. Fixes #87133.
+
+	* gnome-panel-preferences.c: (load_animation_menu): use
+	panel_gconf_string_to_enum.
+
+	* panel-config-global.c: (panel_global_config_set_entry):
+	ditto.
+
+	* panel.c: (panel_load_panels_from_gconf): ditto.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-preferences.c:
+	(animation_menu_changed): rename from option_menu_changed.
+	(load_animation_menu): rename from load_option_menu, removing
+	generic handling of option menus and checking string value
+	before mapping to an enum. Fixes #86667.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* menu.c: (create_add_panel_submenu): make ordering
+	of the 'New Panel' menu sane. Fixes #61599.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-preferences.desktop.in: use X-GNOME-DocPath.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* launcher.c, menu.c: Patch from Glynn Foster
+	to use X-GNOME-DocPath instead of DocPath.
+	Fixes #87431.
+
+2002-07-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* quick-desktop-reader.c: (get_encoding): Patch from
+	Hidetoshi Tajima to use g_get_charset get the canonical
+	name of the locale's charset. Fixes #84074.
+
+2002-07-08  Mark McLoughlin  <mark@skynet.ie>
+
+	* global-keys.c: (panel_global_keys_filter): patch
+	from Glynn to pop up the global menu instead of
+	panel context menu.
+
+2002-07-05  Rohit R <rohit.raveendran@wipro.com>
+
+	* gnome-panel/gnome-panel-screenshot.c:
+	Remove temp dir correctly and update the permissions
+	for files and directories created.
+	Fixes #87259
+
+2002-07-04  Satyajit Kanungo <satyajit.kanungo@wipro.com>
+
+	* menu.c: Changed the section Id for Panel Manual to point  
+	  correct section in the help document.
+
 2002-07-03  Mark McLoughlin  <mark@skynet.ie>
 
 	* Makefile.am: add egg-screen-exec.[ch] to build.
@@ -7,6 +172,107 @@
 	  ones in panel-util.c.
 
 	* panel-util.[ch]: kill screen-exec methods.
+
+2002-07-02  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-screenshot.c:
+	* gnome-panel-screenshot.glade: Patch from Glynn Foster
+	to add help button.
+
+2002-07-02  Mark McLoughlin  <mark@skynet.ie>
+
+	* gnome-panel-preferences.c: clean up, a lot. No
+	global variables, use glade properly, error dialog
+	if glade file not found ...
+
+	* gnome-panel-preferences.glade: implement string changes
+	recommended in #85651. Also remove extra useless widgets.
+
+2002-07-02  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-config.c: Various string changes from #85623.
+
+Mon Jul  1 16:44:35 2002  Jonathan Blandford  <jrb@gnome.org>
+
+	* gnome-run.c (sync_entry_to_list): do the icon finding in an idle
+	instead of a timeout.  There's no reason to be so slow here.
+
+	* disclosure-widget.c (unrealize): We should really remove the
+	timeout in an unrealize handler instead of finalize.  Doesn't hurt
+	to keep the finalize one around.
+
+2002-07-01  Glynn Foster  <glynn.foster@sun.com>
+
+	* menu.c: Set default response to delete your panel.
+
+2002-07-01  Glynn Foster  <glynn.foster@sun.com>
+
+	* menu.c: (create_panel_menu): s/Main Menu/GNOME Menu for the
+	tooltip.
+
+2002-07-01  Glynn Foster  <glynn.foster@sun.com>
+
+	* menu.c: (remove_panel_query): Don't expose the 
+	term 'applet' to the user - yeah, yeah, I know we still
+	have this stuff in the user docs.
+
+2002-07-01  Mark McLoughlin  <mark@skynet.ie>
+
+	String changes and UI consistency changes from
+	#85344, #85619, #85620, #82586 and 85622. Based
+	partially on a patch from Glynn Foster.
+
+	* Makefile.am: remove menu-properties.[ch].
+
+	* applet.c: (applet_callback_callback): remove
+	properties callback.
+
+	* distribution.c, drawer.c, foobar-widget.c,
+	  launcher.c: string changes.
+
+	* menu.c: various string changes, mnemonics, fixing
+	the delete panel dialog, removing global preferences
+	menuitem and removing menu properties menu item.
+
+	* panel-applet-frame.c: (panel_applet_frame_cnx_broken):
+	string change.
+
+2002-07-01  Mark McLoughlin  <mark@skynet.ie>
+
+	Fixes #86459
+
+	* panel-applet-frame.c: (panel_applet_frame_get_name): Sanity
+	check sequence length and buffer before using.
+
+2002-07-01  Mark McLoughlin  <mark@skynet.ie>
+	
+	Fixes #86455
+
+	* disclosure-widget.c:
+	(finalize): remove the timeout.
+	(expand_collapse_timeout): unset timeout tag if last time
+	running.
+
+	* panel-applet-frame.c: (panel_applet_frame_load_from_gconf):
+	kill debug.
+
+2002-07-01  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel.c: (drag_data_recieved_cb), (panel_monitor_from_toplevel),
+	(panel_is_applet_right_stick): move here from applet.c
+
+	* panel-applet-frame.[ch]:
+	(panel_applet_frame_load): add exactpos param and pass to
+	panel_applet_register.
+	(panel_applet_frame_load_from_gconf), pass exactpos = TRUE.
+	(panel_applet_frame_reload_response): ditto.
+
+	* applet.h: kill panel_applet_get_right_stick.
+
+	* applet.c: (panel_applet_save_position): update for right_stick ()
+	change.
+
+	* menu.c: (add_bonobo_applet): add exactpos = FALSE.
 
 2002-06-26  Mark McLoughlin  <mark@skynet.ie>
 
@@ -214,7 +480,7 @@
 
 	* Makefile.am: use $(prefix)/$(DATADIRNAME)/locale instead
 	of $datadir/locale for locale directory location. Reported
-	by Hidetoshit Tajima in #83623.
+	by Hidetoshi Tajima in #83623.
 
 2002-06-10  Kjartan Maraas  <kmaraas@gnome.org>
 
