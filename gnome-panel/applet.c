@@ -536,7 +536,8 @@ panel_applet_create_menu (AppletInfo *info)
 
 		/* FIXME: should have a "Move" pixmap.
 		 */
-		setup_menuitem (menuitem, NULL, _("_Move"));
+		image = gtk_image_new ();
+		setup_menuitem (menuitem, image, _("_Move"));
 
 		g_signal_connect (menuitem, "activate",
 				  G_CALLBACK (move_applet_callback), info);
@@ -1005,7 +1006,7 @@ panel_applet_save_position (AppletInfo *applet_info,
 	gconf_client_set_bool (client, temp_key, right_stick, NULL);
 
 	position = panel_applet_get_position (applet_info);
-	if (right_stick)
+	if (right_stick && !PANEL_WIDGET (applet_info->widget->parent)->packed)
 		position = PANEL_WIDGET (applet_info->widget->parent)->size - position;
 
 	temp_key = panel_applet_get_full_gconf_key (
