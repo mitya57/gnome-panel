@@ -49,13 +49,6 @@ struct _AppletWidget
 {
 	GtkPlug			window;
 
-        char                    *goad_id;
-
-	/* use these as prefixes when loading saving data */
-	char			*globcfgpath; /*a file which applets can use for
-						global settings*/
-	char			*privcfgpath; /*applets own cfg path*/
-
         gpointer                corbadat; /* CORBA stuff */
 };
 

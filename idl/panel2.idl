@@ -31,6 +31,10 @@ module GNOME {
 		/* XXX do activation stuff here - the applet side of it
 		   will be via a GNOME::GenericFactory (ask elliot) */
 
+		/*this inits a panelspot, it's called by the applet */
+		PanelSpot add_applet(in Applet panel_applet,
+				     in string goad_id,
+				     out unsigned long winid);
 		oneway void quit ();
 
 		readonly attribute boolean in_drag;
@@ -76,19 +80,12 @@ module GNOME {
 	};
 
 	interface Applet {
-		/*this inits the applet, it's called by the panel, that way we
-		  can get an exception if the applet is doing weird things, maybe
-		  it shouldn't be one way because of this*/
-		void init(in PanelSpot panel_spot,
-			  in string cfgpath,
-			  in string globcfgpath,
-			  in unsigned long winid);
-
 		oneway void change_orient (in Panel::OrientType orient);
 		oneway void do_callback (in string callback_name);
 		boolean session_save (in string cfgpath,
 				      in string global_cfgpath);
 		oneway void back_change (in Panel::BackInfoType backing);
 		oneway void set_tooltips_state (in boolean enabled);
+		readonly attribute string goad_id;
 	};
 };
