@@ -1041,3 +1041,25 @@ static void orb_remove_connection(GIOPConnection *cnx)
 {
   gtk_input_remove(GPOINTER_TO_INT(cnx->user_data));
 }
+
+/* Used by shlib applets */
+CORBA_Object
+applet_widget_corba_activate(GtkWidget *applet,
+			     PortableServer_POA poa,
+			     const char *goad_id,
+			     const char **params,
+			     gpointer *impl_ptr,
+			     CORBA_Environment *ev)
+{
+	/*FIXME: fill this in*/
+}
+
+void
+applet_widget_corba_deactivate(PortableServer_POA poa,
+				    const char *goad_id,
+				    gpointer impl_ptr,
+				    CORBA_Environment *ev)
+{
+	/*FIXME: fill this in*/
+}
+
