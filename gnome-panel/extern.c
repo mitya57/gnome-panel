@@ -312,7 +312,6 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 {
 	Extern *ext;
 	POA_GNOME_PanelSpot *panelspot_servant;
-	PortableServer_ObjectId objid = {0, sizeof("PanelSpot"), "PanelSpot" };
 
 	if(!cfgpath || !*cfgpath)
 		cfgpath = g_copy_strings(old_panel_cfg_path,
@@ -329,7 +328,7 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 
 	POA_GNOME_PanelSpot__init(panelspot_servant, &ev);
 	
-	PortableServer_POA_activate_object_with_id(thepoa, &objid, panelspot_servant, &ev);
+	CORBA_free(PortableServer_POA_activate_object(thepoa, panelspot_servant, &ev));
 	g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 
 	ext->pspot = CORBA_OBJECT_NIL; /*will be filled in during add_applet*/
@@ -381,7 +380,6 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 	char *p;
 	POA_GNOME_PanelSpot *panelspot_servant;
 	GNOME_PanelSpot acc;
-	PortableServer_ObjectId objid = {0, sizeof("PanelSpot"), "PanelSpot" };
 	
 	for(li=applets;li!=NULL;li=g_list_next(li)) {
 		AppletInfo *info = li->data;
@@ -426,7 +424,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 
 	POA_GNOME_PanelSpot__init(panelspot_servant, ev);
 	
-	PortableServer_POA_activate_object_with_id(thepoa, &objid, panelspot_servant, ev);
+	CORBA_free(PortableServer_POA_activate_object(thepoa, panelspot_servant, ev));
 	g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
 
 	acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, ev);
@@ -737,7 +735,6 @@ panel_corba_clean_up(void)
 void
 panel_corba_gtk_init(CORBA_ORB panel_orb)
 {
-  PortableServer_ObjectId objid = {0, sizeof("Panel"), "Panel" };
   GNOME_Panel acc;
   char hostname [4096];
   char *name;
@@ -757,8 +754,8 @@ panel_corba_gtk_init(CORBA_ORB panel_orb)
   PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(thepoa, &ev), &ev);
   g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 
-  PortableServer_POA_activate_object_with_id(thepoa, &objid,
-					     &panel_servant, &ev);
+  CORBA_free(PortableServer_POA_activate_object(thepoa,
+						&panel_servant, &ev));
   g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 
   acc = PortableServer_POA_servant_to_reference(thepoa, &panel_servant, &ev);
