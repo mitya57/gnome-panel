@@ -34,6 +34,8 @@ module GNOME {
 		/*this inits a panelspot, it's called by the applet */
 		PanelSpot add_applet(in Applet panel_applet,
 				     in string goad_id,
+				     out string cfgpath,
+				     out string globcfgpath,
 				     out unsigned long winid);
 		oneway void quit ();
 
