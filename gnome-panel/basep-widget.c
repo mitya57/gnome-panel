@@ -832,6 +832,23 @@ basep_widget_show_hidebutton_pixmaps(BasePWidget *basep)
 	show_hidebutton_pixmap(basep->hidebutton_s, show);
 }
 
+void
+basep_update_frame (BasePWidget *basep)
+{
+	gboolean hide_frame = global_config.hide_panel_frame ||
+		PANEL_WIDGET (basep->panel)->back_type != PANEL_BACK_NONE;
+
+	if (hide_frame && GTK_WIDGET_VISIBLE (basep->frame)) {
+		gtk_widget_show (basep->innerebox);
+		gtk_widget_reparent (basep->panel, basep->innerebox);
+		gtk_widget_hide (basep->frame);
+	} else if (!hide_frame && !GTK_WIDGET_VISIBLE (basep->frame)) {
+		gtk_widget_show (basep->frame);
+		gtk_widget_reparent (basep->panel, basep->frame);
+		gtk_widget_hide (basep->innerebox);
+	}
+}
+
 static void
 basep_back_change(PanelWidget *panel,
 		  PanelBackType type,
@@ -839,17 +856,7 @@ basep_back_change(PanelWidget *panel,
 		  GdkColor *color,
 		  BasePWidget *basep)
 {
-	if((type != PANEL_BACK_NONE || global_config.hide_panel_frame) &&
-	   basep->panel->parent == basep->frame) {
-		gtk_widget_show(basep->innerebox);
-		gtk_widget_reparent(basep->panel,basep->innerebox);
-		gtk_widget_hide(basep->frame);
-	} else if ((type == PANEL_BACK_NONE && !global_config.hide_panel_frame) &&
-		   basep->panel->parent == basep->innerebox) {
-		gtk_widget_show(basep->frame);
-		gtk_widget_reparent(basep->panel,basep->frame);
-		gtk_widget_hide(basep->innerebox);
-	}
+	basep_update_frame (basep);
 
 	set_frame_colors(panel,
 			 basep->frame,

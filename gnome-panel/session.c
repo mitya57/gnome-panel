@@ -79,6 +79,7 @@ apply_global_config(void)
 					  done there are no menu applets*/
 	static int small_icons_old = 0; /*same here*/
 	static int keep_bottom_old = -1;
+	GSList *li;
 	panel_widget_change_global(global_config.explicit_hide_step_size,
 				   global_config.auto_hide_step_size,
 				   global_config.drawer_step_size,
@@ -87,6 +88,7 @@ apply_global_config(void)
 				   global_config.movement_type,
 				   global_config.disable_animations,
 				   global_config.applet_padding);
+
 	if(global_config.tooltips_enabled)
 		gtk_tooltips_enable(panel_tooltips);
 	else
@@ -128,7 +130,6 @@ apply_global_config(void)
 
 	if(keep_bottom_old == -1 ||
 	   keep_bottom_old != global_config.keep_bottom) {
-		GSList *li;
 		for(li = panel_list; li != NULL; li = g_slist_next(li)) {
 			PanelData *pd = li->data;
 			if(!GTK_WIDGET_REALIZED(pd->panel))
@@ -168,6 +169,12 @@ apply_global_config(void)
 					global_config.tile_down[i],
 					global_config.tile_border[i],
 					global_config.tile_depth[i]);
+	}
+
+	for(li = panel_list; li != NULL; li = g_slist_next(li)) {
+		PanelData *pd = li->data;
+		if (IS_BASEP_WIDGET (pd->panel))
+			basep_update_frame (BASEP_WIDGET (pd->panel));
 	}
 }
 
@@ -571,6 +578,8 @@ do_session_save(GnomeClient *client,
 				      global_config.drawer_auto_close);
 		gnome_config_set_bool("simple_movement",
 				      global_config.simple_movement);
+		gnome_config_set_bool("hide_panel_frame",
+				      global_config.hide_panel_frame);
 		buf = g_string_new(NULL);
 		for(i=0;i<LAST_TILE;i++) {
 			g_string_sprintf(buf,"tiles_enabled_%d",i);
@@ -1106,7 +1115,7 @@ load_up_globals(void)
 
 	global_config.drawer_auto_close = gnome_config_get_bool("drawer_auto_close=FALSE");
 	global_config.simple_movement = gnome_config_get_bool("simple_movement=FALSE");
-
+	global_config.hide_panel_frame = gnome_config_get_bool("hide_panel_frame=FALSE");
 	for(i=0;i<LAST_TILE;i++) {
 		g_string_sprintf(buf,"tiles_enabled_%d=TRUE",i);
 		global_config.tiles_enabled[i] =

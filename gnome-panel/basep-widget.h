@@ -240,6 +240,8 @@ void            basep_widget_set_state         (BasePWidget *basep,
 						BasePState state,
 						gboolean emit);
 
+void            basep_update_frame             (BasePWidget *basep);
+
 #define GNOME_PANEL_HINTS (WIN_HINTS_SKIP_FOCUS|WIN_HINTS_SKIP_WINLIST|WIN_HINTS_SKIP_TASKBAR)
 
 END_GNOME_DECLS
