@@ -342,11 +342,11 @@
 
 <title>Erabiltzaile aurreratuentzako oharra</title>   
 
-   <para> 
+   <para>
      <guilabel>Itzali</guilabel> eta <guilabel>Berrabiarazi</guilabel> aukerak
-      ager daitezen ezinbestekoa da <command>/usr/bin/shutdown</command>
-      komandoa exekutatzeko baimena izatea.  
-   </para> 
+      ager daitezen ezinbestekoa da <command>/usr/bin/reboot</command>
+      edo <command>poweroff</command> komandoa exekutatzeko baimena izatea.
+   </para>
  </note> 
 
    <para> 
