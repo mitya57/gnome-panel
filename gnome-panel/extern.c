@@ -336,12 +336,14 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 	ext->cfg = cfgpath;
 	extern_applets = g_list_prepend(extern_applets,ext);
 
+	ext->info = NULL;
 	if(reserve_applet_spot (ext, panel, pos, APPLET_EXTERN_PENDING)==0) {
 		g_warning("Whoops! for some reason we can't add "
 			  "to the panel");
 		extern_clean(ext);
 		return;
 	}
+	ext->info = applets_last->data;
 
 	extern_start_new_goad_id(ext);
 }
@@ -442,12 +444,14 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 
 	*wid = reserve_applet_spot (ext, li->data, pos,
 				      APPLET_EXTERN_RESERVED);
+	ext->info = NULL;
 	if(*wid == 0) {
 		extern_clean(ext);
 		*globcfgpath = NULL;
 		*cfgpath = NULL;
 		return CORBA_OBJECT_NIL;
 	}
+	ext->info = applets_last->data;
 	p = g_copy_strings(old_panel_cfg_path,"Applet_Dummy/",NULL);
 	*cfgpath = CORBA_string_dup(p);
 	g_free(p);
