@@ -133,6 +133,7 @@ apply_global_config(void)
 			PanelData *pd = li->data;
 			if(!GTK_WIDGET_REALIZED(pd->panel))
 				continue;
+#if 0
 			if((IS_SNAPPED_WIDGET(pd->panel) &&
 			    SNAPPED_WIDGET(pd->panel)->mode != SNAPPED_AUTO_HIDE &&
 			    SNAPPED_WIDGET(pd->panel)->state == SNAPPED_SHOWN) ||
@@ -155,6 +156,7 @@ apply_global_config(void)
 					gnome_win_hints_set_layer(pd->panel,
 								  WIN_LAYER_ABOVE_DOCK);
 			}
+#endif
 		}
 	}
 	keep_bottom_old = global_config.keep_bottom;
@@ -415,34 +417,9 @@ save_panel_configuration(gpointer data, gpointer user_data)
 	gnome_config_set_bool("hidebutton_pixmaps_enabled",
 			      basep->hidebutton_pixmaps_enabled);
 	
-	switch(pd->type) {
-	case SNAPPED_PANEL:
-		{
-		SnappedWidget *snapped = SNAPPED_WIDGET(pd->panel);
-		gnome_config_set_int("pos", snapped->pos);
-		gnome_config_set_int("mode", snapped->mode);
-		gnome_config_set_int("state", snapped->state);
-		break;
-		}
-	case CORNER_PANEL:
-		{
-		CornerWidget *corner = CORNER_WIDGET(pd->panel);
-		gnome_config_set_int("pos", corner->pos);
-		gnome_config_set_int("orient",panel->orient);
-		gnome_config_set_int("mode", corner->mode);
-		gnome_config_set_int("state", corner->state);
-		break;
-		}
-	case DRAWER_PANEL:
-		{
-		DrawerWidget *drawer = DRAWER_WIDGET(pd->panel);
-		gnome_config_set_int("orient",drawer->orient);
-		gnome_config_set_int("state", drawer->state);
-		break;
-		}
-	default:
-		g_assert_not_reached();
-	}
+
+	gnome_config_set_int ("mode", basep->mode);
+	gnome_config_set_int ("state", basep->state);
 
 	gnome_config_set_int("sz", panel->sz);
 
@@ -460,6 +437,26 @@ save_panel_configuration(gpointer data, gpointer user_data)
 	gnome_config_set_int("back_type", panel->back_type);
 	
 	g_string_free(buf,TRUE);
+
+	/* now do different types */
+	if (IS_BORDER_WIDGET(basep))
+		gnome_config_set_int("edge", BORDER_POS(basep->pos)->edge);
+
+	switch (pd->type) {
+	case ALIGNED_PANEL:
+		gnome_config_set_int ("align", ALIGNED_POS (basep->pos)->align);
+		break;
+	case SLIDING_PANEL:
+		gnome_config_set_int ("offset", SLIDING_POS (basep->pos)->offset);
+		gnome_config_set_int ("anchor", SLIDING_POS (basep->pos)->anchor);
+		break;
+	case DRAWER_PANEL:
+		gnome_config_set_int ("orient", DRAWER_POS (basep->pos)->orient);
+		/*gnome_config_set_int ("temp_hidden", DRAWER_POS (basep->pos)->temp_state);*/
+		break;
+	default:
+		break;
+	}
 
 	gnome_config_pop_prefix ();
 }
@@ -517,8 +514,7 @@ do_session_save(GnomeClient *client,
 	printf("Saving to [%s]\n",panel_cfg_path);
 
 	printf("Saving session: 1"); fflush(stdout);
-#endif
-#ifdef PANEL_DEBUG
+
 	printf(" 2"); fflush(stdout);
 #endif
 	s = g_concat_dir_and_file(panel_cfg_path,"panel/Config/");
@@ -724,7 +720,8 @@ load_default_applets(void)
 		"gnome/apps/Applications/Netscape.desktop",
 		NULL };
 	int i;
-	int flags = MAIN_MENU_SYSTEM|MAIN_MENU_USER;
+	int flags = MAIN_MENU_SYSTEM|MAIN_MENU_USER|
+		MAIN_MENU_SYSTEM_SUB|MAIN_MENU_USER_SUB;
 
 	/*guess redhat menus*/
 	if(g_file_exists("/etc/X11/wmconfig"))
@@ -736,7 +733,7 @@ load_default_applets(void)
 	if (g_file_exists("/etc/menu-methods/gnome"))
 		flags |= MAIN_MENU_DEBIAN|MAIN_MENU_DEBIAN_SUB;
 	load_menu_applet(NULL,flags, panels->data, 0);
-
+	
 	for(i=0;def_launchers[i]!=NULL;i++) {
 		char *p = gnome_datadir_file (def_launchers[i]);
 		int center = gdk_screen_width()/2;
@@ -876,7 +873,7 @@ init_user_panels(void)
 {
 	GString *buf;
 	int   count,num;	
-	GtkWidget *panel;
+	GtkWidget *panel=NULL;
 
 	buf = g_string_new(NULL);
 	g_string_sprintf(buf,"%spanel/Config/panel_count=0",
@@ -888,16 +885,16 @@ init_user_panels(void)
 	  to work, so this is the way we find out if there was no
 	  config from last time*/
 	if(count<=0)  {
-		panel = snapped_widget_new(SNAPPED_BOTTOM,
-					   SNAPPED_EXPLICIT_HIDE,
-					   SNAPPED_SHOWN,
-					   SIZE_STANDARD,
-					   TRUE,
-					   TRUE,
-					   PANEL_BACK_NONE,
-					   NULL,
-					   TRUE,
-					   NULL);
+		panel = edge_widget_new(BORDER_BOTTOM,
+					BASEP_EXPLICIT_HIDE,
+					BASEP_SHOWN,
+					SIZE_STANDARD,
+					TRUE,
+					TRUE,
+					PANEL_BACK_NONE,
+					NULL,
+					TRUE,
+					NULL);
 		panel_setup(panel);
 		gtk_widget_show(panel);
 
@@ -911,12 +908,16 @@ init_user_panels(void)
 	for(num=1;num<=count;num++) {
 		PanelType type;
 		PanelBackType back_type;
+		PanelSizeType sz;
+		BasePState state;
+		BasePMode mode;
+		BorderEdge edge;
 		char *back_pixmap, *color;
 		GdkColor back_color = {0,0,0,1};
 		int fit_pixmap_bg;
 		int hidebuttons_enabled;
 		int hidebutton_pixmaps_enabled;
-
+		
 		g_string_sprintf(buf,"%spanel/Panel_%d/",
 				 old_panel_cfg_path, num);
 		gnome_config_push_prefix (buf->str);
@@ -935,9 +936,12 @@ init_user_panels(void)
 		back_type=gnome_config_get_int(buf->str);
 		fit_pixmap_bg = gnome_config_get_bool ("fit_pixmap_bg=TRUE");
 
+		g_string_sprintf(buf,"sz=%d", SIZE_STANDARD);
+		sz=gnome_config_get_int(buf->str);
+		
 		/*now for type specific config*/
 
-		g_string_sprintf(buf,"type=%d", SNAPPED_PANEL);
+		g_string_sprintf(buf,"type=%d", EDGE_PANEL);
 		type = gnome_config_get_int(buf->str);
 
 		hidebuttons_enabled =
@@ -945,113 +949,96 @@ init_user_panels(void)
 		hidebutton_pixmaps_enabled =
 			gnome_config_get_bool("hidebutton_pixmaps_enabled=TRUE");
 
-		switch(type) {
-		case SNAPPED_PANEL:
-			{
-				SnappedPos pos;
-				SnappedMode mode;
-				SnappedState state;
-				PanelSizeType sz;
+		state = gnome_config_get_int("state=0");
+		mode = gnome_config_get_int("mode=0");
+#if 0 /* i guess we can't easily do this for now */
+		pos = basep_widget_load_pos_settings();
+#endif
+		switch (type) {
+			
+		case EDGE_PANEL:
+			g_string_sprintf (buf, "edge=%d", BORDER_BOTTOM);
+			edge = gnome_config_get_int (buf->str);
+			panel = edge_widget_new (edge, 
+						 mode, state, sz,
+						 hidebuttons_enabled,
+						 hidebutton_pixmaps_enabled,
+						 back_type, back_pixmap,
+						 fit_pixmap_bg, &back_color);
+			break;
+		case ALIGNED_PANEL: {
+			AlignedAlignment align;
+			g_string_sprintf (buf, "edge=%d", BORDER_BOTTOM);
+			edge = gnome_config_get_int (buf->str);
+			
+			g_string_sprintf (buf, "align=%d", ALIGNED_LEFT);
+			align = gnome_config_get_int (buf->str);
 
-				g_string_sprintf(buf,"pos=%d", SNAPPED_BOTTOM);
-				pos=gnome_config_get_int(buf->str);
+			panel = aligned_widget_new (align, edge,
+						    mode, state, sz,
+						    hidebuttons_enabled,
+						    hidebutton_pixmaps_enabled,
+						    back_type, back_pixmap,
+						    fit_pixmap_bg, &back_color);
+			break;
+		}
+		case SLIDING_PANEL: {
+			gint16 offset;
+			SlidingAnchor anchor;
+			g_string_sprintf (buf, "edge=%d", BORDER_BOTTOM);
+			edge = gnome_config_get_int (buf->str);
+			
+			g_string_sprintf (buf, "anchor=%d", SLIDING_ANCHOR_LEFT);
+			anchor = gnome_config_get_int (buf->str);
 
-				g_string_sprintf(buf,"mode=%d",
-						 SNAPPED_EXPLICIT_HIDE);
-				mode=gnome_config_get_int(buf->str);
+			offset = gnome_config_get_int ("offset=0");
 
-				g_string_sprintf(buf,"state=%d", SNAPPED_SHOWN);
-				state=gnome_config_get_int(buf->str);
+			panel = sliding_widget_new (anchor, offset, edge,
+						    mode, state, sz,
+						    hidebuttons_enabled,
+						    hidebutton_pixmaps_enabled,
+						    back_type, back_pixmap,
+						    fit_pixmap_bg, &back_color);
+			break;
+		}
+		case DRAWER_PANEL: {
+			PanelOrientType orient;
+			/*BasePState temp_state;*/
 
-				g_string_sprintf(buf,"sz=%d", SIZE_STANDARD);
-				sz=gnome_config_get_int(buf->str);
+			g_string_sprintf (buf, "orient=%d", ORIENT_UP);
+			orient = gnome_config_get_int (buf->str);
 
-				panel = snapped_widget_new(pos,
-							   mode,
-							   state,
-							   sz,
-							   hidebuttons_enabled,
-							   hidebutton_pixmaps_enabled,
-							   back_type,
-							   back_pixmap,
-							   fit_pixmap_bg,
-							   &back_color);
-				break;
-			}
-		case DRAWER_PANEL:
-			{
-				DrawerState state;
-				PanelOrientType orient;
-				PanelSizeType sz;
-
-				g_string_sprintf(buf,"state=%d", DRAWER_SHOWN);
-				state=gnome_config_get_int(buf->str);
-
-				g_string_sprintf(buf,"orient=%d", ORIENT_UP);
-				orient=gnome_config_get_int(buf->str);
-
-				g_string_sprintf(buf,"sz=%d", SIZE_STANDARD);
-				sz=gnome_config_get_int(buf->str);
-
-				panel = drawer_widget_new(orient,
-							  state,
-							  sz,
-							  back_type,
-							  back_pixmap,
-							  fit_pixmap_bg,
-							  &back_color,
-							  hidebutton_pixmaps_enabled,
-							  hidebuttons_enabled);
-				break;
-			}
-		case CORNER_PANEL:
-			{
-				CornerPos pos;
-				PanelOrientation orient;
-				CornerState state;
-				CornerMode mode;
-				PanelSizeType sz;
-				
-				g_string_sprintf(buf,"pos=%d", CORNER_NE);
-				pos=gnome_config_get_int(buf->str);
-
-				g_string_sprintf(buf,"orient=%d",
-						 PANEL_HORIZONTAL);
-				orient=gnome_config_get_int(buf->str);
-
-				g_string_sprintf(buf,"state=%d", CORNER_SHOWN);
-				state=gnome_config_get_int(buf->str);
-
-				g_string_sprintf(buf,"mode=%d",
-						 CORNER_EXPLICIT_HIDE);
-				mode=gnome_config_get_int(buf->str);
-
-				g_string_sprintf(buf,"sz=%d", SIZE_STANDARD);
-				sz=gnome_config_get_int(buf->str);
-
-				panel = corner_widget_new(pos,
-							  orient,
-							  mode,
-							  state,
-							  sz,
-							  hidebuttons_enabled,
-							  hidebutton_pixmaps_enabled,
-							  back_type,
-							  back_pixmap,
-							  fit_pixmap_bg,
-							  &back_color);
-				break;
-			}
-		default: panel=NULL; break; /*fix warning*/
+#warning FIXME: there are some issues with auto hiding drawers
+			panel = drawer_widget_new (orient,
+						   BASEP_EXPLICIT_HIDE, 
+						   state, sz,
+						   hidebuttons_enabled,
+						   hidebutton_pixmaps_enabled,
+						   back_type, back_pixmap,
+						   fit_pixmap_bg, &back_color);
+#if 0
+			g_string_sprintf (buf, "temp_state=%d", BASEP_SHOWN);
+			temp_state = gnome_config_get_int (buf->str);
+			DRAWER_POS (BASEP_WIDGET (panel)->pos)->temp_state = temp_state;
+#endif
+			break;
+		}
+#if 0
+		case FREE_PANEL:
+			break;
+#endif
+		default:
+			g_assert_not_reached ();
+			break;
 		}
 
 		gnome_config_pop_prefix ();
 		
 		g_free(color);
 		g_free(back_pixmap);
+
 		if (panel) {
 			panel_setup(panel);
-
 			gtk_widget_show(panel);
 		}
 	}

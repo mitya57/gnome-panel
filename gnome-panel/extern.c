@@ -268,11 +268,11 @@ send_position_change(Extern *ext)
 	/*ingore this until we get an ior*/
 	if(ext->applet) {
 		int x=0,y=0;
-		GtkWidget *wid;
-
+		GtkWidget *wid=ext->ebox;
+		
 		CORBA_Environment ev;
 		CORBA_exception_init(&ev);
-
+		g_warning ("Crazy function!\n");
 		/*go the the toplevel panel widget*/
 		for(;;) {
 			if(!GTK_WIDGET_NO_WINDOW(wid)) {
@@ -769,13 +769,9 @@ s_panelspot_show_menu(POA_GNOME_PanelSpot *servant,
 		create_applet_menu(ext->info);
 
 	panel = get_panel_parent(ext->info->widget);
-	if(IS_SNAPPED_WIDGET(panel)) {
-		SNAPPED_WIDGET(panel)->autohide_inhibit = TRUE;
-		snapped_widget_queue_pop_down(SNAPPED_WIDGET(panel));
-	} else if (IS_CORNER_WIDGET(panel)) {
-	        CORNER_WIDGET(panel)->autohide_inhibit = TRUE;
-	        corner_widget_queue_pop_down(CORNER_WIDGET(panel));
-	}
+
+	BASEP_WIDGET(panel)->autohide_inhibit = TRUE;
+	basep_widget_queue_autohide(BASEP_WIDGET(panel));
 	
 	ext->info->menu_age = 0;
 	gtk_menu_popup(GTK_MENU(ext->info->menu), NULL, NULL,
