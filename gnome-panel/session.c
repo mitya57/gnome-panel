@@ -714,6 +714,7 @@ load_default_applets(void)
 {
 	char *def_launchers[] =
 	      { "gnome/apps/gnome-help.desktop",
+		"gnome/apps/Utilities/gnome-terminal.desktop",
 		"gnome/apps/Settings/gnomecc.desktop",
 		"gnome/apps/Applications/Netscape.desktop",
 		NULL };

@@ -572,7 +572,7 @@ about_cb (GtkWidget *widget, gpointer data)
 	  "Elliot Lee (sopwith@redhat.com)",
 	  "Owen Taylor (otaylor@redhat.com)",
 	  "Jacob Berkman (jberkman@andrew.cmu.edu)",
-	  "Many others...",
+	  "Many others ...",
 	  "and finally, The Knights Who Say ... NI!",
 	  NULL
 	  };
@@ -2426,16 +2426,20 @@ static GtkWidget *
 create_kde_menu(GtkWidget *menu, int fake_submenus,
 		int force, int fake)
 {
+	char *pixmap_name = g_concat_dir_and_file (KDE_ICONDIR, "exec.xpm");
 	if(!fake || menu) {
 		menu = create_menu_at (menu, 
 				       KDE_MENUDIR, FALSE,
 				       _("KDE menus"), 
-				       NULL,fake_submenus,
+				       pixmap_name,
+				       fake_submenus,
 				       force);
 	} else {
 		menu = create_fake_menu_at (KDE_MENUDIR, FALSE,
-					    _("KDE menus"),NULL);
+					    _("KDE menus"),
+					    pixmap_name);
 	}
+	g_free (pixmap_name);
 	return menu;
 }
 
@@ -3737,24 +3741,24 @@ create_root_menu(int fake_submenus, int flags)
 	}
 	if(flags&MAIN_MENU_KDE && flags&MAIN_MENU_KDE_SUB) {
 		GtkWidget *pixmap = NULL;
+		char *pixmap_path;
 		if(need_separ)
 			add_menu_separator(root_menu);
 		need_separ = FALSE;
 		menu = create_kde_menu(NULL, fake_submenus, TRUE, TRUE);
-		if (g_file_exists("/usr/share/icons/exec.xpm")) {
-			pixmap = gnome_stock_pixmap_widget_at_size (NULL, "/usr/share/icons/exec.xpm",
+		pixmap_path = g_concat_dir_and_file (KDE_MINI_ICONDIR, "exec.xpm");
+		if (g_file_exists(pixmap_path)) {
+			pixmap = gnome_stock_pixmap_widget_at_size (NULL, pixmap_path,
 								    SMALL_ICON_SIZE,
 								    SMALL_ICON_SIZE);
 			if (pixmap)
 				gtk_widget_show (pixmap);
 		}
+		g_free (pixmap_path);
 		menuitem = gtk_menu_item_new ();
 		setup_menuitem (menuitem, pixmap, _("KDE menus"));
 		gtk_menu_append (GTK_MENU (root_menu), menuitem);
 		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem), menu);
-		gtk_signal_connect(GTK_OBJECT(menu),"show",
-				   GTK_SIGNAL_FUNC(rh_submenu_to_display),
-				   menuitem);
 		gtk_signal_connect(GTK_OBJECT(menu),"show",
 				   GTK_SIGNAL_FUNC(submenu_to_display),
 				   menuitem);
