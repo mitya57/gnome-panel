@@ -241,14 +241,12 @@ extern_clean(Extern *ext)
 
 	extern_applets = g_list_remove(extern_applets,ext);
 
-	if(ext->applet != CORBA_OBJECT_NIL)
-		CORBA_Object_release((CORBA_Object)ext->applet, &ev);
-
 	g_free(ext->goad_id);
 	g_free(ext->cfg);
 
-	/*FIXME: is this correct???*/
-	/*CORBA_Object_release((CORBA_Object)ext, &ev);*/
+	CORBA_Object_release(ext->pspot, &ev);
+	CORBA_Object_release(ext->applet, &ev);
+	POA_GNOME_PanelSpot__fini((PortableServer_Servant) ext, &ev);
 
 	g_free(ext);
 
