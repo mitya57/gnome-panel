@@ -31,6 +31,7 @@
 #include "pager.h"
 
 #include "multihead-hacks.h"
+#include "egg-screen-help.h"
 
 /* even 16 is pretty darn dubious. */
 #define MAX_REASONABLE_ROWS 16
@@ -176,8 +177,10 @@ response_cb(GtkWidget * widget,int id, PagerData *pager)
 							     GNOME_PROGRAM_STANDARD_PROPERTIES, NULL);
 		}
 
-		gnome_help_display_desktop (applet_program, "workspace-switcher",
-					    "workspace-switcher", "workspacelist-prefs", &error);
+		egg_screen_help_display_desktop (
+			gtk_widget_get_screen (pager->applet),
+			applet_program, "workspace-switcher",
+			"workspace-switcher", "workspacelist-prefs", &error);
 		if (error) {
 			GtkWidget *dialog;
 			dialog = gtk_message_dialog_new (GTK_WINDOW(widget),
@@ -485,8 +488,10 @@ display_help_dialog (BonoboUIComponent *uic,
 						     GNOME_PROGRAM_STANDARD_PROPERTIES, NULL);
 	}
 
-	gnome_help_display_desktop (applet_program, "workspace-switcher",
-				    "workspace-switcher", NULL, &error);
+	egg_screen_help_display_desktop (
+		gtk_widget_get_screen (pager->applet),
+		applet_program, "workspace-switcher",
+		"workspace-switcher", NULL, &error);
 	if (error) {
 		GtkWidget *dialog;
 		dialog = gtk_message_dialog_new (NULL,
