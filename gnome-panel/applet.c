@@ -27,6 +27,8 @@
 #include "session.h"
 #include "panel-applet-frame.h"
 
+#include "multihead-hacks.h"
+
 #define SMALL_ICON_SIZE 20
 
 extern GSList *panels;
@@ -179,6 +181,13 @@ applet_remove_callback (GtkWidget  *widget,
 		info->remove_idle = g_idle_add (applet_idle_remove, info);
 }
 
+static inline GdkScreen *
+applet_user_menu_get_screen (AppletUserMenu *menu)
+{
+	return gtk_window_get_screen (
+			GTK_WINDOW (get_panel_parent (menu->info->widget)));
+}
+
 static void
 applet_callback_callback (GtkWidget      *widget,
 			  AppletUserMenu *menu)
@@ -188,7 +197,9 @@ applet_callback_callback (GtkWidget      *widget,
 	switch (menu->info->type) {
 	case APPLET_LAUNCHER:
 		if (!strcmp (menu->name, "properties"))
-			launcher_properties (menu->info->data);
+			launcher_properties (
+				menu->info->data,
+				applet_user_menu_get_screen (menu));
 
 		else if (!strcmp (menu->name, "help"))
 			panel_show_help ("wgospanel.xml", "gospanel-16");
@@ -239,7 +250,9 @@ applet_callback_callback (GtkWidget      *widget,
 			freeit = TRUE;
 		}
 		if (command)
-			gnome_execute_shell (g_get_home_dir (), command);
+			panel_execute_shell (
+				applet_user_menu_get_screen (menu),
+				g_get_home_dir (), command);
 		if (freeit)
 			g_free (command);
 		break;
@@ -584,6 +597,9 @@ applet_show_menu (AppletInfo     *info,
 	panel_applet_menu_set_recurse (GTK_MENU (info->menu),
 				       "menu_panel",
 				       info->widget->parent);
+
+	gtk_menu_set_screen (GTK_MENU (info->menu),
+			     panel_screen_from_toplevel (panel));
 
 	if (!GTK_WIDGET_REALIZED (info->menu))
 		gtk_widget_show (info->menu);

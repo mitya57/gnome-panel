@@ -43,6 +43,30 @@ GtkWidget *	create_icon_entry	(GtkWidget *table,
 					 UpdateFunction func,
 					 gpointer data);
 
+#ifdef HAVE_GTK_MULTIHEAD
+char           *panel_display_string       (GdkScreen    *screen);
+#endif
+
+int             panel_execute_async        (GdkScreen    *screen,
+					    const char   *dir,
+					    int           argc,
+					    char * const  argv []);
+int             panel_execute_shell        (GdkScreen    *screen,
+					    const char   *dir,
+					    const char   *command);
+gboolean        panel_execute_command_line (GdkScreen    *screen,
+					    const char   *dir,
+					    const char   *command,
+					    GError      **error);
+int             panel_ditem_launch         (GdkScreen    *screen,
+					    const GnomeDesktopItem *item,
+					    GList        *file_list,
+					    GnomeDesktopItemLaunchFlags flags,
+					    GError      **error);
+GdkScreen      *panel_screen_from_number   (int           screen);
+
+
+
 void		panel_show_help		(const char *path,
 					 const char *linkid);
 
@@ -71,20 +95,14 @@ gboolean        panel_parse_accelerator (GlobalConfigKey *key);
 char *		convert_keysym_state_to_string (guint keysym,
 						GdkModifierType state);
 
-GtkWidget *	panel_error_dialog	(const char *class,
+GtkWidget      *panel_error_dialog      (GdkScreen  *screen,
+					 const char *class,
 					 const char *format,
-					 ...) G_GNUC_PRINTF (2, 3);
-GtkWidget *	panel_info_dialog	(const char *class,
+					 ...) G_GNUC_PRINTF (3, 4);
+GtkWidget      *panel_info_dialog       (GdkScreen  *screen,
+					 const char *class,
 					 const char *format,
-					 ...) G_GNUC_PRINTF (2, 3);
-GtkWidget *	panel_error_dialog_with_parent (GtkWindow *parent,
-						const char *class,
-						const char *format,
-						...) G_GNUC_PRINTF (3, 4);
-GtkWidget *	panel_info_dialog_with_parent (GtkWindow *parent,
-					       const char *class,
-					       const char *format,
-					       ...) G_GNUC_PRINTF (3, 4);
+					 ...) G_GNUC_PRINTF (3, 4);
 
 gboolean	is_ext			(const char *file,
 					 const char *ext);

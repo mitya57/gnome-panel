@@ -1,3 +1,14 @@
+2002-06-25  Mark McLoughlin  <mark@skynet.ie>
+
+	* fish.c: (fishy_root_window),
+	(fishy_window_set_screen): impl helper methods.
+	(load_image_file): create the pixmap using the correct
+	root window.
+	(fish_properties_apply), (display_properties_dialog),
+	(update_fortune_dialog), (change_water),
+	(display_about_dialog): set the screen on which the window
+	is to realize.
+
 2002-06-21  Mark McLoughlin  <mark@skynet.ie>
 
 	* fish.c: (load_image_file), (create_fish_widget),

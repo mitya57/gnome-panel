@@ -27,6 +27,9 @@
 #include "menu-util.h"
 #include "panel-util.h"
 #include "menu-properties.h"
+#include "panel.h"
+
+#include "multihead-hacks.h"
 
 #undef MENU_PROPERTIES_DEBUG
 
@@ -327,7 +330,8 @@ dialog_response (GtkWidget *dialog, int response, gpointer data)
 }
 
 static GtkWidget *
-create_properties_dialog (Menu      *menu)
+create_properties_dialog (Menu      *menu,
+			  GdkScreen *screen)
 {
 	GtkWidget *dialog, *notebook;
 	GtkWidget *vbox;
@@ -355,6 +359,7 @@ create_properties_dialog (Menu      *menu)
 
 	gtk_window_set_wmclass (GTK_WINDOW (dialog),
 				"menu_properties", "Panel");
+	gtk_window_set_screen (GTK_WINDOW (dialog), screen);
 	
 	vbox = gtk_vbox_new(FALSE,GNOME_PAD_SMALL);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox),GNOME_PAD_SMALL);
@@ -555,15 +560,22 @@ create_properties_dialog (Menu      *menu)
 void
 menu_properties (Menu *menu)
 {
+	GdkScreen *screen;
 	GtkWidget *dialog;
 
 	g_return_if_fail (menu != NULL);
+	g_return_if_fail (menu->info != NULL);
+
+	screen = gtk_window_get_screen (
+			GTK_WINDOW (get_panel_parent (menu->info->widget)));
 
 	if (menu->prop_dialog != NULL) {
+		gtk_window_set_screen (
+			GTK_WINDOW (menu->prop_dialog), screen);
 		gtk_window_present (GTK_WINDOW (menu->prop_dialog));
 		return;
 	}
 
-	dialog = create_properties_dialog (menu);
+	dialog = create_properties_dialog (menu, screen);
 	gtk_widget_show_all (dialog);
 }
