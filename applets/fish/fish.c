@@ -878,7 +878,7 @@ something_fishy_going_on (Fish       *fish,
 			  NULL);
 
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-	fishy_window_set_screen (GTK_WINDOW (w), fish->applet);
+	fishy_window_set_screen (GTK_WINDOW (dialog), fish->applet);
 	gtk_widget_show (dialog);
 }
 
