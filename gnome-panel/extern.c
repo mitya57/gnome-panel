@@ -404,12 +404,12 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 				*wid=GDK_WINDOW_XWINDOW(socket->window);
 
 				panelspot_servant = (POA_GNOME_PanelSpot *)ext;
-				acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, ev);
+				acc = ext->pspot = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, ev);
 				g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
 				ext->pspot = CORBA_Object_duplicate(acc, ev);
 				g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
 
-				return acc;
+				return CORBA_Object_duplicate(acc, ev);
 			}
 		}
 	}
@@ -756,20 +756,8 @@ panel_corba_gtk_init(CORBA_ORB panel_orb)
   acc = PortableServer_POA_servant_to_reference(thepoa, &panel_servant, &ev);
   g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 
-  ns = gnome_name_service_get();
-  goad_server_register(ns, acc, "gnome_panel", "server", &ev);
-  CORBA_Object_release(ns, &ev);
+  goad_server_register(CORBA_OBJECT_NIL, acc, "gnome_panel", "server", &ev);
 
-  if(goad_server_activation_id()) {
-    CORBA_char *ior;
-    ior = CORBA_ORB_object_to_string(orb, acc, &ev);
-    printf("%s\n", ior); fflush(stdout);
-    CORBA_free(ior);
-  }
-
-  CORBA_Object_release(acc, &ev);
-  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
-
-  ORBit_custom_run_setup(orb, &ev);
+  //CORBA_Object_release(acc, &ev);
   g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 }
