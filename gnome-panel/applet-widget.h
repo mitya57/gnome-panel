@@ -172,12 +172,6 @@ int		applet_widget_init		(const char *app_id,
 						 unsigned int flags,
 						 poptContext *return_ctx);
 
-/*defaults init for use with "normal" non-multi applets*/
-#define \
-applet_widget_init_defaults(app_id,app_version,argc,argv,options,flags,return_ctx) \
-applet_widget_init(app_id,app_version,argc,argv,options,flags,return_ctx, \
-		   TRUE,NULL,NULL,NULL)
-
 /*abort the applet loading, once applet has been created, this is a way to
   tell the panel to forget about us if we decide we want to quit before
   we add the actual applet to the applet-widget*/
@@ -208,10 +202,10 @@ void applet_widget_corba_deactivate(PortableServer_POA poa,
 
 #define APPLET_ACTIVATE(func, goad_id, apldat) ({ CORBA_Environment ev; CORBA_exception_init(&ev); \
 CORBA_Object_release(func(CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), \
-"RootPOA", ev), goad_id, NULL, &apldat, &ev)); })
+"RootPOA", &ev), goad_id, NULL, &apldat, &ev)); CORBA_exception_free(&ev); })
 
 #define APPLET_DEACTIVATE(func, goad_id, apldat) ({ CORBA_Environment ev; CORBA_exception_init(&ev); \
-CORBA_Object_release(func(CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), "RootPOA", ev), goad_id, apldat, &ev)); })
+CORBA_Object_release(func(CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), "RootPOA", &ev), goad_id, apldat, &ev));  CORBA_exception_free(&ev); })
 
 #define APPLET_DEACTIVATE_DEFAULT(goad_id, apldat) APPLET_DEACTIVATE(applet_widget_corba_deactivate, goad_id, apldat)
 
