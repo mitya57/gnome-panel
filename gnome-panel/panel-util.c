@@ -214,7 +214,7 @@ panel_ditem_launch (GdkScreen                    *screen,
 	if (gdk_screen_get_default () != screen)
 		envp = panel_munge_environment (screen);
 
-	retval = gnome_desktop_item_launch_env (
+	retval = gnome_desktop_item_launch_with_env (
 			item, file_list, flags, envp, error);
 
 	g_strfreev (envp);

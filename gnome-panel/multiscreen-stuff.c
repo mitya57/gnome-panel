@@ -146,7 +146,7 @@ multiscreen_init (void)
 	if (g_getenv ("FAKE_XINERAMA_PANEL")) {
 		int width, height;
 
-#ifdef HAVE_GTK_MULITHEAD
+#ifdef HAVE_GTK_MULTIHEAD
 		width  = gdk_screen_get_width  (gdk_screen_get_default ());
 		height = gdk_screen_get_height (gdk_screen_get_default ());
 #else
