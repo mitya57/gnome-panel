@@ -19,24 +19,16 @@ lib_LTLIBRARIES = libpanel_applet.la
 
 CORBA_SRCLIST = gnome-panel-stubs.c gnome-panel-skels.c gnome-panel-common.c gnome-panel.h
 
-CORBA2_SRCLIST = panel2-stubs.c panel2-skels.c \
-	panel2-common.c panel2.h
-
 # try to make these get cleaned properly
-CLEANFILES += $(CORBA_SRCLIST) $(CORBA2_SRCLIST)
+CLEANFILES += $(CORBA_SRCLIST)
 
 $(CORBA_SRCLIST): $(top_srcdir)/idl/gnome-panel.idl $(ORBIT_IDL)
 	$(ORBIT_IDL) $<
 
-$(CORBA2_SRCLIST): $(top_srcdir)/idl/panel2.idl $(ORBIT_IDL)
-	$(ORBIT_IDL) $<
-
-PANEL_ORB_SRCLIST= orbit-glue.c orbit-glue.h
-
 # We need explicit dependencies here for people building out
 # of the tarballs.
 
-orbit-glue.c: gnome-panel.h
+extern.c: gnome-panel.h
 
 libpanel_applet_la_SOURCES = \
 	panel-util.c  \
@@ -51,7 +43,7 @@ libpanel_appletinclude_HEADERS = \
 libpanel_applet_la_LDFLAGS = -version-info 0:0:0 -rpath $(libdir)
 libpanel_applet_la_LIBADD = $(ORB_LIBS) -lm $(DL_LIB)
 
-BUILT_SOURCES = $(CORBA_SRCLIST) $(CORBA2_SRCLIST)
+BUILT_SOURCES = $(CORBA_SRCLIST)
 
 panel_SOURCES = 		\
 	panel-include.h		\
@@ -93,8 +85,7 @@ panel_SOURCES = 		\
 	panel-util.h		\
 	gdkextra.c		\
 	gdkextra.h		\
-	$(PANEL_ORB_SRCLIST)	\
-	$(CORBA2_SRCLIST)
+	$(CORBA_SRCLIST)
 
 panel_LDADD = $(GNOME_LIBDIR) $(GNORBA_LIBS) $(ORB_LIBS) $(GNOMEUI_LIBS) $(INTLLIBS)
 

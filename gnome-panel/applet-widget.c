@@ -5,7 +5,7 @@
 
 #include <applet-widget.h>
 
-#include "panel2.h"
+#include "gnome-panel.h"
 
 /*****************************************************************************
   CORBA STUFF
@@ -17,6 +17,8 @@ struct _CallbackInfo {
   AppletCallbackFunc func;
   gpointer data;
 };
+
+GNOME_Panel panel_client;
 
 #define APPLET_ID_KEY "applet_id_key"
 #define APPLET_WIDGET_KEY "applet_widget_key"
@@ -571,13 +573,11 @@ gnome_panel_applet_corba_init(const char *goad_id)
   CustomAppletServant *applet_servant;
   CORBA_Environment ev;
   GNOME_Applet applet_obj;
-  GNOME_Panel panel;
   CORBA_ORB orb;
 
   CORBA_exception_init(&ev);
 
   orb = gnome_CORBA_ORB();
-  panel = goad_server_activate_with_repo_id(NULL, "IDL:GNOME/Panel:1.0", 0, NULL);
 
   applet_servant = g_new0(CustomAppletServant, 1);
 
@@ -602,12 +602,11 @@ gnome_panel_applet_corba_init(const char *goad_id)
   goad_server_register(CORBA_OBJECT_NIL, applet_obj, goad_id, "server", &ev);
   g_return_val_if_fail(ev._major == CORBA_NO_EXCEPTION, FALSE);
 
-  servant->pspot = GNOME_Panel_add_applet(panel, applet_obj,
+  servant->pspot = GNOME_Panel_add_applet(panel_client, applet_obj,
 					  goad_id,
 					  &servant->winid, &ev);
   g_assert(ev._major == CORBA_NO_EXCEPTION);
 
-  CORBA_Object_release(panel, &ev);
   CORBA_exception_free(&ev);
 
   goad_server_register(CORBA_OBJECT_NIL, applet_obj, goad_id, "server", &ev);
@@ -656,12 +655,11 @@ applet_event(GtkWidget *widget, GdkEvent *event, gpointer data)
   GdkEventButton *bevent;
   int in_drag;
   GtkWidget *w;
-  GNOME_Panel pobj = CORBA_OBJECT_NIL;
   CORBA_Environment ev;
   int retval = TRUE, in_drag;
 
   CORBA_exception_init(&ev);
-  in_drag = GNOME_PanelSpot__get_parent_panel_in_drag(CD(widget)->pspot, &ev);
+  in_drag = GNOME_PanelSpot__get_in_drag(panel_client, &ev);
 
   switch (event->type) {
   case GDK_BUTTON_PRESS:
@@ -788,13 +786,13 @@ applet_widget_set_tooltip(AppletWidget *applet, char *text)
 }
 
 /* Get the oprientation the applet should use */
-PanelOrientType
+GNOME_Panel_OrientType
 applet_widget_get_panel_orient(AppletWidget *applet)
 {
 	g_return_val_if_fail(applet != NULL,ORIENT_UP);
 	g_return_val_if_fail(IS_APPLET_WIDGET(applet), ORIENT_UP);
 	
-	return GNOME_PanelSpot__get_parent_panel_orient(CD(applet)->pspot, &ev);
+	return GNOME_PanelSpot__get_parent_orient(CD(applet)->pspot, &ev);
 }
 
 int	
@@ -818,6 +816,9 @@ applet_widget_init(const char *app_id,
 	orb = gnome_CORBA_init_with_popt_table(app_id, VERSION, &argc, argv,
 					       options, flags, return_ctx,
 					       GNORBA_INIT_SERVER_FUNC, &ev);
+
+	panel_client = goad_server_activate_with_repo_id(NULL, "IDL:GNOME/Panel:1.0", 0, NULL);
+
 	CORBA_exception_free(&ev);
 
 	applet_tooltips = gtk_tooltips_new();
@@ -844,13 +845,10 @@ applet_widget_gtk_main_quit (void)
 void
 applet_widget_panel_quit (AppletWidget *applet)
 {
-  GNOME_Panel pobj;
   CORBA_Environment ev;
 
   CORBA_exception_init(&ev);
-  pobj = GNOME_PanelSpot__get_parent_panel(CD(applet)->pspot, &ev);
-  GNOME_Panel_quit(pobj, &ev);
-  CORBA_Object_release(pobj, &ev);
+  GNOME_Panel_quit(panel_client, &ev);
   CORBA_exception_free(&ev);
 }
 
@@ -860,7 +858,6 @@ server_applet_change_orient(CustomAppletServant *servant,
 			    CORBA_Environment *ev)
 {
   AppletWidget *applet;
-  PanelOrientType o = (PanelOrientType) orient;
 
   applet = servant->appwidget;
   if(applet) {

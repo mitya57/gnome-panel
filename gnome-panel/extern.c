@@ -13,6 +13,7 @@
 #include <gnome.h>
 
 #include "panel-include.h"
+#include "gnome-panel.h"
 
 #define APPLET_EVENT_MASK (GDK_BUTTON_PRESS_MASK |		\
 			   GDK_BUTTON_RELEASE_MASK |		\
@@ -37,6 +38,10 @@ static char *goad_id_starting = NULL; /*the goad id of the applet that is
 static GList *start_queue = NULL; /*the queue of the applets to be
 				    started*/
 static int start_timeout = -1; /*id of the timeout for starting new applet*/
+
+CORBA_ORB orb = NULL;
+CORBA_Environment ev;
+PortableServer_POA thepoa;
 
 static int
 start_timeout_handler(gpointer data)
@@ -161,6 +166,8 @@ void
 load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 {
 	Extern *ext;
+	POA_GNOME_PanelSpot *panelspot_servant;
+	PortableServer_ObjectId objid = {0, sizeof("PanelSpot"), "PanelSpot" };
 
 	if(!cfgpath || !*cfgpath)
 		cfgpath = g_copy_strings(old_panel_cfg_path,
@@ -170,7 +177,15 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 		cfgpath = g_strdup(cfgpath);
 	
 	ext = g_new(Extern,1);
-	/*FIXME: init the panel spot*/
+
+	panelspot_servant = (POA_GNOME_Panel *)ext;
+	panelspot_servant->_private = NULL;
+	panelspot_servant->vepv = &panelspot_vepv;
+
+	POA_GNOME_PanelSpot__init(panelspot_servant, &ev);
+	
+	PortableServer_POA_activate_object_with_id(thepoa, &objid, panelspot_servant, &ev);
+	g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
 
 	ext->applet = CORBA_OBJECT_NIL;
 	ext->goad_id = g_strdup(goad_id);
@@ -322,10 +337,10 @@ static POA_GNOME_PanelSpot__epv panelspot_epv = {
   (gpointer)&s_panelspot_sync_config
 };
 static POA_GNOME_Panel__vepv panelspot_vepv = { &panelspot_base_epv, &panelspot_epv };
-static POA_GNOME_Panel panelspot_servant = { NULL, &panelspot_vepv };
+//static POA_GNOME_Panel panelspot_servant = { NULL, &panelspot_vepv };
 
 
-static CORBA_short
+static CORBA_PanelSpot
 s_panel_add_applet(POA_GNOME_Panel *servant,
 		   CORBA_Applet panel_applet,
 		   CORBA_char *goad_id,
@@ -338,7 +353,7 @@ s_panel_add_applet(POA_GNOME_Panel *servant,
 				       cfgpath,globcfgpath,wid,ev);
 }
 
-static CORBA_short
+static CORBA_PanelSpot
 s_panel_add_applet_full(POA_GNOME_Panel *servant,
 			CORBA_Applet panel_applet,
 			CORBA_char *goad_id,
@@ -353,6 +368,9 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 	int i;
 	Extern *ext;
 	char *p;
+	POA_GNOME_PanelSpot *panelspot_servant;
+	GNOME_PanelSpot acc;
+	PortableServer_ObjectId objid = {0, sizeof("PanelSpot"), "PanelSpot" };
 	
 	for(li=applets;li!=NULL;li=g_list_next(li)) {
 		AppletInfo *info = li->data;
@@ -373,8 +391,12 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 				*globcfgpath = CORBA_string_dup(old_panel_cfg_path);
 				info->type = APPLET_EXTERN_RESERVED;
 				*wid=GDK_WINDOW_XWINDOW(socket->window);
-				/*FIXME: return a reference to panel spot here*/
-				return ext->blablabla;
+
+				panelspot_servant = (POA_GNOME_Panel *)ext;
+				acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, &ev);
+				g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+				return acc;
 			}
 		}
 	}
@@ -383,7 +405,18 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 	  have already reserved a spot for it*/
 	ext = g_new(Extern,1);
 
-	/*FIXME: we have to init the panel spot object here*/
+	panelspot_servant = (POA_GNOME_Panel *)ext;
+	panelspot_servant->_private = NULL;
+	panelspot_servant->vepv = &panelspot_vepv;
+
+	POA_GNOME_PanelSpot__init(panelspot_servant, &ev);
+	
+	PortableServer_POA_activate_object_with_id(thepoa, &objid, panelspot_servant, &ev);
+	g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+	acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, &ev);
+	g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
 	ext->applet = applet_obj;
 	ext->goad_id = g_strdup(goad_id);
 	ext->cfg = NULL;
@@ -410,8 +443,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 	g_free(p);
 	*globcfgpath = CORBA_string_dup(old_panel_cfg_path);
 
-	/*FIXME: return a reference to panel spot here*/
-	return ext->blablabla;
+	return acc;
 }
 
 static void
@@ -435,6 +467,7 @@ s_panelspot_get_tooltip(POA_GNOME_PanelSpot *servant,
 			CORBA_Environment *ev)
 {
 	/*FIXME: get the tooltip text*/
+	return GNOME_string_dup("");
 }
 
 static void
@@ -693,3 +726,58 @@ s_panelspot_sync_config(POA_GNOME_PanelSpot *servant,
 	panel_config_sync();
 }
 
+void
+panel_corba_clean_up(void)
+{
+  CORBA_Object ns = gnome_name_service_get();
+  goad_server_unregister(ns, "gnome_panel", "server", &ev);
+  CORBA_Object_release(ns, &ev);
+  CORBA_ORB_shutdown(orb, CORBA_FALSE, &ev);
+}
+
+void
+panel_corba_gtk_init(CORBA_ORB panel_orb)
+{
+  PortableServer_ObjectId objid = {0, sizeof("Panel"), "Panel" };
+  GNOME_Panel acc;
+  char hostname [4096];
+  char *name;
+  CORBA_Object ns;
+
+  CORBA_exception_init(&ev);
+
+  orb = panel_orb;
+
+  POA_GNOME_Panel__init(&servant, &ev);
+  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+  thepoa = (PortableServer_POA)
+    CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
+  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+  PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(thepoa, &ev), &ev);
+  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+  PortableServer_POA_activate_object_with_id(thepoa, &objid, &servant, &ev);
+  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+  acc = PortableServer_POA_servant_to_reference(thepoa, &servant, &ev);
+  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+  ns = gnome_name_service_get();
+  goad_server_register(ns, acc, "gnome_panel", "server", &ev);
+  CORBA_Object_release(ns, &ev);
+
+  if(goad_server_activation_id()) {
+    CORBA_char *ior;
+    ior = CORBA_ORB_object_to_string(orb, acc, &ev);
+    printf("%s\n", ior); fflush(stdout);
+    CORBA_free(ior);
+  }
+
+  CORBA_Object_release(acc, &ev);
+  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+
+  ORBit_custom_run_setup(orb, &ev);
+  g_return_if_fail(ev._major == CORBA_NO_EXCEPTION);
+}

@@ -177,7 +177,7 @@ main(int argc, char **argv)
 	gtk_timeout_add(500,start_extern_timeout,NULL);
 	
 	/* I use the glue code to avoid making this a C++ file */
-	panel_corba_gtk_main ("IDL:GNOME/Panel:1.0");
+	gtk_main ();
 
 	return 0;
 }

@@ -518,7 +518,7 @@ panel_session_die (GnomeClient *client,
 	/*clean up corba stuff*/
 	panel_corba_clean_up();
 	
-	panel_corba_gtk_main_quit();
+	gtk_main_quit();
 	return TRUE;
 }
 

@@ -2,12 +2,15 @@
 #ifndef PANEL_TYPES_H
 #define PANEL_TYPES_H
 
-typedef enum {
+#include <gnome-panel.h>
+
+/*typedef enum {
 	ORIENT_UP,
 	ORIENT_DOWN,
 	ORIENT_LEFT,
 	ORIENT_RIGHT
-} PanelOrientType;
+} PanelOrientType;*/
+typedef enum GNOME_Panel_OrientType PanelOrientType;
 
 typedef enum {
 	LAUNCHER_TILE=0,
