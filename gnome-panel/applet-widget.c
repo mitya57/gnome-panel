@@ -691,8 +691,6 @@ applet_widget_new(const char *goad_id)
 			   GTK_SIGNAL_FUNC(applet_widget_destroy),
 			   NULL);
 
-	applet_widgets = g_list_prepend(applet_widgets, applet);
-
 	applet_count++;
 
 	return GTK_WIDGET(applet);
