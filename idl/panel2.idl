@@ -38,8 +38,24 @@ module GNOME {
 	interface PanelSpot { /* panel half of applets */
 		attribute string tooltip;
 		readonly attribute Panel parent_panel;
-
+		
+		/* the applet is all done with building itself
+		   so it just tells us that it's all ready, this
+		   makes the panel start the next applet (otherwise,
+		   panel would stop launching applets, it's launching
+		   them synchroniously for speed) also it makes this
+		   applet "savable" otherwise the panel wouldn't save
+		   it's state*/
+		oneway void register();
+		/* if the applet didn't call "register" yet, and wants
+		   to abort itself (the panel will free up it's spot
+		   and start he next applet), it should do this before
+		   it exits */
+		oneway void abort_load();
+		
 		oneway void remove_from_panel();
+
+		/*accessors*/
 		short get_pos ();
 		Panel::OrientType get_panel_orient();
 
@@ -54,6 +70,15 @@ module GNOME {
 	};
 
 	interface Applet {
+		/*this inits the applet, it's called by the panel, that way we
+		  can get an exception if the applet is doing weird things, maybe
+		  it shouldn't be one way because of this*/
+		void init(in Object panel,
+			  in Object panel_spot,
+			  in string cfgpath,
+			  in string globcfgpath,
+			  in unsigned long wid);
+
 		oneway void change_orient (in Panel::OrientType orient);
 		oneway void do_callback (in string callback_name);
 		short session_save (in string cfgpath,
