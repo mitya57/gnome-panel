@@ -75,6 +75,7 @@ about_cb (GtkWidget *widget, gpointer data)
 	  "Federico Mena (quartic@gimp.org)",
 	  "Tom Tromey (tromey@cygnus.com)",
 	  "Ian Main (slow@intergate.bc.ca)",
+	  "Elliot Lee (sopwith@redhat.com)",
 	  "and finally, The Knights Who Say ... NI!",
 	  NULL
 	  };
