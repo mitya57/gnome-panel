@@ -639,8 +639,10 @@ static void
 load_default_applets(void)
 {
 	load_menu_applet(NULL,0, panels->data, 0);
+#if 0
 	load_extern_applet("gen_util_clock",NULL,
 			   panels->data,INT_MAX/2/*right flush*/);
+#endif
 	/*we laoded default applets, so we didn't find the config or
 	  something else was wrong, so do complete save when next syncing*/
 	need_complete_save = TRUE;
