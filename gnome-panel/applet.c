@@ -20,6 +20,7 @@
 			   GDK_POINTER_MOTION_HINT_MASK)
 
 GList *applets = NULL;
+GList *applets_last = NULL;
 int applet_count = 0;
 
 /*config sync stuff*/
@@ -446,7 +447,13 @@ register_toy(GtkWidget *applet,
 			    PANEL_APPLET_FORBIDDEN_PANELS,NULL);
 		
 	/*add to the array of applets*/
-	applets = g_list_append(applets,info);
+	if(applets_last != applets) {
+		applets_last = g_list_append(applets_last,info);
+	} else {
+		applets_last = applets = g_list_append(applets,info);
+		if(applets->next)
+			applets_last = applets->next;
+	}
 	applet_count++;
 
 	/*we will need to save this applet's config now*/

@@ -37,17 +37,7 @@ extern int panels_to_sync;
 extern int globals_to_sync;
 extern int need_complete_save;
 
-extern GArray *applets;
-extern int applet_count;
-
-extern char *panel_cfg_path;
-extern char *old_panel_cfg_path;
-
 extern GtkTooltips *panel_tooltips;
-
-extern GnomeClient *client;
-
-extern GlobalConfig global_config;
 
 /*???? this might be ugly, but I guess we can safely assume that we can only
   have one menu open and that nothing weird will happen to the panel that

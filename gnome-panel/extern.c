@@ -19,7 +19,8 @@
 			   GDK_POINTER_MOTION_MASK |		\
 			   GDK_POINTER_MOTION_HINT_MASK)
 
-extern GArray *applets;
+extern GList *applets;
+extern GList *applets_last;
 extern int applet_count;
 
 extern GtkTooltips *panel_tooltips;

@@ -8,11 +8,6 @@
 /* Used for all the packing and padding options */
 #define CONFIG_PADDING_SIZE 3
 
-extern GArray *applets;
-extern int applet_count;
-
-extern GlobalConfig global_config;
-
 static GList *ppconfigs=NULL;
 
 static PerPanelConfig *

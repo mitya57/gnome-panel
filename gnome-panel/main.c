@@ -21,7 +21,8 @@ extern int panels_to_sync;
 extern int globals_to_sync;
 extern int need_complete_save;
 
-extern GArray *applets;
+extern GList *applets;
+extern GList *applets_last;
 extern int applet_count;
 
 extern char *panel_cfg_path;
@@ -150,7 +151,6 @@ main(int argc, char **argv)
 	gnome_client_set_clone_command (client, 1, argv);
 	gnome_client_set_restart_command (client, 1, argv);
 
-	applets = g_array_new(FALSE, FALSE, sizeof(AppletInfo));
 	applet_count = 0;
 
 	panel_tooltips = gtk_tooltips_new();

@@ -31,7 +31,8 @@ static char *gnome_folder = NULL;
 GList *small_icons = NULL;
 GList *dot_buttons = NULL;
 
-extern GArray *applets;
+extern GList *applets;
+extern GList *applets_last;
 extern int applet_count;
 
 extern GlobalConfig global_config;
@@ -203,13 +204,9 @@ add_drawers_from_dir(char *dirname, char *name, int pos, PanelWidget *panel)
 	load_drawer_applet(NULL,pixmap_name,subdir_name,
 			   panel,pos);
 	
-	{ /*slightly ugly*/
-		GList *l;
-		l = g_list_last(applets);
-		g_return_if_fail(l!=NULL);
-		info = l->data;
-		g_return_if_fail(info!=NULL);
-	}
+	g_return_if_fail(applets_last!=NULL);
+	info = applets_last->data;
+	g_return_if_fail(info!=NULL);
 	
 	drawer = info->data;
 	g_return_if_fail(drawer);

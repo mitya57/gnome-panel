@@ -20,7 +20,8 @@ int panels_to_sync = FALSE;
 int globals_to_sync = FALSE;
 int need_complete_save = FALSE;
 
-extern GArray *applets;
+extern GList *applets;
+extern GList *applets_list;
 extern int applet_count;
 
 extern GtkTooltips *panel_tooltips;
