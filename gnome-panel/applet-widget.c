@@ -706,10 +706,10 @@ applet_event(GtkWidget *widget, GdkEvent *event, gpointer data)
   int retval = TRUE;
 
   CORBA_exception_init(&ev);
-  in_drag = GNOME_Panel__get_in_drag(panel_client, &ev);
 
   switch (event->type) {
   case GDK_BUTTON_PRESS:
+    in_drag = GNOME_Panel__get_in_drag(panel_client, &ev);
     bevent = (GdkEventButton *) event;
 
     if(in_drag) {
@@ -733,15 +733,15 @@ applet_event(GtkWidget *widget, GdkEvent *event, gpointer data)
     break;
 
   case GDK_BUTTON_RELEASE:
+    in_drag = GNOME_Panel__get_in_drag(panel_client, &ev);
     if(in_drag)
-      GNOME_PanelSpot_drag_stop(CD(widget)->pspot, &ev);
+	    GNOME_PanelSpot_drag_stop(CD(widget)->pspot, &ev);
     break;
 
   default:
     retval = FALSE;
     break;
   }
-
   CORBA_exception_free(&ev);
 
   return retval;
