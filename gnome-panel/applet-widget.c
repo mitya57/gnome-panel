@@ -377,7 +377,7 @@ applet_widget_remove(AppletWidget *applet)
   CORBA_exception_init(&ev);
   servant = applet->corbadat;
   goad_server_unregister(CORBA_OBJECT_NIL, servant->goad_id, "server", &ev);
-  
+
   GNOME_PanelSpot_unregister_us(CD(applet)->pspot, &ev);
   CORBA_exception_free(&ev);
 }
@@ -642,6 +642,14 @@ gnome_panel_applet_corba_init(AppletWidget *applet, const char *goad_id)
 						 (char *)goad_id,
 						 &privcfg,&globcfg,
 						 &applet_servant->winid, &ev);
+    {
+	    FILE *fp = fopen("/tmp/bla","a");
+	    gdk_beep();
+	    fprintf(fp,"\nADD_APPLET_RETURNED:\nthe pspot %lX\n\n",
+		    (long)applet_servant->pspot);
+	    fclose(fp);
+    }
+
   g_assert(ev._major == CORBA_NO_EXCEPTION);
   
   if(privcfg && *privcfg)
@@ -815,10 +823,25 @@ applet_widget_add(AppletWidget *applet, GtkWidget *widget)
 	gtk_container_add(GTK_CONTAINER(applet),widget);
 
 	CORBA_exception_init(&ev);
+    {
+	    FILE *fp = fopen("/tmp/bla","a");
+	    gdk_beep();
+	    fprintf(fp,"\nCALLING REGUISTER US ON:\nthe pspot %lX\n\n",
+		    (long)(CD(applet)->pspot));
+	    fclose(fp);
+    }
+  
 	GNOME_PanelSpot_register_us(CD(applet)->pspot, &ev);
 	CORBA_exception_free(&ev);
 
 	bind_top_applet_events(GTK_WIDGET(applet));
+    {
+	    FILE *fp = fopen("/tmp/bla","a");
+	    gdk_beep();
+	    fprintf(fp,"\nAPPLET_WIDGET_ADD\nthe applet widget %lX\n",(long)applet);
+	    fprintf(fp,"the pspot %lX\n\n",(long)(CD(applet)->pspot));
+	    fclose(fp);
+    }
 }
 
 void

@@ -294,10 +294,12 @@ reserve_applet_spot (Extern *ext, PanelWidget *panel, int pos,
 	
 	/*we save the obj in the id field of the appletinfo and the 
 	  path in the path field */
+	ext->info = NULL;
 	if(!register_toy(ext->ebox,ext,panel,pos,type)) {
 		g_warning("Couldn't add applet");
 		return 0;
 	}
+	ext->info = applets_last->data;
 	
 	if(!GTK_WIDGET_REALIZED(socket))
 		gtk_widget_realize(socket);
@@ -336,14 +338,12 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 	ext->cfg = cfgpath;
 	extern_applets = g_list_prepend(extern_applets,ext);
 
-	ext->info = NULL;
 	if(reserve_applet_spot (ext, panel, pos, APPLET_EXTERN_PENDING)==0) {
 		g_warning("Whoops! for some reason we can't add "
 			  "to the panel");
 		extern_clean(ext);
 		return;
 	}
-	ext->info = applets_last->data;
 
 	extern_start_new_goad_id(ext);
 }
@@ -388,6 +388,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 		if(info && info->type == APPLET_EXTERN_PENDING) {
 			Extern *ext = info->data;
 			g_assert(ext);
+			g_assert(ext->info == info);
 			if(strcmp(ext->goad_id,goad_id)==0) {
 				/*we started this and already reserved a spot
 				  for it, including the socket widget*/
@@ -450,14 +451,12 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 
 	*wid = reserve_applet_spot (ext, li->data, pos,
 				      APPLET_EXTERN_RESERVED);
-	ext->info = NULL;
 	if(*wid == 0) {
 		extern_clean(ext);
 		*globcfgpath = NULL;
 		*cfgpath = NULL;
 		return CORBA_OBJECT_NIL;
 	}
-	ext->info = applets_last->data;
 	p = g_copy_strings(old_panel_cfg_path,"Applet_Dummy/",NULL);
 	*cfgpath = CORBA_string_dup(p);
 	g_free(p);
@@ -567,7 +566,8 @@ s_panelspot_register_us(POA_GNOME_PanelSpot *servant,
 	g_assert(ext);
 	g_assert(ext->info);
 	
-	printf("ext: %lX\n",(long)ext);
+	printf("register ext: %lX\n",(long)ext);
+	printf("register ext->info: %lX\n",(long)(ext->info));
 
 	puts("STARTED, now try to start the next one");
 	printf("cur: %s, ext: %s\n",goad_id_starting,ext->goad_id);
@@ -626,6 +626,9 @@ s_panelspot_show_menu(POA_GNOME_PanelSpot *servant,
 {
 	GtkWidget *panel;
 	Extern *ext = (Extern *)servant;
+	
+	printf("show menu ext: %lX\n",(long)ext);
+	printf("show menu ext->info: %lX\n",(long)(ext->info));
 
 	g_return_if_fail(ext != NULL);
 	g_return_if_fail(ext->info != NULL);
@@ -690,6 +693,8 @@ s_panelspot_add_callback(POA_GNOME_PanelSpot *servant,
 			 CORBA_Environment *ev)
 {
 	Extern *ext = (Extern *)servant;
+
+	printf("add callback ext: %lX\n",(long)ext);
 
 	g_return_if_fail(ext != NULL);
 	g_return_if_fail(ext->info != NULL);

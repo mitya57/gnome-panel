@@ -456,13 +456,18 @@ register_toy(GtkWidget *applet,
 			    PANEL_APPLET_FORBIDDEN_PANELS,NULL);
 		
 	/*add to the array of applets*/
-	if(applets_last != applets) {
+	/*if(applets_last != applets) {
 		applets_last = g_list_append(applets_last,info);
 	} else {
 		applets_last = applets = g_list_append(applets,info);
-		if(applets->next)
-			applets_last = applets->next;
 	}
+	if(applets_last->next)
+		applets_last = applets_last->next;
+		*/
+	/*cheap fix for broken logic above I guess, I just want to make
+	 sure this was the problem*/
+	applets = g_list_append(applets,info);
+	applets_last = g_list_last(applets);
 	applet_count++;
 
 	/*we will need to save this applet's config now*/
