@@ -1,3 +1,7 @@
+2001-02-08 14:24:39  Sung-Hyun Nam  <namsh@kldp.org>
+
+	* foobar-widget.c (append_folder_menu): fix spell error in i18n msg
+
 Sat Dec 02 23:22:43 2000  George Lebl <jirka@5z.com>
 
 	* panel.c: use gnome-globe.png for links, and on panel destroy

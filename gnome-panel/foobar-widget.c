@@ -294,7 +294,7 @@ append_folder_menu (GtkWidget *menu_bar, const char *label,
 		: gnome_util_home_file (path);
 
 	if (real_path == NULL) {
-		g_warning (_("can't fine real path"));
+		g_warning (_("can't find real path"));
 		return NULL;
 	}
 
