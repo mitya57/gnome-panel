@@ -226,7 +226,7 @@ append_actions_menu (FoobarWidget *foo,
 				      NULL);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 		g_signal_connect (item, "activate",
-				  G_CALLBACK (panel_lock), NULL);
+				  G_CALLBACK (panel_menuitem_lock_screen), NULL);
 		setup_internal_applet_drag(item, "LOCK:NEW");
 	}
 

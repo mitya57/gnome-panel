@@ -139,6 +139,8 @@ gboolean	panel_ensure_dir	(const char *dirname);
 gboolean	panel_is_uri_writable	(const char *uri);
 gboolean	panel_uri_exists	(const char *uri);
 
+void            panel_lock_screen       (GdkScreen *screen);
+
 
 /* GnomeVFS reading utils */
 

@@ -1,3 +1,18 @@
+2002-07-24  Mark McLoughlin  <mark@skynet.ie>
+
+	Fixes #84101 - were casting a GtkButton to GtkMenu.
+
+	* logout.c:
+	(lock_button_pressed): impl. to use panel_lock_screen.
+	(create_lock_widget): use it here.
+
+	* menu.[ch]: (panel_menuitem_lock_screen): rename from panel_lock.
+	(create_desktop_menu): update.
+	* menu.h:
+	* panel-util.[ch]: (panel_lock_screen): implement.
+
+	* foobar-widget.c: (append_actions_menu): use panel_menuitem_lock.
+
 2002-07-15  Mark McLoughlin  <mark@skynet.ie>
 
 	* button-widget.c:

@@ -1456,3 +1456,18 @@ missing_pixbuf (int size)
 
 	return pb;
 }
+
+void
+panel_lock_screen (GdkScreen *screen)
+{
+	char *argv[3] = {"xscreensaver-command", "-lock", NULL};
+
+	if (!screen)
+		screen = gdk_screen_get_default ();
+
+	if (egg_screen_execute_async (screen, g_get_home_dir (), 2, argv) < 0)
+		panel_error_dialog (screen,
+				    "cannot_exec_xscreensaver",
+				    _("<b>Cannot execute xscreensaver</b>\n\n"
+				    "Details: xscreensaver-command not found"));
+}

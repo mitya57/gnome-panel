@@ -3448,18 +3448,13 @@ make_panel_submenu (GtkWidget *menu, gboolean fake_submenus, gboolean is_basep)
 }
 
 void
-panel_lock (GtkWidget *menuitem)
+panel_menuitem_lock_screen (GtkWidget *menuitem)
 {
 	GdkScreen *screen;
-	char      *argv[3] = {"xscreensaver-command", "-lock", NULL};
 
 	screen = menuitem_to_screen (menuitem);
 
-	if (egg_screen_execute_async (screen, g_get_home_dir (), 2, argv) < 0)
-		panel_error_dialog (screen,
-				    "cannot_exec_xscreensaver",
-				    _("<b>Cannot execute xscreensaver</b>\n\n"
-				    "Details: xscreensaver-command not found"));
+	panel_lock_screen (screen);
 }
 
 static GtkWidget *
@@ -3519,7 +3514,7 @@ create_desktop_menu (GtkWidget *menu, gboolean fake_submenus)
 					   _("Lock Screen"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 		g_signal_connect (menuitem, "activate",
-				  G_CALLBACK (panel_lock), NULL);
+				  G_CALLBACK (panel_menuitem_lock_screen), NULL);
 		setup_internal_applet_drag(menuitem, "LOCK:NEW");
 		gtk_tooltips_set_tip (panel_tooltips, menuitem,
 				      _("Lock the screen so that you can "
