@@ -22,14 +22,6 @@
 			   GDK_POINTER_MOTION_MASK |		\
 			   GDK_POINTER_MOTION_HINT_MASK)
 
-CreateGtkTypeFunc create_panel_type[] = {
-	edge_pos_get_type,
-	drawer_pos_get_type,
-	aligned_pos_get_type,
-	sliding_pos_get_type,
-	NULL
-};
-
 /*list of all panel widgets created*/
 GSList *panel_list = NULL;
 

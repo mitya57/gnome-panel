@@ -103,6 +103,8 @@ basep_widget_realize(GtkWidget *w)
 	g_return_if_fail(IS_BASEP_WIDGET(basep));
 	GTK_WIDGET_CLASS(basep_widget_parent_class)->realize(w);
 
+	basep_widget_update_winhints (basep);
+
 	set_frame_colors(PANEL_WIDGET(basep->panel),
 			 basep->frame,
 			 basep->hidebutton_n,
@@ -787,11 +789,11 @@ static void
 basep_widget_init (BasePWidget *basep)
 {
 	/*if we set the gnomewm hints it will have to be changed to TOPLEVEL*/
-	gnome_win_hints_init();
 	if (gnome_win_hints_wm_exists())
 		GTK_WINDOW(basep)->type = GTK_WINDOW_TOPLEVEL;
 	else
 		GTK_WINDOW(basep)->type = GTK_WINDOW_POPUP;
+
 	GTK_WINDOW(basep)->allow_shrink = TRUE;
 	GTK_WINDOW(basep)->allow_grow = TRUE;
 	GTK_WINDOW(basep)->auto_shrink = TRUE;
@@ -881,6 +883,35 @@ basep_widget_show_hidebutton_pixmaps(BasePWidget *basep)
 	show_hidebutton_pixmap(basep->hidebutton_e, show);
 	show_hidebutton_pixmap(basep->hidebutton_w, show);
 	show_hidebutton_pixmap(basep->hidebutton_s, show);
+}
+
+void
+basep_widget_update_winhints (BasePWidget *basep)
+{
+	GtkWidget *w = GTK_WIDGET (basep);
+	if (!gnome_win_hints_wm_exists ())
+		return;
+		
+	gnome_win_hints_set_expanded_size (w, 0, 0, 0, 0);
+	gdk_window_set_decorations(w->window, 0);
+	gnome_win_hints_set_state (w, WIN_STATE_STICKY |
+				   WIN_STATE_FIXED_POSITION);
+	
+	switch (basep->state) {
+	case BASEP_SHOWN:
+		gnome_win_hints_set_hints (w, GNOME_PANEL_HINTS |
+					   WIN_HINTS_DO_NOT_COVER);
+		gnome_win_hints_set_layer (w, global_config.keep_bottom
+					   ? WIN_LAYER_BELOW
+					   : WIN_LAYER_DOCK);
+		break;
+	default: /* all of the hidden states */
+		gnome_win_hints_set_hints (w, GNOME_PANEL_HINTS);
+		gnome_win_hints_set_layer (w, global_config.keep_bottom
+					   ? WIN_LAYER_ONTOP 
+					   : WIN_LAYER_ABOVE_DOCK);
+		break;
+	}
 }
 
 void
@@ -1249,14 +1280,6 @@ basep_widget_explicit_hide (BasePWidget *basep, BasePState state)
 
 	gnome_triggers_vdo("", NULL, supinfo);
 	
-#if 0
-	gnome_win_hints_set_hints(GTK_WIDGET(anchor),
-				  GNOME_PANEL_HINTS);
-	gnome_win_hints_set_layer(GTK_WIDGET(anchor),
-				  global_config.keep_bottom?
-				  WIN_LAYER_ONTOP:
-				  WIN_LAYER_ABOVE_DOCK);
-#endif
 	if (GTK_WIDGET_REALIZED(GTK_WIDGET(basep))) {
 		BasePPosClass *klass = basep_widget_get_pos_class (basep);
 		PanelOrientType hide_orient;
@@ -1280,6 +1303,7 @@ basep_widget_explicit_hide (BasePWidget *basep, BasePState state)
 	}
 
 	basep->state = state;
+	basep_widget_update_winhints (basep);
 
 	gtk_signal_emit(GTK_OBJECT(basep),
 			basep_widget_signals[STATE_CHANGE_SIGNAL],
@@ -1325,17 +1349,9 @@ basep_widget_explicit_show (BasePWidget *basep)
 		basep_widget_do_showing (basep, hide_orient,
 					 size, pw_explicit_step);
 	}
-
-#if 0
-	gnome_win_hints_set_hints(GTK_WIDGET(anchor),
-				  GNOME_PANEL_HINTS |
-				  WIN_HINTS_DO_NOT_COVER);
-	gnome_win_hints_set_layer(GTK_WIDGET(anchor),
-				  global_config.keep_bottom?
-				  WIN_LAYER_BELOW:
-				  WIN_LAYER_DOCK);
-#endif
+	
 	basep->state = BASEP_SHOWN;
+	basep_widget_update_winhints (basep);
 
 	gtk_signal_emit(GTK_OBJECT(basep),
 			basep_widget_signals[STATE_CHANGE_SIGNAL],
@@ -1382,6 +1398,8 @@ basep_widget_autoshow (BasePWidget *basep)
 	}
 
 	basep->state = BASEP_SHOWN;
+	basep_widget_update_winhints (basep);
+
 	gtk_signal_emit (GTK_OBJECT(basep),
 			 basep_widget_signals[STATE_CHANGE_SIGNAL],
 			 BASEP_SHOWN);
@@ -1447,6 +1465,7 @@ basep_widget_autohide (gpointer data)
 
 
 	basep->state = BASEP_AUTO_HIDDEN;
+	basep_widget_update_winhints (basep);
 
 	gtk_signal_emit(GTK_OBJECT(basep),
 			basep_widget_signals[STATE_CHANGE_SIGNAL],
@@ -1508,6 +1527,7 @@ basep_drag_motion (PanelWidget        *panel,
 	}
 
 	basep_widget_autoshow(basep);
+	basep_widget_queue_autohide (basep);
 
 	return TRUE;
 }

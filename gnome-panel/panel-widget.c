@@ -614,7 +614,7 @@ panel_widget_switch_move(PanelWidget *panel, AppletData *ad, int moveby)
 static int
 push_applet_right(PanelWidget *panel, GList *list)
 {
-	AppletData *ad;
+	AppletData *ad = NULL;
 	AppletData *nad = NULL;
 
 	g_return_val_if_fail(panel!=NULL,FALSE);
@@ -649,8 +649,8 @@ push_applet_right(PanelWidget *panel, GList *list)
 static int
 push_applet_left(PanelWidget *panel, GList *list)
 {
-	AppletData *ad;
-	AppletData *pad = pad;
+	AppletData *ad = NULL;
+	AppletData *pad = NULL;
 
 	g_return_val_if_fail(panel!=NULL,FALSE);
 	g_return_val_if_fail(IS_PANEL_WIDGET(panel),FALSE);

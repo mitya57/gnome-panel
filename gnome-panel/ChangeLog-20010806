@@ -1,3 +1,28 @@
+1999-08-19  Jacob Berkman  <jberkman@andrew.cmu.edu>
+
+	* aligned-widget.c (aligned_pos_show_hide_right): 
+	(aligned_pos_show_hide_left): 
+	(aligned_pos_class_init): Facilitate jumping to other side of
+	screen like the standard panel does
+
+	* panel-widget.c (push_applet_left): initialize variables to NULL so
+	gcc leaves us alone
+	(push_applet_right): same deal here
+
+	(now that I have the Blackbox GNOME winhint patch working...
+	
+	* basep-widget.c (basep_widget_update_winhints): set the gnome WM hints if
+	available
+	(basep_widget_realize): 
+	(basep_widget_explicit_hide): 
+	(basep_widget_explicit_show): 
+	(basep_widget_autohide): 
+	(basep_widget_autohide): update the hints in the functions 
+
+	* main.c (main): init win hints here
+
+	* panel-types.h: removed unused types
+
 1999-08-18  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
 	* *.c: store config in ~/.gnome/panel.d/default/ instead of

@@ -21,6 +21,8 @@ static void aligned_pos_get_pos (BasePWidget *basep,
 				 gint16 *x, gint16 *y,
 				 guint16 w, guint16 h);
 
+static int aligned_pos_show_hide_left (BasePWidget *basep);
+static int aligned_pos_show_hide_right (BasePWidget *basep);
 static BorderPosClass *parent_class;
 
 GtkType
@@ -75,6 +77,10 @@ aligned_pos_class_init (AlignedPosClass *klass)
 
 	pos_class->set_pos = aligned_pos_set_pos;
 	pos_class->get_pos = aligned_pos_get_pos;
+	pos_class->north_clicked = pos_class->west_clicked = 
+		aligned_pos_show_hide_left;
+	pos_class->south_clicked = pos_class->east_clicked =
+		aligned_pos_show_hide_right;
 }
 
 static void
@@ -198,6 +204,57 @@ aligned_pos_get_pos (BasePWidget *basep, gint16 *x, gint16 *y,
 		}
 		break;
 	}
+}
+
+static int
+aligned_pos_show_hide_left (BasePWidget *basep)
+{
+	switch (basep->state) {
+	case BASEP_SHOWN:
+		if (ALIGNED_POS (basep->pos)->align == ALIGNED_RIGHT)
+			aligned_widget_change_align (ALIGNED_WIDGET (basep), 
+						     ALIGNED_LEFT);
+		else 
+			basep_widget_explicit_hide (basep, BASEP_HIDDEN_LEFT);
+		break;
+	case BASEP_HIDDEN_RIGHT:
+		basep_widget_explicit_show (basep);
+		break;
+	case BASEP_AUTO_HIDDEN:
+		g_warning (_("weird: north/west clicked while auto hidden"));
+		break;
+	case BASEP_HIDDEN_LEFT:
+	case BASEP_MOVING:
+		g_assert_not_reached ();
+		break;
+	}
+	return FALSE;
+}
+
+
+static int
+aligned_pos_show_hide_right (BasePWidget *basep)
+{
+	switch (basep->state) {
+	case BASEP_SHOWN:
+		if (ALIGNED_POS (basep->pos)->align == ALIGNED_LEFT)
+			aligned_widget_change_align (ALIGNED_WIDGET (basep), 
+						     ALIGNED_RIGHT);
+		else
+			basep_widget_explicit_hide (basep, BASEP_HIDDEN_RIGHT);
+		break;
+	case BASEP_HIDDEN_LEFT:
+		basep_widget_explicit_show (basep);
+		break;
+	case BASEP_AUTO_HIDDEN:
+		g_warning (_("weird: south/east clicked while auto hidden"));
+		break;
+	case BASEP_MOVING:
+	case BASEP_HIDDEN_RIGHT:
+		g_assert_not_reached ();
+		break;
+	}
+	return FALSE;
 }
 
 void aligned_widget_change_params (AlignedWidget *aligned,

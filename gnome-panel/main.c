@@ -241,16 +241,13 @@ main(int argc, char **argv)
 
 	panel_tooltips = gtk_tooltips_new();
 
+	gnome_win_hints_init ();
+
 	/*set the globals*/
 	load_up_globals();
 	
 	init_menus();
 	
-	create_panel_type [EDGE_PANEL] = edge_pos_get_type;
-	create_panel_type [DRAWER_PANEL] = drawer_pos_get_type;
-	create_panel_type [ALIGNED_PANEL] = aligned_pos_get_type;
-	create_panel_type [SLIDING_PANEL] = sliding_pos_get_type;
-
 	init_user_panels();
 
 	init_user_applets();

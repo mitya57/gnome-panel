@@ -35,15 +35,4 @@ typedef enum {
 	PANEL_LAST_TYPE
 } PanelType;
 
-
-typedef GtkType (*CreateGtkTypeFunc) (void);
-extern CreateGtkTypeFunc create_panel_type [PANEL_LAST_TYPE];
-
-typedef enum {
-	STANDARD_PANEL     =0,
-	BORDER_PANEL       =1,
-	TABBED_PANEL       =2,
-	PANEL_LAST_SUBTYPE =4
-} PanelSubType;
-
 #endif
