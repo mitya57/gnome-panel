@@ -4,6 +4,7 @@
 #include <glib.h>
 #include "panel.h"
 #include "panel-widget.h"
+
 #include <libgnorba/gnorba.h>
 
 BEGIN_GNOME_DECLS
