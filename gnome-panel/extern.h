@@ -26,23 +26,22 @@ void extern_clean(Extern *ext);
 void load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos);
 
 /*stuff for corba*/
-int applet_request_id (const char *goad_id,
-		       char **cfgpath,
-		       char **globcfgpath, guint32 *winid);
-void applet_register (CORBA_Object obj,
-		      int applet_id,
-		      const char *goad_id,
-		      const char *goad_ids);
+CORBA_PanelSpot add_applet (CORBA_Applet applet_obj,
+			    const char *goad_id,
+			    char **cfgpath,
+			    char **globcfgpath,
+			    guint32 *winid);
+void applet_register (AppletInfo *info);
 guint32 reserve_applet_spot (Extern *ext, PanelWidget *panel, int pos,
 			     AppletType type);
-void applet_abort_id(int applet_id);
-int applet_get_panel(int applet_id);
-int applet_get_pos(int applet_id);
-PanelOrientType applet_get_panel_orient(int applet_id);
-void applet_show_menu(int applet_id);
-void applet_drag_start(int applet_id);
-void applet_drag_stop(int applet_id);
-void applet_set_tooltip(int applet_id, const char *tooltip);
+void applet_abort_id(AppletInfo *info);
+int applet_get_panel(AppletInfo *info);
+int applet_get_pos(AppletInfo *info);
+PanelOrientType applet_get_panel_orient(AppletInfo *info);
+void applet_show_menu(AppletInfo *info);
+void applet_drag_start(AppletInfo *info);
+void applet_drag_stop(AppletInfo *info);
+void applet_set_tooltip(AppletInfo *info, const char *tooltip);
 
 /*start the next applet in queue*/
 void extern_start_next(void);
