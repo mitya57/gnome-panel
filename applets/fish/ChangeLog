@@ -1,3 +1,11 @@
+2002-07-15  Mark McLoughlin  <mark@skynet.ie>
+
+	* fish.c:
+	(something_fishy_going_on): add fish arg and set dialog
+	screen.
+	(fish_locate_fortune_command), (update_fortune_dialog): upd
+	for above change.
+
 2002-07-12  Mark McLoughlin  <mark@skynet.ie>
 
 	* fish.c: (something_fishy_going_on): impl.

@@ -862,7 +862,8 @@ display_properties_dialog (BonoboUIComponent *uic,
 }
 
 static void
-something_fishy_going_on (const char *message)
+something_fishy_going_on (Fish       *fish,
+			  const char *message)
 {
 	GtkWidget *dialog;
 
@@ -877,6 +878,7 @@ something_fishy_going_on (const char *message)
 			  NULL);
 
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	fishy_window_set_screen (GTK_WINDOW (w), fish->applet);
 	gtk_widget_show (dialog);
 }
 
@@ -887,7 +889,7 @@ fish_locate_fortune_command (Fish *fish)
 
 	retval = panel_applet_gconf_get_string (PANEL_APPLET (fish->applet), FISH_PREFS_COMMAND, NULL);
 	if (!retval) {
-		something_fishy_going_on (_("Unable to get the name of the command to execute"));
+		something_fishy_going_on (fish, _("Unable to get the name of the command to execute"));
 		return NULL;
 	}
 
@@ -903,7 +905,7 @@ fish_locate_fortune_command (Fish *fish)
 		retval = g_strdup ("/usr/games/fortune");
 
 	if (!retval)
-		something_fishy_going_on (_("Unable to locate the command to execute"));
+		something_fishy_going_on (fish, _("Unable to locate the command to execute"));
 
 	return retval;
 }
@@ -1033,7 +1035,7 @@ update_fortune_dialog (Fish *fish)
 
 		message = g_strdup_printf (_("Unable to execute '%s'\n\nDetails : %s"),
 					   fortune_command, error->message);
-		something_fishy_going_on (message);
+		something_fishy_going_on (fish, message);
 		g_free (message);
 		g_error_free (error);
 	}

@@ -163,7 +163,8 @@ static void set_atk_relation (GtkWidget *label, GtkWidget *entry, AtkRelationTyp
 #define WANT_BITMAPS(x) (x == REPORT_MAIL_USE_ANIMATION || x == REPORT_MAIL_USE_BITMAP)
 
 static void
-mailcheck_execute_shell (const char *command)
+mailcheck_execute_shell (MailCheck  *mailcheck,
+			 const char *command)
 {
 	GError *error = NULL;
 
@@ -184,6 +185,8 @@ mailcheck_execute_shell (const char *command)
 				  NULL);
 
 		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+		gtk_window_set_screen (GTK_WINDOW (dialog),
+				       gtk_widget_get_screen (GTK_WIDGET (mailcheck->applet)));
 
 		gtk_widget_show (dialog);
 
@@ -535,7 +538,7 @@ after_mail_check (MailCheck *mc)
 		if (mc->newmail_enabled &&
 		    mc->newmail_cmd && 
 		    (strlen(mc->newmail_cmd) > 0))
-			mailcheck_execute_shell (mc->newmail_cmd);
+			mailcheck_execute_shell (mc, mc->newmail_cmd);
 	}
 
 	switch (mc->report_mail_mode) {
@@ -605,7 +608,7 @@ mail_check_timeout (gpointer data)
 			mc->mail_timeout = 0;
 		}
 
-		mailcheck_execute_shell (mc->pre_check_cmd);
+		mailcheck_execute_shell (mc, mc->pre_check_cmd);
 
 		mc->mail_timeout = gtk_timeout_add(mc->update_freq, mail_check_timeout, mc);
 	}
@@ -645,7 +648,7 @@ exec_clicked_cmd (GtkWidget *widget, GdkEventButton *event, gpointer data)
 	if (event->button == 1) {
 		
 		if (mc->clicked_enabled && mc->clicked_cmd && (strlen(mc->clicked_cmd) > 0))
-			mailcheck_execute_shell (mc->clicked_cmd);
+			mailcheck_execute_shell (mc, mc->clicked_cmd);
 		
 		if (mc->reset_on_clicked) {
 			mc->newmail = mc->unreadmail = 0;

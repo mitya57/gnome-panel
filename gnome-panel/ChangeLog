@@ -1,3 +1,11 @@
+2002-07-15  Mark McLoughlin  <mark@skynet.ie>
+
+	* button-widget.c:
+	(button_widget_new), (button_widget_set_pixmap): realise
+	error dialogs on the default screen.
+
+	* menu.c: (remove_panel_query): remove #ifdef HAVE_GTK_MULTIHEAD.
+
 Fri Jul 12 10:06:16 2002  George Lebl <jirka@5z.com>
 
 	* quick-desktop-reader.c: Apply parts of the patch from
