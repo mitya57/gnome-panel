@@ -79,6 +79,11 @@ BUILT_SOURCES = \
 	panel-marshal.c		\
 	panel-marshal.h
 
+EGG_ACCELERATORS_FILES =        \
+	eggaccelerators.c       \
+	eggaccelerators.h       \
+	$(NULL)
+
 panel_sources =			\
 	panel-typebuiltins.c	\
 	panel-typebuiltins.h	\

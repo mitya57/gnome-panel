@@ -943,11 +943,6 @@ load_icons_handler_again:
 	return TRUE;
 }
 
-#ifdef FIXME
-/* FIXME:
- *    Disabled for 2.0.0 because menu editing just
- * doesn't work. Re-enable in future.
- */
 static void
 add_new_app_to_menu (GtkWidget    *widget,
 		     ShowItemMenu *sim)
@@ -1042,7 +1037,6 @@ remove_menuitem (GtkWidget *widget, ShowItemMenu *sim)
 		gnome_desktop_item_unref (ditem);
 	}
 }
-#endif /* FIXME */
 
 static void
 add_to_run_dialog (GtkWidget    *widget,
@@ -1316,11 +1310,6 @@ restore_grabs(GtkWidget *w, gpointer data)
 	gtk_grab_add (GTK_WIDGET (menu));
 }
 
-#ifdef FIXME
-/* FIXME:
- *    Disabled for 2.0.0 because menu editing just
- * doesn't work. Re-enable in future.
- */
 static void
 edit_dentry (GtkWidget    *widget,
 	     ShowItemMenu *sim)
@@ -1348,7 +1337,6 @@ edit_direntry (GtkWidget    *widget,
 			     sim->mf->dir_name,
 			     menuitem_to_screen (sim->menuitem));
 }
-#endif /* FIXME */
 
 static void
 show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
@@ -1372,9 +1360,7 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 				  item);
 
 		if (sim->type == 1) {
-#ifdef FIXME
 			char *tmp;
-#endif
 
 			ii = gnome_desktop_item_new_from_uri (sim->item_loc, 0, NULL);
 
@@ -1393,12 +1379,6 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					  G_CALLBACK (add_app_to_panel),
 					  sim);
 
-#ifdef FIXME
-			/* FIXME:
-			 *    Disabled for 2.0.0 because menu editing just
-			 * doesn't work. Re-enable in future.
-			 */
-			
 			menuitem = gtk_image_menu_item_new ();
 			setup_menuitem (menuitem, NULL,
 					_("Remove this item"));
@@ -1414,7 +1394,6 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 						   "activate",
 						   G_CALLBACK (gtk_menu_shell_deactivate),
 						   G_OBJECT (item->parent));
-#endif /* FIXME */
 
 			menuitem = gtk_image_menu_item_new ();
 			setup_menuitem (menuitem, NULL,
@@ -1451,11 +1430,6 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					 		   G_OBJECT(item->parent));
 			}
 
-#ifdef FIXME
-			/* FIXME:
-			 *    Disabled for 2.0.0 because menu editing just
-			 * doesn't work. Re-enable in future.
-			 */
 			menuitem = gtk_image_menu_item_new ();
 			/*when activated we must pop down the first menu*/
 			g_signal_connect_swapped (G_OBJECT (menuitem),
@@ -1469,7 +1443,6 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					   sim);
 			setup_menuitem (menuitem, NULL, _("_Properties"));
 			gtk_menu_shell_append (GTK_MENU_SHELL (sim->menu), menuitem);
-#endif /* FIXME */
 
 			gnome_desktop_item_unref (ii);
 		}
@@ -1510,11 +1483,6 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					   G_CALLBACK(add_menu_to_panel),
 					   sim->mf->menudir);
 
-#ifdef FIXME
-			/* FIXME:
-			 *    Disabled for 2.0.0 because menu editing just
-			 * doesn't work. Re-enable in future.
-			 */
 			menuitem = gtk_image_menu_item_new ();
 			setup_menuitem (menuitem, NULL,
 					_("Add new item to this menu"));
@@ -1544,7 +1512,6 @@ show_item_menu (GtkWidget *item, GdkEventButton *bevent, ShowItemMenu *sim)
 					    sim);
 			setup_menuitem (menuitem, NULL, _("Properties"));
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menuitem);
-#endif /* FIXME */
 		}
 	}
 
@@ -2685,9 +2652,10 @@ create_new_panel (GtkWidget *w, gpointer data)
 		gtk_window_set_title (GTK_WINDOW (panel), _("Aligned Panel"));
 		gtk_widget_show (panel);
 		basep_widget_set_pos (BASEP_WIDGET (panel), x, y);
-		add_atk_name_desc (BASEP_WIDGET (panel)->panel,
-				   _("Aligned Panel"),
-				   _("GNOME Aligned Panel"));
+
+		panel_set_atk_name_desc (BASEP_WIDGET (panel)->panel,
+					 _("Aligned Panel"),
+					 _("GNOME Aligned Panel"));
 		break;
 	case EDGE_PANEL: 
 		panel = edge_widget_new (NULL,
@@ -2705,10 +2673,11 @@ create_new_panel (GtkWidget *w, gpointer data)
 					 &bcolor);
 		panel_save_to_gconf (panel_setup (panel));
 		gtk_window_set_title (GTK_WINDOW (panel), _("Edge Panel"));
-		gtk_widget_show (panel);	
-		add_atk_name_desc (BASEP_WIDGET (panel)->panel,
-				   _("Edge Panel"),
-				   _("GNOME Edge Panel"));
+		gtk_widget_show (panel);
+
+		panel_set_atk_name_desc (BASEP_WIDGET (panel)->panel,
+					 _("Edge Panel"),
+					 _("GNOME Edge Panel"));
 		break;
 	case SLIDING_PANEL: {
 		BorderEdge    edge;
@@ -2730,10 +2699,11 @@ create_new_panel (GtkWidget *w, gpointer data)
 					    &bcolor);
 		panel_save_to_gconf (panel_setup (panel));
 		gtk_window_set_title (GTK_WINDOW (panel), _("Sliding Panel"));
-		gtk_widget_show (panel);	
-		add_atk_name_desc (BASEP_WIDGET (panel)->panel,
-				   _("Sliding Panel"),
-				   _("GNOME Sliding Panel"));
+		gtk_widget_show (panel);
+
+		panel_set_atk_name_desc (BASEP_WIDGET (panel)->panel,
+					 _("Sliding Panel"),
+					 _("GNOME Sliding Panel"));
 		}
 		break;
 	case FLOATING_PANEL:
@@ -2754,9 +2724,10 @@ create_new_panel (GtkWidget *w, gpointer data)
 		gtk_window_set_title (GTK_WINDOW (panel), _("Floating Panel"));
 		gtk_widget_show (panel);
 		basep_widget_set_pos (BASEP_WIDGET (panel), x, y);
-		add_atk_name_desc (BASEP_WIDGET (panel)->panel,
-				   _("Floating Panel"),
-				   _("GNOME Floating Panel"));
+
+		panel_set_atk_name_desc (BASEP_WIDGET (panel)->panel,
+					 _("Floating Panel"),
+					 _("GNOME Floating Panel"));
 		break;
 	case FOOBAR_PANEL: {
 		GtkWidget *dialog;
