@@ -26,8 +26,7 @@ module GNOME {
 		union BackInfoType switch(BackType) {
 			case BACK_COLOR: Color c;
 			case BACK_PIXMAP: string pmap;
-			default:
-		}
+		};
 
 		/* XXX do activation stuff here - the applet side of it
 		   will be via a GNOME::GenericFactory (ask elliot) */
@@ -42,7 +41,7 @@ module GNOME {
 
 		oneway void remove_from_panel();
 		short get_pos ();
-		Orientation get_panel_orient();
+		Panel::OrientType get_panel_orient();
 
 		oneway void show_menu ();
 		oneway void drag_start ();
@@ -55,7 +54,7 @@ module GNOME {
 	};
 
 	interface Applet {
-		oneway void change_orient (in Orientation orient);
+		oneway void change_orient (in Panel::OrientType orient);
 		oneway void do_callback (in string callback_name);
 		short session_save (in string cfgpath,
 				    in string global_cfgpath);

@@ -5,7 +5,7 @@
 
 #include <applet-widget.h>
 
-#include "gnome-panel.h"
+#include "panel2.h"
 
 /*****************************************************************************
   CORBA STUFF

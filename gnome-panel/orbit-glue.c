@@ -3,7 +3,7 @@
 #include <orb/orbit.h>
 
 #include "panel-include.h"
-#include "gnome-panel.h"
+#include "panel2.h"
 #include "orbit-glue.h"
 
 extern char *panel_cfg_path;

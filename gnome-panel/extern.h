@@ -4,6 +4,7 @@
 #include <glib.h>
 #include "panel.h"
 #include "panel-widget.h"
+#include "panel2.h"
 
 #include <libgnorba/gnorba.h>
 
@@ -11,13 +12,14 @@ BEGIN_GNOME_DECLS
 
 typedef struct _Extern Extern;
 struct _Extern {
-        CORBA_Object obj;
+	POA_GNOME_PanelSpot servant;
+        GNOME_Applet applet;
 
 	char *goad_id;
 	char *cfg;
 	GtkWidget *ebox;
-	GList *goad_ids; /*applet goad_ids which can be started from
-			   this object*/
+
+	AppletInfo *ai;
 };
 void extern_clean(Extern *ext);
 
