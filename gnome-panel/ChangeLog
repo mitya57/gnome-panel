@@ -1,3 +1,39 @@
+2002-08-05  Mark McLoughlin  <mark@skynet.ie>
+
+	* applet.c: (panel_applet_register): focus the
+	object as its added to the panel. #88202.
+
+2002-08-05  Mark McLoughlin  <mark@skynet.ie>
+
+	* panel-applet-frame.c: (panel_applet_frame_construct):
+	remove 2.2.x FIXME.
+
+2002-08-05  Mark McLoughlin  <mark@skynet.ie>
+
+	* basep-widget.c:
+	(basep_calculate_borders): kill really silly silly.
+	Fixes #89736.
+
+2002-08-05  Mark McLoughlin  <mark@skynet.ie>
+
+	* menu.c: (restore_grabs): don't change cursor
+	when restoring menu grab. Fixes #89631.
+
+2002-08-02  Mark McLoughlin  <mark@skynet.ie>
+
+	* menu.c:
+	(find_empty_border_and_anchor): impl figuring
+	out the best place to use a sliding panel.
+	(create_new_panel): use it. Fixes #87733.
+
+	* xstuff.c: (xstuff_set_pos_size): don't set the
+	hint unless the size has actually changed.
+
+2002-08-01  Mark McLoughlin  <mark@skynet.ie>
+
+	* session.c: (panel_quit): request a Global
+	only session save.
+
 2002-07-31  Mark McLoughlin  <mark@skynet.ie>
 
 	* button-widget.c, logout.c: include multihead-hacks.h.
