@@ -107,211 +107,7 @@ extern_clean(Extern *ext)
 }
 
 
-void
-applet_show_menu(AppletInfo *info)
-{
-	GtkWidget *panel;
 
-	g_return_if_fail(info != NULL);
-
-	if (!info->menu)
-		create_applet_menu(info);
-
-	panel = get_panel_parent(info->widget);
-	if(IS_SNAPPED_WIDGET(panel)) {
-		SNAPPED_WIDGET(panel)->autohide_inhibit = TRUE;
-		snapped_widget_queue_pop_down(SNAPPED_WIDGET(panel));
-	}
-
-	gtk_menu_popup(GTK_MENU(info->menu), NULL, NULL, applet_menu_position,
-		       info, 3, GDK_CURRENT_TIME);
-}
-
-PanelOrientType
-applet_get_panel_orient(AppletInfo *info)
-{
-	PanelWidget *panel;
-
-	g_return_val_if_fail(info != NULL,ORIENT_UP);
-
-	panel = PANEL_WIDGET(info->widget->parent);
-
-	g_return_val_if_fail(panel != NULL,ORIENT_UP);
-
-	return get_applet_orient(panel);
-}
-
-
-int
-applet_get_panel(AppletInfo *info)
-{
-	int panel;
-	GList *list;
-	gpointer p;
-
-	g_return_val_if_fail(info != NULL,-1);
-
-	p = PANEL_WIDGET(info->widget->parent);
-
-	for(panel=0,list=panels;list!=NULL;list=g_list_next(list),panel++)
-		if(list->data == p)
-			return panel;
-	return -1;
-}
-
-void
-applet_abort_id(AppletInfo *info)
-{
-	Extern *e;
-
-	g_return_if_fail(info != NULL);
-	
-	e = info->data;
-
-	g_return_if_fail(e != NULL);
-	
-	if(goad_id_starting && strcmp(e->goad_id,goad_id_starting)==0)
-		extern_start_next();
-
-	/*only reserved spots can be canceled, if an applet
-	  wants to chance a pending applet it needs to first
-	  user reserve spot to obtain id and make it EXTERN_RESERVED*/
-	if(info->type != APPLET_EXTERN_RESERVED)
-		return;
-
-	panel_clean_applet(info);
-}
-
-
-int
-applet_get_pos(AppletInfo *info)
-{
-	AppletData *ad;
-
-	g_return_val_if_fail(info != NULL,-1);
-
-	ad = gtk_object_get_data(GTK_OBJECT(info->widget),
-				 PANEL_APPLET_DATA);
-	if(!ad)
-		return -1;
-	return ad->pos;
-}
-
-void
-applet_drag_start(AppletInfo *info)
-{
-	PanelWidget *panel;
-
-	g_return_if_fail(info != NULL);
-
-	panel = PANEL_WIDGET(info->widget->parent);
-
-	g_return_if_fail(panel!=NULL);
-
-	/*panel_widget_applet_drag_start(panel,info->widget);
-	panel_widget_applet_drag_end(panel);*/
-	panel_widget_applet_drag_start(panel,info->widget);
-	panel_widget_applet_move_use_idle(panel);
-}
-
-void
-applet_drag_stop(AppletInfo *info)
-{
-	PanelWidget *panel;
-
-	g_return_if_fail(info != NULL);
-
-	panel = PANEL_WIDGET(info->widget->parent);
-
-	g_return_if_fail(panel!=NULL);
-
-	panel_widget_applet_drag_end(panel);
-}
-
-CORBA_PanelSpot
-add_applet (CORBA_Applet applet_obj, const char *goad_id, char **cfgpath,
-	    char **globcfgpath, guint32 * winid)
-{
-	GList *li;
-	int i;
-	Extern *ext;
-	
-	for(li=applets;li!=NULL;li=g_list_next(li)) {
-		AppletInfo *info = li->data;
-		if(info && info->type == APPLET_EXTERN_PENDING) {
-			Extern *ext = info->data;
-			g_assert(ext);
-			if(strcmp(ext->goad_id,goad_id)==0) {
-				/*we started this and already reserved a spot
-				  for it, including the socket widget*/
-				GtkWidget *socket =
-					GTK_BIN(info->widget)->child;
-				g_return_val_if_fail(GTK_IS_SOCKET(socket),-1);
-
-				ext->applet = applet_obj;
-				*cfgpath = ext->cfg;
-				ext->cfg = NULL;
-				*globcfgpath = g_strdup(old_panel_cfg_path);
-				info->type = APPLET_EXTERN_RESERVED;
-				*winid=GDK_WINDOW_XWINDOW(socket->window);
-				/*FIXME: return a reference to panel spot here*/
-				return ext->blablabla;
-			}
-		}
-	}
-	
-	/*this is an applet that was started from outside, otherwise we would
-	  have already reserved a spot for it*/
-	ext = g_new(Extern,1);
-
-	/*FIXME: we have to init the panel spot object here*/
-	ext->applet = applet_obj;
-	ext->goad_id = g_strdup(goad_id);
-	ext->cfg = NULL;
-	extern_applets = g_list_prepend(extern_applets,ext);
-
-	*winid = reserve_applet_spot (ext, panels->data, 0,
-				      APPLET_EXTERN_RESERVED);
-	if(*winid == 0) {
-		extern_clean(ext);
-		*globcfgpath = NULL;
-		*cfgpath = NULL;
-		return CORBA_OBJECT_NIL;
-	}
-	*cfgpath = g_copy_strings(old_panel_cfg_path,"Applet_Dummy/",NULL);
-	*globcfgpath = g_strdup(old_panel_cfg_path);
-
-	/*FIXME: return a reference to panel spot here*/
-	return ext->blablabla;
-}
-
-void
-applet_register (AppletInfo *info)
-{
-	PanelWidget *panel;
-	Extern *ext;
-	CORBA_Environment ev;
-
-	g_return_if_fail(info != NULL);
-
-	ext = info->data;
-	g_assert(ext);
-
-	/*if we should start the next applet*/
-	if(goad_id_starting && strcmp(goad_id,goad_id_starting)==0)
-		extern_start_next();
-
-	panel = PANEL_WIDGET(info->widget->parent);
-	g_return_if_fail(panel!=NULL);
-
-	/*no longer pending*/
-	info->type = APPLET_EXTERN;
-
-	orientation_change(info,panel);
-	back_change(info,panel);
-	send_applet_tooltips_state(ext->applet,
-				   global_config.tooltips_enabled);
-}
 
 static int
 extern_socket_destroy(GtkWidget *w, gpointer data)
@@ -359,14 +155,6 @@ reserve_applet_spot (Extern *ext, PanelWidget *panel, int pos,
 		gtk_widget_realize(socket);
 
 	return GDK_WINDOW_XWINDOW(socket->window);
-}
-
-void
-applet_set_tooltip(AppletInfo *info, const char *tooltip)
-{
-	g_return_if_fail(info != NULL);
-
-	gtk_tooltips_set_tip (panel_tooltips,info->widget,tooltip,NULL);
 }
 
 void
@@ -656,60 +444,252 @@ s_panelspot_set_tooltip(POA_GNOME_PanelSpot *servant,
 {
 	Extern *ext = (Extern *)servant;
 	if(val && *val)
-		applet_set_tooltip(ext->info, val);
+		gtk_tooltips_set_tip (panel_tooltips,ext->ebox,val,NULL);
 	else
-		applet_set_tooltip(ext->info, NULL);
+		gtk_tooltips_set_tip (panel_tooltips,ext->ebox,NULL,NULL);
 }
 
 static CORBA_short
 s_panelspot_get_parent_panel(POA_GNOME_PanelSpot *servant,
-			     CORBA_Environment *ev);
+			     CORBA_Environment *ev)
+{
+	int panel;
+	GList *list;
+	gpointer p;
+	Extern *ext = (Extern *)servant;
+	PanelWidget *panel;
+	AppletInfo *info;
+
+	g_assert(ext);
+	
+	info = ext->data;
+	g_assert(info);
+
+	p = PANEL_WIDGET(info->widget->parent);
+
+	for(panel=0,list=panels;list!=NULL;list=g_list_next(list),panel++)
+		if(list->data == p)
+			return panel;
+	return -1;
+}
 
 static CORBA_short
 s_panelspot_get_spot_pos(POA_GNOME_PanelSpot *servant,
-			 CORBA_Environment *ev);
+			 CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	PanelWidget *panel;
+	AppletInfo *info;
+	AppletData *ad;
+
+	g_assert(ext);
+	
+	info = ext->data;
+	g_assert(info);
+	
+	ad = gtk_object_get_data(GTK_OBJECT(info->widget),
+				 PANEL_APPLET_DATA);
+	if(!ad)
+		return -1;
+	return ad->pos;
+}
 
 static GNOME_Panel_OrientType
 s_panelspot_get_parent_orient(POA_GNOME_PanelSpot *servant,
-			      CORBA_Environment *ev);
+			      CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	PanelWidget *panel;
+	AppletInfo *info;
+
+	g_assert(ext);
+	
+	info = ext->data;
+	g_assert(info);
+
+	panel = PANEL_WIDGET(info->widget->parent);
+
+	g_return_val_if_fail(panel != NULL,ORIENT_UP);
+
+	return get_applet_orient(panel);
+}
 
 static void
 s_panelspot_register(POA_GNOME_PanelSpot *servant,
-		     CORBA_Environment *ev);
+		     CORBA_Environment *ev)
+{
+	PanelWidget *panel;
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_assert(ext);
+	
+	info = ext->data;
+	g_assert(info);
+
+	/*if we should start the next applet*/
+	if(goad_id_starting && strcmp(goad_id,goad_id_starting)==0)
+		extern_start_next();
+
+	panel = PANEL_WIDGET(info->widget->parent);
+	g_return_if_fail(panel!=NULL);
+
+	/*no longer pending*/
+	info->type = APPLET_EXTERN;
+
+	orientation_change(info,panel);
+	back_change(info,panel);
+	send_applet_tooltips_state(ext->applet,
+				   global_config.tooltips_enabled);
+}
 
 static void
 s_panelspot_unregister(POA_GNOME_PanelSpot *servant,
-		       CORBA_Environment *ev);
+		       CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	panel_clean_applet(ext->info);
+}
 
 static void
 s_panelspot_abort_load(POA_GNOME_PanelSpot *servant,
-		       CORBA_Environment *ev);
+		       CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_return_if_fail(ext != NULL);
+
+	info = ext->data;
+	g_return_if_fail(info != NULL);
+	
+	if(goad_id_starting && strcmp(ext->goad_id,goad_id_starting)==0)
+		extern_start_next();
+
+	/*only reserved spots can be canceled, if an applet
+	  wants to chance a pending applet it needs to first
+	  user reserve spot to obtain id and make it EXTERN_RESERVED*/
+	if(info->type != APPLET_EXTERN_RESERVED)
+		return;
+
+	panel_clean_applet(info);
+}
 
 static void
 s_panelspot_show_menu(POA_GNOME_PanelSpot *servant,
-		      CORBA_Environment *ev);
+		      CORBA_Environment *ev)
+{
+	GtkWidget *panel;
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_return_if_fail(ext != NULL);
+
+	info = ext->data;
+	g_return_if_fail(info != NULL);
+
+	if (!info->menu)
+		create_applet_menu(info);
+
+	panel = get_panel_parent(info->widget);
+	if(IS_SNAPPED_WIDGET(panel)) {
+		SNAPPED_WIDGET(panel)->autohide_inhibit = TRUE;
+		snapped_widget_queue_pop_down(SNAPPED_WIDGET(panel));
+	}
+
+	gtk_menu_popup(GTK_MENU(info->menu), NULL, NULL, applet_menu_position,
+		       info, 3, GDK_CURRENT_TIME);
+}
+
 
 static void
 s_panelspot_drag_start(POA_GNOME_PanelSpot *servant,
-		       CORBA_Environment *ev);
+		       CORBA_Environment *ev)
+{
+	PanelWidget *panel;
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_return_if_fail(ext != NULL);
+
+	info = ext->data;
+	g_return_if_fail(info != NULL);
+
+	panel = PANEL_WIDGET(info->widget->parent);
+
+	g_return_if_fail(panel!=NULL);
+
+	/*panel_widget_applet_drag_start(panel,info->widget);
+	panel_widget_applet_drag_end(panel);*/
+	panel_widget_applet_drag_start(panel,info->widget);
+	panel_widget_applet_move_use_idle(panel);
+}
 
 static void
 s_panelspot_drag_stop(POA_GNOME_PanelSpot *servant,
-		      CORBA_Environment *ev);
+		      CORBA_Environment *ev)
+{
+	PanelWidget *panel;
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_return_if_fail(ext != NULL);
+
+	info = ext->data;
+	g_return_if_fail(info != NULL);
+
+	panel = PANEL_WIDGET(info->widget->parent);
+
+	g_return_if_fail(panel!=NULL);
+
+	panel_widget_applet_drag_end(panel);
+}
 
 static void
 s_panelspot_add_callback(POA_GNOME_PanelSpot *servant,
 			 CORBA_char *callback_name,
 			 CORBA_char *stock_item,
 			 CORBA_char *menuitem_text,
-			 CORBA_Environment *ev);
+			 CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_return_if_fail(ext != NULL);
+
+	info = ext->data;
+	g_return_if_fail(info != NULL);
+	applet_add_callback(info, callback_name, stock_item, menuitem_text);
+}
 
 static void
 s_panelspot_remove_callback(POA_GNOME_PanelSpot *servant,
 			    CORBA_char *callback_name,
-			    CORBA_Environment *ev);
+			    CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_return_if_fail(ext != NULL);
+
+	info = ext->data;
+	g_return_if_fail(info != NULL);
+	applet_remove_callback(info, callback_name);
+}
 
 static void
 s_panelspot_sync_config(POA_GNOME_PanelSpot *servant,
-			CORBA_Environment *ev);
+			CORBA_Environment *ev)
+{
+	Extern *ext = (Extern *)servant;
+	AppletInfo *info;
+
+	g_return_if_fail(ext != NULL);
+
+	info = ext->data;
+	g_return_if_fail(info != NULL);
+	if(g_list_find(applets_to_sync, info)==NULL)
+		applets_to_sync = g_list_prepend(applets_to_sync,info);
+	panel_config_sync();
+}
 
