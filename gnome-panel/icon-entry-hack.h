@@ -11,8 +11,11 @@
 #ifndef ICON_ENTRY_HACK_H
 #define ICON_ENTRY_HACK_H
 
-void	hack_dentry_edit		(GnomeDEntryEdit *dedit);
-void	hack_icon_entry			(GnomeIconEntry *ientry);
+#include <libgnomeui/gnome-ditem-edit.h>
+#include <libgnomeui/gnome-icon-item.h>
+
+void	hack_ditem_edit		        (GnomeDItemEdit *dedit);
+void	hack_icon_entry		        (GnomeIconEntry *ientry);
 char *	hack_icon_entry_get_icon	(GnomeIconEntry *ientry);
 void 	hack_icon_entry_set_icon	(GnomeIconEntry *ientry,
 					 const char *icon);

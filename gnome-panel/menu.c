@@ -249,7 +249,7 @@ about_gnome_cb(GtkObject *object, char *program_path)
 static void
 activate_app_def (GtkWidget *widget, const char *item_loc)
 {
-	GnomeDesktopEntry *item = gnome_desktop_entry_load (item_loc);
+	GnomeDesktopItem *item = gnome_desktop_item_load (item_loc);
 	if (item != NULL) {
 		char *curdir = g_get_current_dir ();
 		chdir (g_get_home_dir ());
@@ -742,7 +742,7 @@ validate_for_filename(char *file)
 static void
 really_add_new_menu_item (GtkWidget *d, int button, gpointer data)
 {
-	GnomeDEntryEdit *dedit = GNOME_DENTRY_EDIT(data);
+	GnomeDItemEdit *dedit = GNOME_DITEM_EDIT(data);
 	char *file, *dir = gtk_object_get_data(GTK_OBJECT(d), "dir");
 	GnomeDesktopEntry *dentry;
 	FILE *fp;
@@ -3158,7 +3158,7 @@ create_applets_menu (GtkWidget *menu, gboolean fake_submenus, gboolean title)
 	char *menudir = gnome_datadir_file ("applets");
 
 	if (menudir == NULL ||
-	    ! g_file_test (menudir, G_FILE_TEST_ISDIR)) {
+	    ! g_file_test (menudir, G_FILE_TEST_IS_DIR)) {
 		g_free (menudir);
 		return NULL;
 	}
@@ -3528,7 +3528,7 @@ create_system_menu (GtkWidget *menu, gboolean fake_submenus,
 	char *menudir = gnome_datadir_file ("gnome/apps");
 
 	if (menudir &&
-	    g_file_test (menudir, G_FILE_TEST_ISDIR)) {
+	    g_file_test (menudir, G_FILE_TEST_IS_DIR)) {
 		if(!fake || menu) {
 			menu = create_menu_at (menu, menudir,
 					       FALSE /* applets */,
@@ -3567,7 +3567,7 @@ create_user_menu (const char *title, const char *dir, GtkWidget *menu,
 	char *menudir = gnome_util_home_file (dir);
 	if (!panel_file_exists (menudir))
 		mkdir (menudir, 0755);
-	if (!g_file_test (menudir, G_FILE_TEST_ISDIR)) {
+	if (!g_file_test (menudir, G_FILE_TEST_IS_DIR)) {
 		g_warning(_("Can't create the user menu directory"));
 		g_free (menudir); 
 		return menu;
@@ -3685,7 +3685,7 @@ create_add_launcher_menu (GtkWidget *menu, gboolean fake_submenus)
 
 	add_distribution_submenu (menu, fake_submenus,
 				  TRUE /*launcher_add */);
-	if (g_file_test (kde_menudir, G_FILE_TEST_ISDIR)) {
+	if (g_file_test (kde_menudir, G_FILE_TEST_IS_DIR)) {
 		add_kde_submenu (menu, fake_submenus,
 				 TRUE /*launcher_add */);
 	}

@@ -60,7 +60,7 @@ struct _DirRec {
 	GSList *mfl;  /*records of menus using this record*/
 };
 
-char * get_applet_goad_id_from_dentry(GnomeDesktopEntry *ii);
+char * get_applet_goad_id_from_dentry(GnomeDesktopItem *ii);
 
 GSList * get_mfiles_from_menudir(const char *menudir);
 

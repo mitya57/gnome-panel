@@ -19,8 +19,8 @@ typedef struct {
 	AppletInfo        *info;
 	GtkWidget         *button;
 	GtkObject	  *dedit;
-	GnomeDesktopEntry *dentry;
-	GnomeDesktopEntry *revert_dentry;
+	GnomeDesktopItem *ditem;
+	GnomeDesktopItem *revert_ditem;
 
 	GtkWidget         *prop_dialog;
 } Launcher;
@@ -31,7 +31,7 @@ typedef struct {
  * etc.  Also always hoard if an applet which owns a desktop already
  * exists.*/
 Launcher *	load_launcher_applet_full	(const char *params,
-						 GnomeDesktopEntry *dentry,
+						 GnomeDesktopItem *ditem,
 						 PanelWidget *panel,
 						 int pos,
 						 gboolean exactpos);

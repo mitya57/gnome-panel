@@ -124,9 +124,9 @@ applet_callback_callback(GtkWidget *widget, gpointer data)
 			panel_show_help ("launchers.html");
 		else if (strcmp (menu->name, "help_on_app") == 0) {
 			Launcher * launcher = menu->info->data;
-			if (launcher->dentry != NULL) {
+			if (launcher->ditem != NULL) {
 				char *path = panel_gnome_kde_help_path
-					(launcher->dentry->docpath);
+					(launcher->ditem->docpath);
 				if (path != NULL) {
 					gnome_url_show (path);
 					g_free (path);
@@ -641,8 +641,8 @@ applet_destroy (GtkWidget *w, AppletInfo *info)
 		 * just want to schedule removals until session
 		 * saving */
 
-		if (launcher->dentry->location != NULL) {
-			char *file = g_strdup (launcher->dentry->location);
+		if (launcher->ditem->location != NULL) {
+			char *file = g_strdup (launcher->ditem->location);
 			launchers_to_kill = 
 				g_list_prepend (launchers_to_kill, file);
 		}

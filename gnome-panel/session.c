@@ -502,7 +502,7 @@ save_applet_configuration(AppletInfo *info)
 
 			launcher_save (launcher);
 			gnome_config_set_string ("base_location",
-						 g_basename (launcher->dentry->location));
+						 g_basename (launcher->ditem->location));
 			break;
 		}
 	case APPLET_LOGOUT:

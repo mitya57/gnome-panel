@@ -78,8 +78,9 @@ panel_standard_menu_pos (GtkMenu *menu, gint *x, gint *y, gpointer data)
 	*y += screen_basey;
 }
 
+/* FIXME: actually deal with push_in */
 void
-panel_menu_position (GtkMenu *menu, gint *x, gint *y, gpointer data)
+panel_menu_position (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer data)
 {
 	GtkWidget *w = data;
 	gint wx, wy;
@@ -111,8 +112,9 @@ panel_menu_position (GtkMenu *menu, gint *x, gint *y, gpointer data)
 	}
 }
 
+/* FIXME: deal with push_in */
 void
-applet_menu_position (GtkMenu *menu, gint *x, gint *y, gpointer data)
+applet_menu_position (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer data)
 {
 	AppletInfo *info = data;
 	int wx, wy;
