@@ -30,29 +30,56 @@ module GNOME {
 
 		/* XXX do activation stuff here - the applet side of it
 		   will be via a GNOME::GenericFactory (ask elliot) */
-
+		
 		/*this inits a panelspot, it's called by the applet */
 		PanelSpot add_applet(in Applet panel_applet,
 				     in string goad_id,
 				     out string cfgpath,
 				     out string globcfgpath,
 				     out unsigned long winid);
+		/*same as above but this is usefull if we know onto
+		  which panel we want to add, this is only to be called
+		  from an applet which was NOT started by the panel as
+		  those get the position from the panel itself*/
+		PanelSpot add_applet_full(in Applet panel_applet,
+					  in string goad_id,
+					  in short panel,
+					  in short pos,
+					  out string cfgpath,
+					  out string globcfgpath,
+					  out unsigned long winid);
 		oneway void quit ();
 
+		/*dunno if this is good, since I don't want to mix
+		  corba into the panel-widget code*/
 		readonly attribute boolean in_drag;
-		readonly attribute OrientType orient;
+		/*there is only ONE Panel object for the entire 
+		  panel app, so this makes no sense*/
+		/*readonly attribute OrientType orient;*/
 	};
 
 	interface PanelSpot { /* panel half of applets */
 		/*accessors*/
-		readonly attribute short spot_pos;
+		/*readonly attribute short spot_pos;*/
 		attribute string tooltip;
-		readonly attribute Panel parent_panel;
+		
+		/*accessors for certain flags*/
+		/*gets the number of the panel which this is on,
+		  this is for those rare applets that want to save
+		  their prefs in a different way*/
+		short get_parent_panel();
+		/*similiar to the above, but gets the position*/
+		short get_spot_pos();
+
+		/*gets the orient of the panel on which this applet
+		  resides*/
+		OrientType get_orient();
 
 		/* These are exact copies of the in_drag & orient
-		   attributes on parent_panel, for efficiency's sake */
-		readonly attribute boolean parent_panel_in_drag;
-		readonly attribute OrientType parent_panel_orient;
+		   attributes on parent_panel, for efficiency's sake
+		 XXX this doesn't make any sense to me -George*/
+		/*readonly attribute boolean parent_panel_in_drag;
+		readonly attribute OrientType parent_panel_orient;*/
 		
 		/* the applet is all done with building itself
 		   so it just tells us that it's all ready, this
