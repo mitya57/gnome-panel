@@ -610,6 +610,7 @@ gnome_panel_applet_corba_init(const char *goad_id)
   CORBA_Object_release(panel, &ev);
   CORBA_exception_free(&ev);
 
+  goad_server_register(CORBA_OBJECT_NIL, applet_obj, goad_id, "server", &ev);
   return TRUE;
 }
 

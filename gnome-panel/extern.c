@@ -53,7 +53,7 @@ extern_start_new_goad_id(Extern *e)
 {
         CORBA_Environment ev;
 	if(!goad_id_starting) {
-		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_NEW_ONLY, NULL),&ev);
+		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_NEW_ONLY|GOAD_ACTIVATE_ASYNC, NULL),&ev);
 		goad_id_starting = g_strdup(e->goad_id);
 	} else {
 		if(start_timeout>-1)
