@@ -712,6 +712,13 @@ applet_event(GtkWidget *widget, GdkEvent *event, gpointer data)
   case GDK_BUTTON_PRESS:
     in_drag = GNOME_Panel__get_in_drag(panel_client, &ev);
     bevent = (GdkEventButton *) event;
+    {
+	    FILE *fp = fopen("/tmp/bla","a");
+	    gdk_beep();
+	    fprintf(fp,"the applet %lX\n",(long)widget);
+	    fprintf(fp,"the pspot %lX\n",(long)(CD(widget)->pspot));
+	    fclose(fp);
+    }
 
     if(in_drag) {
       GNOME_PanelSpot_drag_stop(CD(widget)->pspot, &ev);

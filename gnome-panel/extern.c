@@ -202,11 +202,12 @@ static void
 extern_start_new_goad_id(Extern *e)
 {
         CORBA_Environment ev;
-	if(!goad_id_starting) {
+	/*FIXME: fix synchronious starting*/
+	/*if(!goad_id_starting) {*/
 		CORBA_exception_init(&ev);
-		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_ASYNC, NULL),&ev);
+		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_NEW_ONLY|GOAD_ACTIVATE_ASYNC, NULL),&ev);
 		CORBA_exception_free(&ev);
-		goad_id_starting = g_strdup(e->goad_id);
+		/*goad_id_starting = g_strdup(e->goad_id);
 	} else {
 		if(start_timeout>-1)
 			gtk_timeout_remove(start_timeout);
@@ -214,7 +215,7 @@ extern_start_new_goad_id(Extern *e)
 		start_queue = g_list_append(start_queue,e);
 		start_timeout = gtk_timeout_add(100*1000,
 						start_timeout_handler,NULL);
-	}
+	}*/
 }
 
 void
@@ -404,7 +405,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 				*wid=GDK_WINDOW_XWINDOW(socket->window);
 
 				panelspot_servant = (POA_GNOME_PanelSpot *)ext;
-				acc = ext->pspot = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, ev);
+				acc = PortableServer_POA_servant_to_reference(thepoa, panelspot_servant, ev);
 				g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
 				ext->pspot = CORBA_Object_duplicate(acc, ev);
 				g_return_val_if_fail(ev->_major == CORBA_NO_EXCEPTION,NULL);
@@ -462,7 +463,7 @@ s_panel_add_applet_full(POA_GNOME_Panel *servant,
 	g_free(p);
 	*globcfgpath = CORBA_string_dup(old_panel_cfg_path);
 
-	return acc;
+	return CORBA_Object_duplicate(acc, ev);
 }
 
 static void
@@ -565,7 +566,11 @@ s_panelspot_register_us(POA_GNOME_PanelSpot *servant,
 
 	g_assert(ext);
 	g_assert(ext->info);
+	
+	printf("ext: %lX\n",(long)ext);
 
+	puts("STARTED, now try to start the next one");
+	printf("cur: %s, ext: %s\n",goad_id_starting,ext->goad_id);
 	/*if we should start the next applet*/
 	if(goad_id_starting && strcmp(ext->goad_id,goad_id_starting)==0)
 		extern_start_next();
