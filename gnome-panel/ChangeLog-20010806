@@ -1,3 +1,10 @@
+1999-08-20  Jacob Berkman  <jberkman@andrew.cmu.edu>
+
+	* menu.c (update_hidebutton_menu): one stupid mistake...
+	(update_back_menu): two stupid mistakes...
+
+	changing properties from the menu now works :)
+
 1999-08-19  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
 	* menu.c (make_properties_submenu): added properties for the hide

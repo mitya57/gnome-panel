@@ -2762,13 +2762,15 @@ change_hidebuttons (GtkWidget *widget, gpointer data)
 
 	switch (GPOINTER_TO_INT (data)) {
 	case HIDEBUTTONS_NONE:
-		hidebuttons_enabled = TRUE;
+		hidebuttons_enabled = FALSE;
 		break;
 	case HIDEBUTTONS_PLAIN:
-		hidebutton_pixmaps_enabled = TRUE;
+		hidebutton_pixmaps_enabled = FALSE;
+		hidebuttons_enabled = TRUE;
 		break;
 	case HIDEBUTTONS_PIXMAP:
 		hidebutton_pixmaps_enabled = TRUE;
+		hidebuttons_enabled = TRUE;
 		break;
 	}
 
@@ -2868,7 +2870,7 @@ update_back_menu (GtkWidget *menu, gpointer data)
 {
 	GtkWidget *menuitem = NULL;
 	char *s = NULL;
-	switch (current_panel->sz) {
+	switch (current_panel->back_type) {
 	case PANEL_BACK_NONE:
 		s = MENU_BACK_NONE;
 		break;
@@ -2895,13 +2897,14 @@ update_hidebutton_menu (GtkWidget *menu, gpointer data)
 	char *s = NULL;
 	GtkWidget *menuitem = NULL;
 	BasePWidget *basep = gtk_object_get_data(GTK_OBJECT(current_panel),
-						 PANEL_PARENT);
+						 "panel_parent");
+
 	if (!basep->hidebuttons_enabled)
 		s = MENU_HIDEBUTTONS_NONE;
 	else if (basep->hidebutton_pixmaps_enabled)
 		s = MENU_HIDEBUTTONS_PIXMAP;
 	else 
-		s = MENU_HIDEBUTTONS_NONE;
+		s = MENU_HIDEBUTTONS_PLAIN;
 	
 	menuitem = gtk_object_get_data (GTK_OBJECT (menu), s);
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
