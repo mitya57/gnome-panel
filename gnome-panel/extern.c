@@ -444,3 +444,5 @@ load_extern_applet(char *goad_id, char *cfgpath, PanelWidget *panel, int pos)
 
 	extern_start_new_goad_id(goad_id);
 }
+
+/****** start from scratch */

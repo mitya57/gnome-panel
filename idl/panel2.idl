@@ -32,12 +32,21 @@ module GNOME {
 		   will be via a GNOME::GenericFactory (ask elliot) */
 
 		oneway void quit ();
+
 		readonly attribute boolean in_drag;
+		readonly attribute OrientType orient;
 	};
 
 	interface PanelSpot { /* panel half of applets */
+		/*accessors*/
+		readonly attribute short spot_pos;
 		attribute string tooltip;
 		readonly attribute Panel parent_panel;
+
+		/* These are exact copies of the in_drag & orient
+		   attributes on parent_panel, for efficiency's sake */
+		readonly attribute boolean parent_panel_in_drag;
+		readonly attribute OrientType parent_panel_orient;
 		
 		/* the applet is all done with building itself
 		   so it just tells us that it's all ready, this
@@ -47,18 +56,15 @@ module GNOME {
 		   applet "savable" otherwise the panel wouldn't save
 		   it's state*/
 		oneway void register();
+
+		oneway void unregister();
+
 		/* if the applet didn't call "register" yet, and wants
 		   to abort itself (the panel will free up it's spot
 		   and start he next applet), it should do this before
 		   it exits */
 		oneway void abort_load();
 		
-		oneway void remove_from_panel();
-
-		/*accessors*/
-		short get_pos ();
-		Panel::OrientType get_panel_orient();
-
 		oneway void show_menu ();
 		oneway void drag_start ();
 		oneway void drag_stop ();
@@ -73,16 +79,15 @@ module GNOME {
 		/*this inits the applet, it's called by the panel, that way we
 		  can get an exception if the applet is doing weird things, maybe
 		  it shouldn't be one way because of this*/
-		void init(in Object panel,
-			  in Object panel_spot,
+		void init(in PanelSpot panel_spot,
 			  in string cfgpath,
 			  in string globcfgpath,
-			  in unsigned long wid);
+			  in unsigned long winid);
 
 		oneway void change_orient (in Panel::OrientType orient);
 		oneway void do_callback (in string callback_name);
-		short session_save (in string cfgpath,
-				    in string global_cfgpath);
+		boolean session_save (in string cfgpath,
+				      in string global_cfgpath);
 		oneway void back_change (in Panel::BackInfoType backing);
 		oneway void set_tooltips_state (in boolean enabled);
 	};
