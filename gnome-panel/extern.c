@@ -568,8 +568,6 @@ s_panelspot_register_us(POA_GNOME_PanelSpot *servant,
 	printf("register ext: %lX\n",(long)ext);
 	printf("register ext->info: %lX\n",(long)(ext->info));
 
-	puts("STARTED, now try to start the next one");
-	printf("cur: %s, ext: %s\n",goad_id_starting,ext->goad_id);
 	/*if we should start the next applet*/
 	if(goad_id_starting && strcmp(ext->goad_id,goad_id_starting)==0)
 		extern_start_next();

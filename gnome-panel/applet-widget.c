@@ -642,12 +642,6 @@ gnome_panel_applet_corba_init(AppletWidget *applet, const char *goad_id)
 						 (char *)goad_id,
 						 &privcfg,&globcfg,
 						 &applet_servant->winid, &ev);
-    {
-	    FILE *fp = fopen("/tmp/bla","a");
-	    fprintf(fp,"\nADD_APPLET_RETURNED:\nthe pspot %lX\n\n",
-		    (long)applet_servant->pspot);
-	    fclose(fp);
-    }
 
   g_assert(ev._major == CORBA_NO_EXCEPTION);
   
@@ -681,13 +675,6 @@ applet_widget_new(const char *goad_id)
 
 	CD(applet) = corbadat = gnome_panel_applet_corba_init(applet,goad_id);
 	corbadat->appwidget = applet;
-
-    {
-	    FILE *fp = fopen("/tmp/bla","a");
-	    fprintf(fp,"\nBUILDING THE PLUG ON:\nwinid %lX\n\n",
-		    (long)corbadat->winid);
-	    fclose(fp);
-    }
 
 	gtk_plug_construct(GTK_PLUG(applet), corbadat->winid);
 	
@@ -724,12 +711,6 @@ applet_event(GtkWidget *widget, GdkEvent *event, gpointer data)
   case GDK_BUTTON_PRESS:
     in_drag = GNOME_Panel__get_in_drag(panel_client, &ev);
     bevent = (GdkEventButton *) event;
-    {
-	    FILE *fp = fopen("/tmp/bla","a");
-	    fprintf(fp,"the applet %lX\n",(long)widget);
-	    fprintf(fp,"the pspot %lX\n",(long)(CD(widget)->pspot));
-	    fclose(fp);
-    }
 
     if(in_drag) {
       GNOME_PanelSpot_drag_stop(CD(widget)->pspot, &ev);
@@ -826,23 +807,11 @@ applet_widget_add(AppletWidget *applet, GtkWidget *widget)
 	gtk_container_add(GTK_CONTAINER(applet),widget);
 
 	CORBA_exception_init(&ev);
-    {
-	    FILE *fp = fopen("/tmp/bla","a");
-	    fprintf(fp,"\nCALLING REGUISTER US ON:\nthe pspot %lX\n\n",
-		    (long)(CD(applet)->pspot));
-	    fclose(fp);
-    }
   
 	GNOME_PanelSpot_register_us(CD(applet)->pspot, &ev);
 	CORBA_exception_free(&ev);
 
 	bind_top_applet_events(GTK_WIDGET(applet));
-    {
-	    FILE *fp = fopen("/tmp/bla","a");
-	    fprintf(fp,"\nAPPLET_WIDGET_ADD\nthe applet widget %lX\n",(long)applet);
-	    fprintf(fp,"the pspot %lX\n\n",(long)(CD(applet)->pspot));
-	    fclose(fp);
-    }
 }
 
 void
