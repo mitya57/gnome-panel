@@ -1,3 +1,16 @@
+2002-10-07  Mark McLoughlin  <mark@skynet.ie>
+
+	Fixes problem with keybindings not working on any screen but
+	the default (#93757). Root cause identified by Erwann Chenede.
+
+	* global-keys.[ch]: 
+	(screen_from_event): kill.
+	(panel_global_keys_filter): don't use screen_from_event,
+	just use the passed in screen.
+
+	* xstuff.c: (xstuff_init): register the GdkScreen as
+	the filter data.
+
 2002-10-04  Mark McLoughlin  <mark@skynet.ie>
 
 	* menu-fentry.c: (fr_read_dir): if there's no
