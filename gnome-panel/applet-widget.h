@@ -17,24 +17,16 @@
 
 BEGIN_GNOME_DECLS
 
-#ifndef PANEL_TYPES_H
-/*from panel-types.h*/
-typedef enum {
-	ORIENT_UP,
-	ORIENT_DOWN,
-	ORIENT_LEFT,
-	ORIENT_RIGHT
-} PanelOrientType;
-#endif
+typedef GNOME_Panel_OrientType PanelOrientType;
+#define ORIENT_UP GNOME_Panel_ORIENT_UP
+#define ORIENT_DOWN GNOME_Panel_ORIENT_DOWN
+#define ORIENT_LEFT GNOME_Panel_ORIENT_LEFT
+#define ORIENT_RIGHT GNOME_Panel_ORIENT_RIGHT
 
-#ifndef __PANEL_WIDGET_H__
-/*from panel-widget.h*/
-typedef enum {
-	PANEL_BACK_NONE,
-	PANEL_BACK_COLOR,
-	PANEL_BACK_PIXMAP
-} PanelBackType;
-#endif
+typedef GNOME_Panel_BackType PanelBackType;
+#define PANEL_BACK_NONE GNOME_Panel_BACK_NONE
+#define PANEL_BACK_COLOR GNOME_Panel_BACK_COLOR
+#define PANEL_BACK_PIXMAP GNOME_Panel_BACK_PIXMAP
 
 
 #define APPLET_WIDGET(obj)          GTK_CHECK_CAST (obj, applet_widget_get_type (), AppletWidget)
@@ -65,11 +57,11 @@ struct _AppletWidgetClass
 	   you get an initial change_orient signal during the add, so
 	   that you can update your orientation properly */
 	void (* change_orient) (AppletWidget *applet,
-				PanelOrientType orient);
+				GNOME_Panel_OrientType orient);
 	/* the panel background changes, the pixmap handeling is likely
 	   to change */
 	void (* back_change) (AppletWidget *applet,
-			      PanelBackType type,
+			      GNOME_Panel_BackType type,
 			      char *pixmap,
 			      GdkColor *color);
 	/*will send the current state of the tooltips, if they are enabled
@@ -87,11 +79,15 @@ struct _AppletWidgetClass
 			      char *globcfgpath);
 };
 
-typedef GtkWidget *(*AppletActivator)(const char *goad_id, const char **params, int nparams);
+typedef GtkWidget *(*AppletFactoryActivator)(const char *goad_id, const char **params, int nparams);
+/* Returns TRUE if the factory can activate this applet */
+typedef gboolean (*AppletFactoryQuerier)(const char *goad_id);
 
 guint		applet_widget_get_type		(void);
 
-void            applet_factory_new(const char *goad_id, AppletActivator afunc);
+void            applet_factory_new(const char *goad_id,
+				   AppletFactoryQuerier qfunc,
+				   AppletFactoryActivator afunc);
 GtkWidget*	applet_widget_new(const char *goad_id);
 
 /*set tooltip over the applet, NULL to remove a tooltip*/
@@ -159,7 +155,7 @@ int		applet_widget_get_applet_count	(void);
 void		applet_widget_sync_config	(AppletWidget *applet);
 
 /* Get the oprientation the applet should use */
-PanelOrientType	applet_widget_get_panel_orient	(AppletWidget *applet);
+GNOME_Panel_OrientType	applet_widget_get_panel_orient	(AppletWidget *applet);
 
 /*use this instead of gnome init, if you want multi applet, you also
   have to specify a "start new applet" function which will launch a new

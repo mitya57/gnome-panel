@@ -4,6 +4,7 @@
 #include <gnome.h>
 
 #include <applet-widget.h>
+#include <libgnorba/gnorba.h>
 
 #include "gnome-panel.h"
 
@@ -91,7 +92,7 @@ static void applet_widget_class_init	(AppletWidgetClass *klass);
 static void wapplet_widget_init		(AppletWidget      *applet_widget);
 
 typedef void (*AppletWidgetOrientSignal) (GtkObject * object,
-					  PanelOrientType orient,
+					  GNOME_Panel_OrientType orient,
 					  gpointer data);
 
 typedef int (*AppletWidgetSaveSignal) (GtkObject * object,
@@ -100,7 +101,7 @@ typedef int (*AppletWidgetSaveSignal) (GtkObject * object,
 				        gpointer data);
 
 typedef void (*AppletWidgetBackSignal) (GtkObject * object,
-					PanelBackType type,
+					GNOME_Panel_BackType type,
 					char *pixmap,
 					GdkColor *color,
 					gpointer data);
@@ -629,7 +630,6 @@ gnome_panel_applet_corba_init(AppletWidget *applet, const char *goad_id)
   
   goad_server_register(CORBA_OBJECT_NIL, applet_obj, goad_id, "server", &ev);
   g_return_val_if_fail(ev._major == CORBA_NO_EXCEPTION, NULL);
-
   applet_servant->pspot = GNOME_Panel_add_applet(panel_client, applet_obj,
 						 (char *)goad_id,
 						 &privcfg,&globcfg,
@@ -914,7 +914,7 @@ server_applet_change_orient(CustomAppletServant *servant,
   if(applet) {
     gtk_signal_emit(GTK_OBJECT(applet),
 		    applet_widget_signals[CHANGE_ORIENT_SIGNAL],
-		    (PanelOrientType)orient);
+		    (GNOME_Panel_OrientType)orient);
   }
 }
 
@@ -988,7 +988,7 @@ server_applet_back_change(CustomAppletServant *servant,
   applet = servant->appwidget;
   gtk_signal_emit(GTK_OBJECT(applet),
 		  applet_widget_signals[BACK_CHANGE_SIGNAL],
-		  (PanelBackType)backing->_d,
+		  (GNOME_Panel_BackType)backing->_d,
 		  pptr,
 		  cptr);
 }
@@ -1051,15 +1051,94 @@ applet_widget_corba_activate(GtkWidget *applet,
 			     gpointer *impl_ptr,
 			     CORBA_Environment *ev)
 {
-	/*FIXME: fill this in*/
+  return CORBA_Object_duplicate(CD(applet)->obj, ev);
 }
 
 void
 applet_widget_corba_deactivate(PortableServer_POA poa,
-				    const char *goad_id,
-				    gpointer impl_ptr,
-				    CORBA_Environment *ev)
+			       const char *goad_id,
+			       gpointer impl_ptr,
+			       CORBA_Environment *ev)
 {
 	/*FIXME: fill this in*/
 }
 
+typedef struct {
+  POA_GNOME_GenericFactory servant;
+  AppletFactoryActivator afunc;
+  AppletFactoryQuerier qfunc;
+  CORBA_Object fobj;
+  PortableServer_ObjectId *objid;
+} AppletFactory;
+
+static CORBA_boolean
+server_applet_factory_supports(AppletFactory *servant,
+			       CORBA_char * obj_goad_id,
+			       CORBA_Environment * ev)
+{
+  if(servant->qfunc)
+    return servant->qfunc(obj_goad_id);
+
+  g_message("No AppletFactoryQuerier to check on %s in panel applet",
+	    obj_goad_id);
+
+  return CORBA_FALSE;
+}
+
+static CORBA_Object
+server_applet_factory_create_object(AppletFactory *servant,
+				    CORBA_char * goad_id,
+				    GNOME_stringlist * params,
+				    CORBA_Environment * ev)
+{
+  GtkWidget *applet;
+
+  applet = servant->afunc(goad_id, (char **)params->_buffer, params->_length);
+
+  g_return_val_if_fail(applet, CORBA_OBJECT_NIL);
+
+  return CORBA_Object_duplicate(CD(applet)->obj, ev);
+}
+
+static POA_GNOME_GenericFactory__epv applet_factory_epv = {
+  NULL,
+  (gpointer)&server_applet_factory_supports,
+  (gpointer)&server_applet_factory_create_object,  
+};
+
+static POA_GNOME_GenericFactory__vepv applet_factory_vepv = {
+  &base_epv,
+  &applet_factory_epv
+};
+
+void applet_factory_new(const char *goad_id, AppletFactoryQuerier qfunc,
+			AppletFactoryActivator afunc)
+{
+  AppletFactory *f;
+  CORBA_Environment ev;
+  PortableServer_POA poa;
+
+  g_return_if_fail(afunc);
+
+  CORBA_exception_init(&ev);
+  f = g_new0(AppletFactory, 1);
+  f->servant.vepv = &applet_factory_vepv;
+  f->afunc = afunc; f->qfunc = qfunc;
+  POA_GNOME_GenericFactory__init(f, &ev);
+
+  CORBA_exception_free(&ev);
+
+  poa = (PortableServer_POA)
+    CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), "RootPOA", &ev);
+
+  PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
+  g_return_val_if_fail(ev._major == CORBA_NO_EXCEPTION, NULL);
+
+  f->objid = PortableServer_POA_activate_object(poa, f,
+						&ev);
+  g_return_val_if_fail(ev._major == CORBA_NO_EXCEPTION, NULL);
+
+  f->fobj = PortableServer_POA_servant_to_reference(poa, f, &ev);
+
+  goad_server_register(CORBA_OBJECT_NIL, f->fobj, goad_id, "server", &ev);
+}

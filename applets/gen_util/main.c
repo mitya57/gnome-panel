@@ -25,22 +25,22 @@
 #include "clock.h"
 #include "printer.h"
 
-static void
+static GtkWidget *
 make_new_applet(const gchar *goad_id)
 {
 	if(strstr(goad_id,"gen_util_mailcheck"))
-		make_mailcheck_applet(goad_id);
+		return make_mailcheck_applet(goad_id);
 	else if(strstr(goad_id,"gen_util_printer"))
-		make_printer_applet(goad_id);
+		return make_printer_applet(goad_id);
 	else if(strstr(goad_id,"gen_util_clock"))
-		make_clock_applet(goad_id);
+		return make_clock_applet(goad_id);
 }
 
 /*when we get a command to start a new widget*/
-static void
-applet_start_new_applet(const gchar *goad_id, gpointer data)
+static GtkWidget *
+applet_start_new_applet(const gchar *goad_id, const char **params, int nparams)
 {
-	make_new_applet(goad_id);
+  return make_new_applet(goad_id);
 }
 
 int
@@ -67,8 +67,8 @@ main(int argc, char **argv)
 	list = g_list_append(list,"gen_util_printer");
 
 	applet_widget_init("gen_util_applet", VERSION, argc, argv,
-			   NULL, 0, NULL, TRUE, list,
-			   applet_start_new_applet, NULL);
+			   NULL, 0, NULL);
+	applet_factory_new("gen_util_applet", applet_start_new_applet);
 	g_list_free(list);
 
 	goad_id = goad_server_activation_id();
