@@ -1,0 +1,265 @@
+ 
+
+<sect1 id="clock"> 
+
+<title>Erlojuaren applet-a</title>  
+
+   <para> 
+      <application>Erlojua</application>ren applet-a (<xref  
+      linkend="clockapplet-fig">) ordua (eta nahi izanez gero baita data ere)
+      hainbat formatutan erakusten duen applet soila da. Applet hau
+      <interface>Panel</interface> bati gehitzeko, egin klik eskuineko botoiaz
+      <interface>Panel</interface>ean eta aukeratu <menuchoice> 
+<guimenu>Panela</guimenu> 
+<guisubmenu>Gehitu panelari</guisubmenu> 
+<guisubmenu>Applet-a</guisubmenu> 
+<guisubmenu>Erlojuak</guisubmenu> 
+<guimenuitem>Erlojua</guimenuitem> </menuchoice>. 
+   </para> 
+  <figure id="clockapplet-fig"> 
+
+<title>Erlojuaren applet-a</title> 
+<screenshot> 
+     <screeninfo>Erlojuaren applet-a</screeninfo> <graphic format="png"
+      fileref="figures/clock_applet"     srccredit="muet"> </graphic>
+      </screenshot> </figure>  
+
+<!-- ============= Usage  ================================ --> 
+<sect2 id="clock-usage"> 
+
+<title>Erabilera</title> 
+
+   <para> 
+      <application>Erlojua</application>ren applet-ak ez du erabiltzailearen
+      sarrerarik behar. Nahi baduzu, konfigura dezakezu, behean azaltzen den
+      bezala.  
+   </para> 
+  
+
+   <para> 
+      Applet-ean eskuineko botoiaz klik eginez gero, elementu hauek dituen menua
+      agertuko zaizu: 
+
+<itemizedlist>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Propietateak&hellip;</guimenuitem> &mdash; <link
+      linkend="clock-prefs"> <guilabel>Propietateak</guilabel></link>
+      elkarrizketa-koadroa irekitzen du. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+<guimenuitem>Laguntza</guimenuitem> &mdash; dokumentu hau bistaratzen du. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Honi buruz&hellip;</guimenuitem> &mdash;
+      <application>Erlojuaren applet</application>-ari buruzko oinarrizko
+      informazioa erakusten du, esaterako, applet-aren bertsioa eta egilearen
+      izena. 
+   </para> 
+ </listitem>  </itemizedlist> 
+   </para> 
+ </sect2>   
+
+<!-- ============= Customization ============================= --> 
+<sect2 id="clock-prefs"> 
+
+<title>Pertsonalizazioa</title> 
+
+   <para> 
+      <application>Erlojua</application>ren applet-a pertsonaliza dezakezu
+      bertan eskuineko botoiaz klik eginez eta 
+     <guimenuitem>Propietateak&hellip;</guimenuitem> aukeratuz.
+      <interface>Propietateen</interface> elkarrizketa-koadroa (<xref     
+      linkend="clock-settings-fig">) irekiko da, eta hainbat ezarpen aldatu ahal
+      izango duzu. 
+   </para> 
+  <figure id="clock-settings-fig"> 
+
+<title>Propietateen elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Propietateen elkarrizketa-koadroa</screeninfo> <graphic
+      format="png" fileref="figures/clock_settings"      srccredit="muet">
+      </graphic> </screenshot> </figure>
+
+   <para> 
+ Hauek dira propietateak: 
+
+<itemizedlist>  
+
+<listitem> 
+
+   <para> 
+      Ordu-formatua &mdash; Hautatu <guilabel>12 orduko</guilabel> formatua
+      <quote>AM/PM</quote> formatudun orduarentzat, edo <guilabel>24
+      ordukoa</guilabel> 24 orduko erlojuarentzat. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Erakutsi data applet-ean &mdash; Hautatu hau applet-aren barruan data
+      ikusi nahi baduzu. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Erakutsi data argibidean &mdash; Hautatu hau sagua applet-aren gainera
+      eramaten denean agertzen den argibidean data erakusteko. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Erabili GMT &mdash; Hautatu hau ordu lokalaren ordez Greenwich
+      meridianokoa erakusteko. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Unix ordua &mdash; Hautatu hau 1970eko urtarrilaren 1etik igarotako
+      denbora, segundotan, erakusteko. 
+   </para> 
+ </listitem>  </itemizedlist> 
+   </para> 
+  
+
+   <para> 
+       Nahi dituzun aldaketa guztiak egin ondoren, egin klik
+      <guibutton>Ados</guibutton> botoian aldaketak aplikatu eta
+      <interface>Propietateen</interface> elkarrizketa-koadroa ixteko. Aldaketak
+      bertan behera utzi eta aurreko balioetara itzultzeko, egin klik
+      <guibutton>Itxi</guibutton> botoian. 
+   </para> 
+  <note> 
+
+<title>Ordua ezarri</title> 
+
+   <para> 
+      <application>Erlojua</application>ren applet-ak ordua bistaratu besterik
+      ez du egiten; ez dizu ordua ezartzeko aukerarik ematen. Unix edo Linux
+      sistemetan ordua ezartzeko, <command>date</command> komandoa erabili behar
+      duzu. Adibidez, 11:43:01PM ordua eta apirilaren 4ko data ezartzeko,
+      erabili <command>date --set="Apr 4 23:43:01"</command>. Kontuan izan ordua
+      ezartzeko root gisa hasi behar duzula saioa. <command>date</command>
+      komandoari buruzko informazio gehiago <ulink type="man"
+      url="man:date">datari buruzko eskuliburuaren orrialdean</ulink> aurki
+      dezakezu. Zure ordu-zona <command>timeconfig</command> edo
+      <command>tzselect</command> komandoak erabiliz ezar dezakezu Linux-en
+      banaketa batzuetan. 
+   </para> 
+ </note>  </sect2>   
+
+<!-- ============= Bugs ================================== --> 
+
+     <!-- This section should describe known bugs and limitations of       the
+      program if there are any - please be frank and list all       problems you
+      know of --> 
+<sect2 id="bugs"> 
+
+<title>Ezagutzen diren akatsak eta mugak</title> 
+
+   <para> 
+ Ez da ezagutzen applet honen akatsik. 
+   </para> 
+ </sect2>   
+
+<!-- ============= Authors ================================ -->  
+<sect2 id="authors"> 
+
+<title>Egileak</title> 
+
+   <para> 
+      <application>Erlojua</application> Miguel de Icaza-k
+      (<email>miguel@kernel.org</email>), Federico Mena-k
+      (<email>quartic@gimp.org</email>), eta Stuart Parmenter-ek
+      (<email>pavlov@innerx.net</email>) idatzi dute. Bidali zure iruzkin,
+      iradokizun eta akatsen berri-emateak <ulink url="http://bugs.gnome.org/"
+      type="http">GNOMEren akatsen segimendurako datu-basera</ulink>. (Akatsei
+      buruzko berriak bidaltzeko argibideak <ulink    
+      url="http://bugs.gnome.org/Reporting.html" type="http">linean</ulink>
+      aurkituko dituzu.) GNOMEren 1.1 bertsioa edo berriagoa erabiltzen ari
+      bazara, <application>Akatsen berri emateko tresna</application>
+      (<command>bug-buddy</command>) ere erabil dezakezu akatsen berri emateko.
+      Tresna hori 
+<guimenu>Menu nagusi</guimenu>ko 
+<guisubmenu>Utilitateak</guisubmenu> azpimenuan duzu eskuragarri. 
+   </para> 
+  
+
+   <para> 
+      Eskuliburu hau Dan Mueth-ek idatzi du
+      (<email>d-mueth@uchicago.edu</email>). Eskuliburuari dagozkion iruzkinak
+      eta iradokizunak <ulink type="http"    
+      url="http://developer.gnome.org/projects/gdp/">GNOMEren
+      dokumentazio-proiektura</ulink> bidal ditzakezu:
+      <email>docs@gnome.org</email>. Iruzkinak linean ere egin ditzakezu <ulink
+      type="http"   
+      url="http://developer.gnome.org/projects/gdp/doctable/">GNOMEren
+      dokumentazio-egoeraren taula</ulink> erabiliz. 
+   </para> 
+  
+
+   
+   <para> 
+      Euskarazko itzulpena Hizkuntza Politikarako Sailburuordetzak egin du
+      (<email>hizkpol@ej-gv.es</email>). Itzulpenari buruzko oharrak eta
+      iradokizunak helbide honetara bidal ditzakezu:
+      <email>hizkpol@ej-gv.es</email> 
+   </para> 
+    </sect2>   
+
+<!-- ============= Application License ============================= -->  
+<sect2 id="license"> 
+
+<title>Lizentzia</title> 
+
+   <para> 
+      Programa hau software librea da; birbana eta/edo alda dezakezu, 
+      Free Software Foundation-ek argitaratutako <ulink
+      type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>ren 2. bertsioan, edo (nahiago baduzu) bertsio
+      berriago batean, jasotako baldintzak betez gero. 
+   </para> 
+ 
+
+   <para> 
+      Programa hau erabilgarria izango delakoan banatzen da, baina inolako 
+      bermerik gabe; era berean, ez da bermatzen beraren EGOKITASUNA 
+      MERKATURATZEKO edo HELBURU PARTIKULARRETARAKO ERABILTZEKO. 
+      Argibide gehiago nahi izanez gero, ikus <ulink
+      type="help" url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>. 
+   </para> 
+ 
+
+   <para> 
+      <ulink type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia
+      Publiko Orokorra</citetitle></ulink>ren kopia bat GNOMEren
+      dokumentazioarekin batera ematen da. GNU Lizentzia Publiko 
+      Orokorraren kopia Free Software Foundation-en bidez ere lor dezakezu 
+      <ulink type="http" url="http://www.fsf.org"> haren web gunea</ulink> 
+      bisitatuz edo hona idatziz: 
+     <address> Free Software Foundation, Inc. <street>59 Temple Place</street> -
+      Suite 330 <city>Boston</city>, <state>MA</state>
+      <postcode>02111-1307</postcode> <country>USA</country> </address> 
+   </para> 
+ </sect2>  </sect1>

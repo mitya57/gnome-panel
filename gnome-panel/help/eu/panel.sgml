@@ -1,0 +1,2534 @@
+
+     <!DOCTYPE article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[]> 
+      <article id="index">  <artheader>  
+
+     <title>GNOMEren panelaren eskuliburua</title> <copyright> <year>2000</year>
+      <holder>Red Hat, Inc.</holder> <holder>Dan Mueth</holder>
+      <holder>Alexander Kirillov</holder> </copyright>  <legalnotice
+      id="legalnotice">  
+
+   <para> 
+     Baimena ematen da dokumentu hau kopiatu, banatu eta/edo aldatzeko 
+     Free Software Foundation-ek argitaratutako 
+     <ulink type="help"         url="gnome-help:fdl"><citetitle>GNU 
+     Dokumentazio Librearen Lizentzia</citetitle></ulink>ren 1.1 bertsioan 
+     edo berriago batean ezarritako baldintzak betetzen badira; 
+     Atal Aldaezinik, Aurreko azaleko testurik eta Atzeko azaleko testurik gabe. 
+     Lizentziaren kopia <ulink
+      type="help"      url="gnome-help:fdl">hemen</ulink> aurkituko duzu.
+  
+
+   <para> 
+      Enpresek euren produktu eta zerbitzuak bereizteko erabiltzen dituzten izen 
+      asko marka erregistratu moduan hartu behar dira. Izen horiek GNOMEren 
+      edozein agiritan agertzen direnean, GNOMEren dokumentazio-proiektuko kideak 
+      marka erregistratuak direla konturatu badira, izen horiek osorik maiuskulaz 
+      edo hasierako letra maiuskulaz idatzi dituzte. 
+   </para> 
+       </legalnotice>    <releaseinfo> GNOMEren panelaren eskuliburuaren 1.0
+      bertsioa da hau. </releaseinfo> </artheader> 
+
+<sect1 id="introduction"> 
+
+<title>Sarrera</title> 
+
+   <para> 
+      <indexterm id="idx-a2"> <primary>Panela</primary> </indexterm> GNOMEren
+      <interface>Panela</interface> GNOMEren erabiltzailearen interfazearen
+      bihotza da, eta bertan biltzen dira <link    linkend="mainmenu">Menu
+      Nagusia</link>, erabiltzailearen <link    linkend="menus">menuak</link>,
+      aplikazioen <link    linkend="launchers">abiarazleak</link>, <link   
+      linkend="applets">applet-ak</link> (erabat panelaren barruan exekutatzen
+      diren aplikazioak), <link linkend="drawers">tiraderak</link>, eta hainbat
+      <link linkend="specialobjects">objektu berezi</link>.
+      <interface>Panela</interface> konfigurazio-aukera ugari eskaintzeko moduan
+      diseinatu da. Oso erraza izango zaizu panelaren <link   
+      linkend="panelproperties">portaera eta itxura aldatzea</link> eta <link
+      linkend="appletadd">objektuak gehitu edo kentzea</link> zure gustu eta
+      ohituretara egokitzeko. <link linkend="paneladd">Panel bat baino
+      gehiago</link> ere izan ditzakezu, bakoitza bere itxura, propietate eta
+      edukiekin. Malgutasun horri esker erraz sor dezakezu mahaigain-ingurune
+      pertsonalizatu, eroso eta eraginkorra. 
+   </para> 
+ 
+
+   <para> 
+      Eskuliburu honek GNOMEren <interface>Panela</interface>ren 1.2 bertsioa
+      azaltzen du. 
+   </para> 
+ </sect1>   
+
+<!-- ########### Panel Basics  ############## -->  
+
+<sect1 id="panelbasics">  
+
+<title>Panelaren oinarrizko ezaugarriak</title> 
+
+   <para> 
+      GNOMEren <interface>panela</interface> erabiltzea oso erraza da eta
+      berehala ikasiko du lehendik mahaigain-ingurune grafikoa erabili duen
+      edonork. Atal honek panela erabiltzen hasteko oinarrizko sarrera emango
+      dizu, eta ondorengo ataletan Paneleko objektuak eta eginbideak azalduko
+      dira. 
+   </para> 
+  
+<sect2 id="intropanel"> 
+
+<title>Paneleko objektuen sarrera</title> 
+
+   <para> 
+      <interface>Panela</interface>k hainbat motatako objektuak izan ditzake.
+      Adibide gisa <xref     linkend="examplepanelfig">n agertzen den
+      <interface>Panela</interface>k mota guztietako objektuak ditu. 
+   </para> 
+ <figure id="examplepanelfig"> 
+
+<title>Adibide-panela</title> 
+<screenshot> 
+     <screeninfo>Adibide-panela</screeninfo> <graphic
+      fileref="./figures/example_panel" format="png"       srccredit="muet">
+      </graphic> </screenshot> </figure>  
+
+   <para> 
+      Adibide gisa ematen den <interface>Panel</interface>ak objektu hauek ditu:
+      
+
+<itemizedlist> 
+
+<listitem> <formalpara> 
+
+<title>Menuak</title> 
+
+   <para> 
+      Menuak elementu-zerrendak dira; elementu bakoitzak aplikazio bat
+      abiarazten du, komando bat exekutatzen du, edo azpimenua da. <xref        
+      linkend="examplepanelfig">n ikusten den <interface>panel</interface>ean,
+      geziaren ondoan ezker-ezkerrean dagoen ikonoa estilizatutako oinatz baten
+      ikonoa da (GNOMEren logotipoa). Horixe da 
+     <guimenu>Menu nagusia</guimenu>, <interface>Panel</interface>eko objekturik
+      garrantzitsuenetakoa. Menu horrek GNOMEn erabilgarri dituzun aplikazio,
+      komando, eta konfigurazio-aukera ia guztietarako sarbidea ematen dizu. 
+     <guimenu>Menu nagusia</guimenu> xehetasun handiz azaltzen da <xref        
+      linkend="mainmenu"> atalean. Ikusten den bigarren ikonoa karpeta bat da,
+      erabiltzaile-menuen ikono lehenetsia. GNOMEk aukera ematen die
+      erabiltzaileei 
+     <guimenu>Menu nagusia</guimenu>z gain beste menu batzuk sortzeko eduki
+      pertsonalizatuekin. Menu bat irekitzeko, egin klik ikonoan saguaren
+      ezkerreko botoiaz. Menuei buruzko informazio gehiago nahi baduzu, ikus
+      <xref linkend="menus">. 
+   </para> 
+ </formalpara> </listitem> 
+
+<listitem> <formalpara> 
+
+<title>Abiarazleak</title> 
+
+   <para> 
+      Abiarazleak botoiak dira, eta sakatzen dituzunean (ezkerreko botoiaz klik
+      eginez) aplikazio bat abiarazten dute edo bestela, komando bat exekutatzen
+      dute. Adibide gisa emandako <interface>Panel</interface>eko hirugarren
+      ikonoa abiarazle bat da, eta <application>Gnumeric</application>
+      kalkulu-orria abiarazten du. Abiarazleei buruzko informazio gehiago nahi
+      baduzu, ikus <xref linkend="launchers">. 
+   </para> 
+ </formalpara> </listitem> 
+
+<listitem> <formalpara> 
+
+<title>Applet-ak</title> 
+
+   <para> 
+      Applet-ak <interface>Panela</interface>ren zati txiki baten barruan
+      exekutatzen diren aplikazioak dira. Adibide gisa agertzen den
+      <interface>Panel</interface>eko laugarren ikonotik zortzigarrenera
+      bitartekoak applet-ak dira. Lehen applet-a <application>GNOMEren
+      eguraldia</application>rena da. Applet honek eguraldiaren datuak
+      periodikoki hartzen ditu saretik eta panelean bistaratzen ditu. Bigarrena
+      <application>Unitate-muntatzailea</application>ren applet-a da; disko bat
+      (kasu honetan disketea) muntatuta dagoen edo ez adierazten du eta
+      saguarekin klik bakarra eginez unitatea muntatzeko edo desmuntatzeko
+      aukera ematen du. Hirugarren applet-a <application>Abiarazte
+      bizkorra</application>rena da. Abiarazleen edukitzaile gisa jokatzen du,
+      baina leku gutxiago behar du abiarazleak zuzenean
+      <interface>Panel</interface>ean jarrita baino. Adibidean agertzen den
+      <application>Abiarazte bizkorra</application>ren applet-ak sei
+      aplikazio-abiarazle ditu. Hurrengoa GNOMEren <application>Mahai
+      Gida</application> da; mahaigain birtual anitz kontrolatzeko eta mahaigain
+      bakoitzean pantaila anitz edukitzeko aukera ematen dizu. Mahaigain eta
+      pantaila batetik bestera joan zaitezke saguaren ezkerreko botoiaz klik
+      eginez. Erakusten den azken applet-a
+      <application>Ataza-zerrenda</application> da. Aplikazio-leihoak era
+      desberdinetan kontrolatzeko aukera ematen du, besteak beste, fokua aldatu,
+      leihoak ikonotu, eta leihoak eta aplikazioak itxi ditzakezu applet horren
+      bidez. Adibidean ikusten den <application>Ataza-zerrenda</application>n bi
+      leiho bakarrik dituen pantaila bat azaltzen da, eta bi leiho horiek
+      Electric Eyes dira. Applet-ei buruzko informazio gehiago nahi baduzu, ikus
+      <xref linkend="applets">. 
+   </para> 
+ </formalpara> </listitem> 
+
+<listitem> <formalpara> 
+
+<title>Tiraderak</title> 
+
+   <para> 
+      Tiraderak funtsean <interface>Panela</interface>ren hedapenak dira, eta
+      ireki eta itxi egin ditzakezu. <interface>Panel</interface>ean sar
+      daitekeen edozer sar daiteke tiraderetan. Adibide gisa emandako
+      <interface>Panel</interface>ean agertzen den tiradera-ikono marroia da
+      tiraderen ikono lehenetsia, baina beste edozein ere erabil daiteke.
+      <guiicon>Tiradera</guiicon> irekitzeko edo ixteko, egin klik tiraderaren
+      ikonoan saguaren ezkerreko botoiaz. Tiraderei buruzko informazio gehiago
+      nahi baduzu, ikus <xref        linkend="drawers">. 
+   </para> 
+ </formalpara> </listitem> 
+
+<listitem> <formalpara> 
+
+<title>Objektu bereziak</title> 
+
+   <para> 
+      Normalean <interface>Panel</interface>eko objektuen bidez egin ezin diren
+      funtzioak egin ahal izateko <interface>Panel</interface>ean gehitzen diren
+      elementuak dira objektu bereziak. Adibide gisa agertzen den
+      <interface>Panel</interface>eko azken elementua <guibutton>Saioa amaitzeko
+      botoia</guibutton> deitzen zaion objektu berezia da. Botoi hori saguaren
+      ezkerreko botoiaz sakatzen baduzu, GNOMEren saiotik irteteko sekuentzia
+      hasiko da. Objektu bereziei buruzko informazio gehiago nahi baduzu, ikus
+      <xref linkend="specialobjects">. 
+   </para> 
+ </formalpara> </listitem> </itemizedlist> 
+   </para> 
+ 
+
+   <para> 
+      Objektu-mota horietako bakoitza xehetasun handiz azaltzen da hurrengo
+      ataletan. Paneleko objektuak oso erraz gehitu, lekuz aldatu eta ken
+      ditzakezu (ikus <xref linkend="appletadd">). 
+   </para> 
+ </sect2>   
+<sect2 id="rightclick"> 
+
+<title>Eskuineko botoiko laster-menua</title> 
+
+   <para> 
+      Paneleko edozein objektutan eskuineko botoiaz klik egiten baduzu, Paneleko
+      objektuaren 
+     <guimenu>eskuineko botoiko</guimenu> laster-menua irekiko zaizu. Menuak
+      elementu hauek ditu: 
+     <guimenuitem>Kendu paneletik</guimenuitem> objektuak
+      <interface>panel</interface>etik kentzeko, 
+     <guimenuitem>Lekuz aldatu</guimenuitem> objetuak
+      <interface>Panela</interface>ren barruan lekuz aldatzeko edo
+      <interface>Panel</interface> batetik bestera eramateko, behean azaltzen
+      den 
+     <guisubmenu>Panela</guisubmenu> azpimenua, eta objektuari dagokion
+      elementuren bat edo beste.  Tiradera, menu eta abiarazleetan, objektuari
+      dagokion elementu berezi bakarra 
+     <guimenuitem>Propietateak...</guimenuitem> da, eta objektuaren propietateak
+      eta ezarpenak pertsonalizatzeko aukera ematen du. Applet-etan, 
+<guimenu>eskuineko botoiaren</guimenu> menuak normalean 
+     <guimenuitem>Honi buruz...</guimenuitem> elementua izango du applet-ari
+      buruzko informazioa emateko (besteak beste, egilearen izena eta
+      applet-aren bertsioa), 
+     <guimenuitem>Laguntza</guimenuitem> applet-aren dokumentazioa ikusteko, eta
+      
+     <guimenuitem>Propietateak...</guimenuitem> applet-aren hobespenak eta
+      ezarpenak konfiguratzeko. Applet-ek askotan beste applet baten kontrol
+      bereziak izaten dituzte 
+<guimenu>eskuineko botoiaren</guimenu> laster-menuan. 
+   </para> 
+ 
+
+   <para> 
+ 
+     <guisubmenu>Panela</guisubmenu> azpimenua <link    
+      linkend="panelmove"><interface>Panelak</interface> sortu eta kentzeko
+      </link> eta <link     linkend="appletadd"><interface>Panel</interface>ean
+      objektuak gehitzeko</link> erabiltzen da. Gainera,
+      <interface>Panel</interface> jakin baten propietateak aldatzeko aukera
+      ematen du 
+     <guimenuitem>Propietateak</guimenuitem> menu-elementuaren bidez (ikus <xref
+      linkend="panelproperties">), eta baita <interface>Panel</interface>
+      guztien propietateak aldatzekoa ere, 
+     <guimenuitem>Hobespen orokorrak...</guimenuitem> menu-elementuaren bidez
+      (ikus <xref     linkend="globalpanelprefs">). 
+   </para> 
+ 
+
+   <para> 
+      <interface>Panel</interface>ean bertan ere eskuineko botoiaz klik egin
+      dezakezu. <link     linkend="mainmenu">
+     <guimenu>Menu nagusia</guimenu></link> irekiko da. Menu horrek goian
+      azaldutako 
+<guisubmenu>Panela</guisubmenu> azpimenua ere badu. 
+   </para> 
+ </sect2>  
+<sect2 id="panelhide"> 
+
+<title>Panela ezkutatu</title> 
+
+   <para> 
+      <indexterm id="idx-a4"> <primary>Panela</primary> <secondary>ezkutatzeko
+      botoiak</secondary> </indexterm> <indexterm id="idx-a5">
+      <primary>Panela</primary> <secondary>ezkutatu</secondary> </indexterm>
+      Adibide gisa emandako <interface>Panela</interface>ren bi muturretan eta
+      <xref linkend="fig2">n azaltzen diren eskuinerako eta ezkerrerako gezien
+      ikonoak <interface>Panela</interface> ezkutatzeko erabiltzen dira. <figure
+      id="fig2"> 
+
+<title>Ezkutatzeko botoia</title> 
+<screenshot> 
+     <screeninfo>Ezkutatzeko botoia</screeninfo> <graphic
+      fileref="./figures/hide-button" format="png"        srccredit="dcm">
+      </graphic> </screenshot> </figure> 
+   </para> 
+ 
+
+   <para> 
+      Gezi horietako bat sakatuz gero, <interface>Panela</interface> ezkutatu
+      egingo da sakatutako geziaren aldera lerratuz, eta
+      <interface>Panela</interface> <guibutton>ezkutatzeko botoia</guibutton>
+      bakarrik geratuko da bistan. Bigarren aldiz sakatzen baduzu,
+      <interface>Panela</interface> zabaldu egingo da. 
+   </para> 
+ 
+
+   <para> 
+      <interface>Panelak</interface> konfigura daitezke erabiltzen ari ez
+      zarenean automatikoki ezkuta daitezen eta sagua
+      <interface>Panela</interface> egongo litzatekeen lekura eramaten duzunean
+      berriz ager daitezen. Oso erabilgarria izan daiteke sistema bereizmen
+      handiz erabili ezin duzunerako. <interface>Panela</interface> automatikoki
+      nola ezkutatu jakiteko, ikus <xref     linkend="panelproperties">. 
+   </para> 
+ </sect2>  
+<sect2 id="loggingout"> 
+
+<title>Saioa amaitu</title> 
+
+   <para> 
+      GNOMEko saioa amaitzeko, egin klik <interface>Panel</interface>ean eta
+      hautatu 
+     <guimenuitem>Amaitu saioa</guimenuitem>. <interface>Saioa
+      amaitzeko</interface> elkarrizketa-koadroa irekiko da, <xref    
+      linkend="logoutdialog-fig">n ikusten dena. 
+   </para> 
+ <figure id="logoutdialog-fig"> 
+
+<title>Saioa amaitzeko elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Saioa amaitu</screeninfo> <graphic
+      fileref="./figures/logout-screen" format="png"      srccredit="dcm">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      Uneko konfigurazioa gorde nahi baduzu, hautatu <guilabel>Gorde uneko
+      konfigurazioa</guilabel> kontrol-laukia. Irekita dauzkazun GNOME aplikazio
+      guztiak eta <application>Kontrol-zentroan</application> egindako
+      konfigurazio-aldaketak gordeko ditu. 
+   </para> 
+ 
+
+   <para> 
+      Saioa amaitzeko modu lehenetsia <guilabel>Amaitu saioa</guilabel> aukera
+      da: GNOME saioa amaituko duzu baina ordenagailua ez da itzaliko.
+      Sistema-konfigurazioaren arabera, beharbada <guilabel>Itzali</guilabel>
+      eta <guilabel>Berrabiarazi</guilabel> aukerak ere izango dituzu,
+      ordenagailua itzaltzeko lehena, eta ordenagailua berrabiarazteko
+      bigarrena. 
+   </para> 
+ <note>   
+
+<title>Erabiltzaile aurreratuentzako oharra</title>   
+
+   <para> 
+     <guilabel>Itzali</guilabel> eta <guilabel>Berrabiarazi</guilabel> aukerak
+      ager daitezen ezinbestekoa da <command>/usr/bin/shutdown</command>
+      komandoa exekutatzeko baimena izatea.  
+   </para> 
+ </note> 
+
+   <para> 
+      Ez baduzu saioa amaitu nahi, sakatu <guibutton>Ez</guibutton> botoia eta
+      berriro ere GNOME saiora itzuliko zara. Bestela, sakatu
+      <guibutton>Bai</guibutton> botoia saioa amaitzeko. 
+   </para> 
+ <note> 
+
+<title>Saio-amaiera eta Leiho-kudeatzaileak</title> 
+
+   <para> 
+      GNOMErekin bateragarria den leiho-kudeatzailea erabiltzen baduzu, GNOME
+      ixteaz gain leiho-kudeatzailea ere itxi egingo du saioa amaitzeko
+      eginbideak. Bateragarria ez den leiho-kudeatzailea erabiltzen baduzu,
+      aldiz, zerorrek itxi beharko duzu leiho-kudeatzailea. 
+   </para> 
+ </note> 
+
+   <para> 
+      <interface>Saioa amaitzeko</interface> elkarrizketa-koadroa desgaitu
+      dezakezu, 
+     <guimenuitem>Amaitu saioa</guimenuitem> menu-elementuak GNOME saioa
+      zuzenean amai dezan ezer galdetu gabe. Horretarako, abiarazi GNOMEren
+      <application>Kontrol-zentroa</application> <menuchoice> 
+<guimenu>Menu nagusian</guimenu> 
+<guisubmenu>Ezarpenak</guisubmenu> hautatuz, eta han, 
+     <guisubmenu>Abioko programak</guisubmenu>  menu-elementuan desautatu
+      <guilabel>Galdetu saioa amaitzean</guilabel> botoia. 
+
+     <!-- Commented out     - as suggested by Drake Zure saioan zehar egindako
+      aldaketak automatikoki gordetzea nahi baduzu, <guilabel>Gorde saioko
+      aldaketak automatikoki</guilabel> botoia erabil dezakezu. --> 
+   </para> 
+ </sect2> 
+<sect2 id="lockscreen"> 
+
+<title>Pantaila blokeatu</title> 
+
+   <para> 
+      Beharbada batzuetan GNOME lanean ari dela utzi nahiko duzu ordenagailua,
+      baina ez duzu nahiko beste norbaitek zure GNOME saioa erabiltzea edo
+      ikustea. GNOMEk horretarako aukera ematen dizu pantaila blokeatuz, eta
+      gero desblokeatzeko pasahitza eskatuz. GNOMEren saioa blokeatzeko, egin
+      klik eskuineko botoiaz <interface>Panel</interface>ean eta hautatu 
+     <guimenuitem>Blokeatu pantaila</guimenuitem>. Bestela,
+      <guibutton>Blokeatzeko botoia</guibutton> baldin badaukazu (ikus <xref    
+      linkend="lockbutton">) <interface>Panel</interface>ean, botoi horretan
+      bertan ere klik egin dezakezu pantaila blokeatzeko. Pantaila
+      desblokeatzeko, idatzi saio-hasierako pasahitza. 
+   </para> 
+ <note> 
+
+<title>Pantaila-babesleak eta Blokeatzeko botoia</title> 
+
+   <para> 
+      <guibutton>Blokeatu pantaila</guibutton> botoiak
+      <application>xscreensaver</application> programaren eginbide bat
+      erabiltzen du. <application>Kontrol-zentroa</application>k
+      pantaila-babeslea ezartzeko erabiltzen duen programa bera da hori.
+      <guibutton>Blokeatu pantaila</guibutton> botoia ondo ibil dadin,
+      pantaila-babesleren bat gaituta izan behar duzu
+      <application>Kontrol-zentroan</application>. 
+   </para> 
+ </note> </sect2> </sect1>    
+
+<!-- ########### Main Menu ############## -->  
+
+<sect1 id="mainmenu"> 
+
+<title>Menu nagusia</title> 
+
+   <para> 
+      <indexterm id="idx-a3"> <primary>Menu nagusia</primary> </indexterm>
+      Adibide gisa emandako <interface>Panel</interface>aren ezkerraldean (ikus
+      <xref    linkend="examplepanelfig">) eta <xref   
+      linkend="main-menu-button-fig">n dagoen oinatz-ikonoa da <guibutton>Menu
+      nagusia</guibutton> (bai, zuzen zaude, gnome-ren oinatza da). Menu horren
+      bitartez eskuratu ahal izango dituzu GNOMEren eginbide gehienak &mdash;
+      aplikazioak, konfigurazio-tresnak, komando-gonbita, 
+<guimenuitem>Amaitu saioa</guimenuitem> eta 
+     <guimenuitem>Blokeatu pantaila</guimenuitem> komandoak, eta abar luze bat.
+      Elementu horietako bat atzitzeko, egin klik <guibutton>Menu
+      nagusia</guibutton> botoian. <guibutton>Menu nagusia</guibutton>ren botoia
+      sakatu ondoren sagua askatu behar duzu, 
+     <guimenu>Menu nagusia</guimenu>n saguaren bitartez aktibatzen diren beste
+      eginbide batzuk erabili ahal izateko. Adibidez, eskuineko botoiaren bidez
+      irekitzen diren laster-menuak, menutik mahaigainera edo
+      <interface>Panel</interface>era arrastatu eta jaregitea, eta abar. 
+   </para> 
+ <figure id="main-menu-button-fig"> 
+
+<title>Menu nagusiaren botoia</title> 
+<screenshot> 
+     <screeninfo>Menu nagusiaren botoia</screeninfo> <graphic
+      fileref="./figures/mm-button" format="png"       srccredit="dcm">
+      </graphic> </screenshot> </figure>
+
+   <para> 
+      <guibutton>Menu nagusia</guibutton>ren hainbat botoi izan ditzakezu
+      <interface>Panel</interface> desberdinetan, eta guztiak banaka konfigura
+      daitezke. 
+   </para> 
+  
+<sect2 id="globalmenu"> 
+
+<title>Menu orokorra</title> 
+
+   <para> 
+ Oinatzaren ikonoan klik eginda irekitzen den 
+<guimenu>Menu-nagusia</guimenu>z gainera, 
+     <guimenu>Menu orokorra</guimenu> ere eskaintzen dizu GNOMEk. Menu nagusiko
+      komando berberak ditu baina ez dago inongo botoiri lotua. 
+     <guimenu>Menu orokorra</guimenu> irekitzeko, egin klik eskuineko botoiaz
+      <interface>Panel</interface>eko leku huts batean. 
+     <guimenu>Menu orokorra</guimenu> irekitzeko beste modu bat, <keycombo
+      action=simul> <keycap>Alt</keycap> <keycap>F1</keycap> teklak sakatzea da.
+      (
+     <guimenu>Menu orokorra</guimenu> aktibatzeko tekla lehenetsiak aldatu nahi
+      badituzu, <interface><link linkend="globalpanelprefs">Panelaren hobespen
+      orokorrak</link> elkarrizketa-koadroko </interface> <link     
+      linkend="misctab"><guilabel>Hainbat</guilabel></link> fitxan egin
+      dezakezu.) 
+   </para> 
+ 
+
+   <para> 
+ Kontuan izan 
+<guimenu>Menu orokorra</guimenu> 
+     <guimenu>Menu nagusi</guimenu>tik aparte konfiguratzen dela, <link    
+      linkend="globalpanelprefs"><interface>Panelaren hobespen
+      orokorrak</interface></link> elkarrizketa-koadroko
+      <guilabel>Menua</guilabel> fitxaren bidez. 
+   </para> 
+ </sect2>  
+<sect2 id="submenus"> 
+
+<title> Menu nagusiaren osagaiak</title> 
+
+   <para> 
+ 
+<guimenu>Menu nagusia</guimenu>ren osagai nagusia 
+     <guisubmenu>Programak</guisubmenu> azpimenua da, aurretik konfiguratutako
+      azpimenu eta menu-elementuen zerrenda biltzen dituena. GNOMEren aplikazio
+      guztiak aurkituko dituzu bertan, hasi <application>Gnumeric</application>
+      kalkulu-orritik eta <application>Gelaxka Libreen</application> jokoraino,
+      eta baita GNOMErenak ez diren beste hainbat ere,
+      <application>Netscape</application> web arakatzailea eta
+      <application>emacs</application> testu-editorea, besteak beste. Gainera,
+      
+     <guisubmenu>Programak</guisubmenu> azpimenuan ondorengo komandoak ere
+      aurkituko dituzu: 
+   </para> 
+ 
+
+<itemizedlist> 
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Fitxategi-kudeatzailea</guimenuitem> &mdash; GNOMEren
+      fitxategi-kudeatzaile grafikoa abiarazten du. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Laguntza-sistema</guimenuitem> &mdash; <application>GNOMEren
+      Laguntza-arakatzailea</application> abiarazten du. Sisteman instalatuta
+      daukazun dokumentazio gehienerako sarbidea ematen dizu
+      <application>GNOMEren Laguntza-arakatzaileak</application> &mdash;
+      GNOMEren dokumentazioaz gain (GNOMEren Erabiltzailearen gida, aplikazioen
+      eskuliburuak, &hellip;), beste mota bateko dokumentaziorako sarbidea ere
+      ematen dizu (eskuliburuko orriak, informazio-orriak, &hellip;). 
+   </para> 
+ </listitem> </itemizedlist>  
+
+   <para> 
+ 
+<guisubmenu>Programak</guisubmenu> azpimenuaz gainera, 
+     <guimenu>Menu nagusia</guimenu>k beste azpimenu batzuk eta zenbait komando
+      erabilgarri ere baditu. Konfigurazioaren arabera, beharbada ezingo dituzu
+      denak ikusi. Bestalde, batzuk azpimenu gisa agertuko dira, eta beste
+      batzuk, aldiz, 
+     <guimenu>Menu nagusia</guimenu>ren zati gisa, beste zatietatik marra
+      horizontalen bidez bananduta. Hauek dira azpimenu eta komando osagarriak:
+      
+   </para> 
+ 
+
+<itemizedlist> 
+
+<listitem> 
+
+   <para> 
+ 
+     <guisubmenu>Gogokoak</guisubmenu>. Azpimenu hori jatorriz hutsik egoten da,
+      eta zure gogokoak diren aplikazioak jar ditzakezu bertan, azkar atzitu
+      ahal izateko. Menu hori <application>Menu-editorea</application>ren bidez
+      edita dezakezu, 
+<guimenu>Menu nagusia</guimenu>n <menuchoice>
+<guisubmenu>Ezarpenak</guisubmenu> 
+     <guimenuitem>Menu-editorea</guimenuitem> </menuchoice> hautatuta. Beste
+      menu bateko edozein elementu ere gehi dezakezu (bereziki 
+<guimenu>Programak</guimenu> menukoak) 
+     <guisubmenu>Gogokoak</guisubmenu> menuan. Horretarako, egin klik elementuan
+      eskuineko botoiaz eta hautatu 
+<guimenuitem>Gehitu hau gogokoen menuan</guimenuitem>. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guisubmenu>Applet-ak</guisubmenu>. Sisteman instalatuta dauzkazun applet
+      guztiak aurkituko dituzu azpimenu honetan. Applet bat hautatzen baduzu,
+      <interface>Panel</interface>ean gehituko da. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guisubmenu>KDE menuak</guisubmenu>. Sisteman instalatuta dauzkazun K
+      Desktop Environment (KDE) menuak erakusten ditu. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+<guisubmenu>AnotherLevel menuak</guisubmenu> eta 
+     <guisubmenu>Debian menuak</guisubmenu>. Azpimenu horiek Red Hat
+      Linux-entzat eta Debian GNU/Linux-entzat lehenetsitako aplikazio-menuak
+      erakusten dituzte hurrenez hurren. Banaketa partikularren erabiltzaileei
+      bakarrik agertuko zaizkie. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Panela</guimenuitem>. Azpimenu hori erabil dezakezu
+      <interface>Panel</interface>aren propietateak aldatzeko (bai <link       
+      linkend="panelproperties"> <interface>Panel
+      indibidualenak</interface></link> eta baita <link       
+      linkend="globalpanelprefs">orokorra</link>renak ere, hau da,
+      <interface>panel</interface> guztienak), <interface>Panel</interface>ean
+      <link linkend="add">objektuak gehitzeko</link>, <link       
+      linkend="panelremoving"><interface>Panel</interface> osoa kentzeko</link>,
+      <link        linkend="paneladd"><interface>Panel</interface> berria
+      sortzeko</link>, edo <citetitle>Panelaren eskuliburua</citetitle>
+      ikusteko. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Mahaigaina</guimenuitem> &mdash; Azpimenu honek bi elementu
+      ditu: 
+     <guimenuitem>Amaitu saioa</guimenuitem>, GNOMEren saioa amaitzeko (ikus
+      <xref linkend="loggingout">), eta 
+     <guimenuitem>Blokeatu pantaila</guimenuitem> (ikus <xref       
+      linkend="lockscreen">). 
+   </para> 
+ </listitem>  <listitem id="runcommand"> 
+
+   <para> 
+ 
+     <guimenuitem>Exekutatu &hellip;</guimenuitem> &mdash; Menu honek
+      <interface>Exekutatu programa</interface> elkarrizketa-koadroa irekitzen
+      du shell-aren komandoak exekutatzeko (ikus <xref linkend="runbutton">). 
+   </para> 
+ </listitem> </itemizedlist> </sect2>  
+<sect2 id="mainmenuconfig"> 
+
+<title>Menu nagusiaren konfigurazioa</title> 
+
+   <para> 
+ 
+     <guimenu>Menu nagusia</guimenu>ren konfigurazioa aldatzeko, egin klik
+      eskuineko botoiaz <guibutton>Menu nagusia</guibutton> botoian (<xref
+      linkend="main-menu-button-fig">) eta hautatu 
+     <guimenuitem>Propietateak &hellip;</guimenuitem> laster-menuan.
+      <interface>Menu-propietateak</interface> elkarrizketa-koadroa irekiko
+      zaizu. Goian aipatutako 
+<guimenu>Menu nagusi</guimenu>ko azpimenu bakoitza (
+<guisubmenu>Programak</guisubmenu>, 
+     <guisubmenu>Gogokoak</guisubmenu>, &hellip;) nola agertzea nahi duzun
+      aukera dezakezu: 
+     <guimenu>Menu nagusia</guimenu>ren zati gisa, azpimenu gisa, edo inola ere
+      ez. 
+   </para> 
+   <figure> 
+
+<title>Menu-propietateen elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Menu-propietateen elkarrizketa-koadroa</screeninfo> <graphic
+      fileref="./figures/mainmenu_properties" format="png"      
+      srccredit="muet"> </graphic> </screenshot> </figure>  
+
+   <para> 
+ 
+     <guisubmenu>Gogokoak</guisubmenu> azpimenuaren edukia ere edita dezakezu
+      (edo, sistema-administratzailea bazara, baita 
+     <guisubmenu>Programak</guisubmenu> azpimenuarena ere) <application>GNOMEren
+      menu-editorea</application>ren bidez. Editore hori abiarazteko, egin klik
+      eskuineko botoiaz <guibutton>Menu nagusia</guibutton> botoian eta hautatu
+      
+     <guimenuitem>Editatu menuak &hellip;</guimenuitem>. Bestela,
+      <application>GNOMEren menu-editorea</application> abiaraz dezakezu 
+<guimenu>Menu nagusia</guimenu>n bertan <menuchoice> 
+<guisubmenu>Programak</guisubmenu> 
+<guisubmenu>Ezarpenak</guisubmenu> 
+<guimenuitem>Menu editorea</guimenuitem> </menuchoice> hautatuz. 
+   </para> 
+ </sect2>  
+
+     <!-- Do we need it now that we have information about Global menu?   
+      <sect2 id="kbdnav"> 
+
+<title>Teklatuaren bidez nabigatu Menu nagusian</title>  
+
+   <para> 
+ Nahiago baduzu, saguaren ordez teklatua erabil dezakezu 
+<guimenu>Menu nagusia</guimenu>n zehar nabigatzeko. 
+     <guimenu>Menu nagusia</guimenu> aktibatzeko, sakatu teklatuko
+      <keycap>Menua</keycap> tekla (PCko teklatu estandarra baduzu,
+      zuriune-barraren ezkerrean egon ohi da menu baten irudiarekin); 
+     <guimenu>Menu nagusia</guimenu> aktibatzeko tekla aldatu nahi baduzu,
+      <interface><link linkend="globalpanelprefs">Panelaren Hobespen
+      Orokorren</link> elkarrizketa-koadroko </interface> <link     
+      linkend="misctab"><guilabel>Hainbat</guilabel></link> fitxaren bidez egin
+      dezakezu. Menuan zehar ibiltzeko, erabili <keycap>Gora</keycap> eta
+      <keycap>Behera</keycap> gezi-teklak; azpimenuetara joateko,
+      <keycap>Eskuin</keycap> gezia; eta, elementuak hautatzeko, sakatu
+      <keycap>Sartu</keycap> tekla. Menutik irteteko, sakatu
+      <keycap>Ihes</keycap> tekla. 
+   </para> 
+ </sect2> --> </sect1>   
+
+<!-- ########### Menus  ############## --> 
+
+<sect1 id="menus"> 
+
+<title>Menus</title> 
+
+   <para> 
+ 
+     <guimenu>Menu nagusia</guimenu>z gainera, (ikus <xref  
+      linkend="mainmenu">), "menu normalak" ere gehi ditzakezu
+      <interface>Panel</interface>ean. Adibide gisa, menu bat erakusten da <xref
+      linkend = "example-menu-fig">n, kasu honetan 
+<guimenu>Gogokoak</guimenu> menua da eta hiru aplikazio-abiarazle eta 
+<guisubmenu>Jokoak</guisubmenu> izeneko azpimenu bat ditu. 
+     <guimenu>Menu nagusiak</guimenu> ez bezala, menu normalek zuk jartzen
+      dizkiezun abiarazleak eta azpimenuak bakarrik izaten dituzte - ez dute
+      lehenetsitako menurik, 
+     <guimenuitem>Exekutatu...</guimenuitem> komandorik eta horrelakorik izaten
+      
+<guimenu>Menu nagusia</guimenu>k bezala. 
+<guimenu>Gogokoak</guimenu> edo 
+     <guimenu>Programak</guimenu> menuetako edozein azpimenu gehi dezakezu
+      <interface>Panel</interface>ean menu bereizi gisa. Horretarako, ekarri
+      azpimenu hori 
+     <guimenu>Menu nagusi</guimenu>tik, egin klik eskuineko botoiaz azpimenuaren
+      tituluan, eta hautatu 
+<guimenuitem>Gehitu hau menu gisa panelean</guimenuitem>. 
+   </para> 
+ <figure id="example-menu-fig"> 
+
+<title>Adibide-menua</title> 
+<screenshot> 
+     <screeninfo>Adibide-menua</screeninfo> <graphic
+      fileref="./figures/example_menu" format="png"     srccredit="muet">
+      </graphic> </screenshot> </figure>  
+<sect2 id="addingmenus"> 
+
+<title>Menu bat gehitu panel bati</title> 
+
+   <para> 
+      <interface>Panel</interface> batean menuak nola gehitu jakiteko, ikus
+      <xref    linkend="add">. 
+   </para> 
+ </sect2>  
+<sect2 id="tearoff"> 
+
+<title>Menua mahaigainera atera</title> 
+
+   <para> 
+      GNOMEko menu guztiek dute mahaigainera ateratzeko eginbidea: ezkerreko
+      botoiaz "zulo-marran" klik egiten baduzu (menuaren goiko aldean,
+      tituluaren gainean dagoen marratxoz osatutako marran), menua mahaigainean
+      agertuko da leiho bereizi bihurtuta, eta hor geratuko da kurtsorea beste
+      leku batera eramaten baduzu ere. Oso baliagarria izango zaizu, oso sakon
+      habiaratutako azpimenu bateko komandoren bat askotan erabiltzen baduzu.
+      Mahaigainera ateratako menu bat mahaigainetik kentzeko, egin klik
+      leihoaren titulu-barrako <guibutton>Itxi</guibutton> botoian (botoi horren
+      itxura eta kokalekua aldatu egingo dira erabiltzen duzun
+      leiho-kudeatzailearen arabera, baina normalean eskuineko azken botoia
+      izaten da, "x" etiketa daramana). 
+   </para> 
+ </sect2>  
+<sect2 id="menusconf"> 
+
+<title>Menua konfiguratu</title> 
+
+   <para> 
+      Menuen izenak eta ikonoak erraz alda ditzakezu (erabiltzaile-menuenak
+      bakarrik, 
+     <guimenu>Menu-nagusi</guimenu>tik hartutako azpimenuenak ezin dira aldatu).
+      Horretarako, egin klik menuan, egin klik eskuineko botoiaz menuaren
+      tituluan (zerrendaren goi-goian dago, beste elementu guztien gainean), eta
+      laster-menuan hautatu 
+     <guimenuitem>Propietateak</guimenuitem>. <interface>Mahaigaineko sarreraren
+      propietateen</interface> elkarrizketa-koadroa irekiko zaizu, <link    
+      linkend="launchers"><interface>Abiarazlearen propietateen</interface>
+      elkarrizketa-koadroa</link>ren antzekoa. 
+   </para> 
+ 
+
+   <para> 
+      Menuan beste elementu bat gehitzeko, egin klik menuaren botoian, egin klik
+      eskuineko botoiaz Menuaren izenean, eta hautatu 
+     <guimenuitem>Gehitu elementu berria menu honi</guimenuitem>.
+      <interface>Sortu menu-elementu bat</interface> elkarrizketa-koadroa
+      irekiko da, eta bertan menu-elementuaren izena, iruzkina, komandoa eta
+      mota idatz ditzakezu (informazio gehiago nahi izanez gero, ikus <xref    
+      linkend="launchers">). Menutik elementu bat kentzeko, egin klik eskuineko
+      botoiaz elementuan eta aukeratu 
+<guimenuitem>Kendu elementu hau</guimenuitem>. 
+   </para> 
+ 
+
+   <para> 
+      Eta amaitzeko, maiz egiten den galdera da "Nola alda ditzaket menuetako
+      letra-tipoa eta atzeko planoa?" Erantzuna da, hori uneko GTK Gaiak
+      erabakitzen duela, eta <application>GNOMEren
+      kontrol-zentroa</application>ren bidez alda daitezkeela ezarpen horiek
+      <menuchoice> 
+<guimenu>Menu nagusian</guimenu> 
+<guisubmenu>Programak</guisubmenu> 
+<guisubmenu>Ezarpenak</guisubmenu> 
+<guisubmenu>Mahaigaina</guisubmenu> 
+<guimenuitem>Gai-hautatzailea</guimenuitem> </menuchoice> hautatuz. 
+   </para> 
+ </sect2> </sect1>   
+
+<!-- ###########  Launchers  ############## --> 
+
+<sect1 id="launchers"> 
+
+<title>Abiarazleak</title> 
+
+   <para> 
+      Abiarazleak <interface>Panel</interface>ean agertzen diren botoiak dira,
+      eta botoi horietakoren batean klik egiten duzunean, aplikazio bat
+      abiaraziko da edo komando bat exekutatuko da. Abiarazleak edozein ikono
+      erabil dezake eta pertsonalizatutako argibidea izaten du abiarazlearen
+      gainetik kurtsorea pasatzean mezu bat erakusteko. 
+   </para> 
+ 
+
+   <para> 
+      Abiarazlearen propietateak alda ditzakezu, ikonoa eta izena esaterako,
+      abiarazlean eskuineko botoiaz klik eginez eta 
+     <guimenuitem>Propietateak...</guimenuitem> hautatuz laster-menuan.
+      <interface>Abiarazlearen propietateak</interface> elkarrizketa-koadroa
+      irekiko da,<xref linkend="launcherpropsfig">n ikusten den bezala. Antzeko
+      elkarrizketa-koadroa erabiltzen da abiarazle berriak sortzeko (ikus <xref 
+       linkend="add">). Kontuan izan GNOMEk bere baitan ez dituela desberdintzen
+      menu-elementuak eta abiarazleak: gauza beraren adierazpen desberdinak
+      baino ez dira. Edozein menu-elementu jar dezakezu
+      <interface>Panel</interface>ean, eta abiarazle gisa azalduko da. Hori
+      horrela izanik, jarraian datorren informazioak berdin balio du
+      abiarazleentzat zein menu-elementuentzat. 
+   </para> 
+ <figure id="launcherpropsfig"> 
+
+     <title>Sortu abiarazlea/Abiarazlearen propietateak
+      elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Sortu abiarazlea/Abiarazlearen propietateak
+      elkarrizketa-koadroa</screeninfo> <graphic
+      fileref="./figures/launcher_properties_basic" format="png"    
+      srccredit="muet"> </graphic> </screenshot> </figure> 
+
+   <para> 
+      <interface>Abiarazlearen propietateen</interface> elkarrizketa-koadroak bi
+      fitxa ditu: <guilabel>Oinarrizkoa</guilabel> eta
+      <guilabel>Aurreratua</guilabel>. <guilabel>Oinarrizkoa</guilabel> fitxan
+      honakoak ezar ditzakezu: 
+   </para> 
+ 
+
+<itemizedlist> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Izena</guilabel> &mdash; aplikazioaren izena da, adibidez,
+      <userinput>GNOMEren terminala</userinput>. Izen hori erabiliko da gero
+      abiarazlea menu batean jartzen duzunean.  
+   </para> 
+ </listitem> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Iruzkina</guilabel> &mdash; aplikazioak egiten duenaren azalpen
+      laburra da; adibidez, <userinput>Terminala emulatzeko
+      programa</userinput>. Argibideetan erabiltzen da.  
+   </para> 
+ </listitem> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Komandoa</guilabel> &mdash; aplikazioa exekutatzen duen
+      komandoa; adibidez, <userinput>gnome-terminal</userinput>.  
+   </para> 
+ </listitem> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Mota</guilabel> &mdash; normalean
+      <guilabel>Aplikazioa</guilabel> izan beharko luke; ez aldatu, baldin eta
+      aplikazio-abiarazlea ez den beste zerbait sortu nahi ez baduzu.  
+   </para> 
+ </listitem> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Ikonoa</guilabel> &mdash; <interface>Panel</interface>ean
+      abiarazlea irudikatzen duen ikonoa da hau. Ez bada ikonorik zehazten,
+      lehenetsitakoa erabiliko da. Ikonoa aldatzeko, egin klik bertan, eta
+      ikono-arakatzailea abiaraziko da.  
+   </para> 
+ </listitem> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Exekutatu terminalean</guilabel> &mdash; honek zehazten du
+      aplikazioa terminalaren barruan exekutatu behar den edo ez. Aplikazioak
+      berak ez badu leihorik sortzen, hautatu botoi hau. Ziur ez bazaude, ez
+      hautatu.  
+   </para> 
+ </listitem> </itemizedlist>  
+
+   <para> 
+      Propietate <guilabel>aurreratuen</guilabel> fitxa behean erakusten da.
+      Erabiltzaile aurreratuentzat da berez; normalean ez duzu fitxa horretako
+      ezarpenik aldatu behar izango. 
+   </para> 
+ <figure id="launcheradvpropsfig"> 
+
+<title>Abiarazlearen propietate aurreratuen elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Abiarazlearen propietate aurreratuen
+      elkarrizketa-koadroa</screeninfo> <graphic
+      fileref="./figures/launcher_properties_advanced" format="png"    
+      srccredit="muet"> </graphic> </screenshot> </figure> 
+
+   <para> 
+ <guilabel>Aurreratua</guilabel> fitxan honakoak ezar ditzakezu: 
+   </para> 
+ 
+
+<itemizedlist> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Probatu hau erabili aurretik</guilabel> &mdash; idatzi hemen
+      komando bat, eta GNOMEk komando hori exekuta daitekeen aztertuko du.
+      Komandoa ezin bada behar bezala exekutatu, abiarazlea (edo menu-elementua)
+      ez da erakutsiko, <interface>Panel</interface> edo menu batean gehitzen
+      baduzu ere. Normalean GNOMEren banaketak prestatzen dihardutenek
+      erabiltzen dute. Adibidez, GNOMEren 
+     <guimenu>Menu nagusi</guimenu> lehenetsiak badu
+      <application>TkRat</application> posta elektronikoko programaren
+      elementua, baina elementu hori ikusteko ezinbestekoa duzu
+      <application>TkRat</application> sisteman instalatuta edukitzea.  
+   </para> 
+ </listitem> 
+
+<listitem>  
+
+   <para> 
+  <guilabel>Dokumentazioa</guilabel> &mdash; oraingoz ez da erabiltzen.  
+   </para> 
+ </listitem> 
+
+<listitem>  
+
+   <para> 
+       <guilabel>Izenaren/iruzkinaren itzulpena</guilabel> &mdash;
+      <guilabel>Izena</guilabel> eta <guilabel>Iruzkina</guilabel> beste
+      hizkuntza batean nola eman diren adieraz dezakezu hemen. Adibidez,
+      <application>GNOME Terminal</application> aplikazioaren kasuan, honela
+      itzuli dute espainolera (es): izena <userinput>Terminal  UNIX de
+      GNOME</userinput> eta iruzkina <userinput>Emulador  de terminal
+      GNOME</userinput>. Horrek esan nahi du erabiltzaile batek hizkuntza gisa
+      espainiera ezarri badu saioa hastean (<application>GNOMEren
+      pantaila-kudeatzaile</application>ko 
+     <guimenu>Hizkuntzak</guimenu> menuan hauta dezakezu saioa hastean erabili
+      nahi duzun hizkuntza), orduan, 
+     <guimenuitem>Terminal UNIX de  GNOME</guimenuitem> ikusiko du menuan eta
+      <guilabel>Emulador de terminal GNOME</guilabel> argibide gisa. Terminala
+      exekutatzen duen benetako komandoa ez da aldatzen.  
+   </para> 
+  
+
+   <para> 
+       Itzulpen berria gehitzeko, idatzi hizkuntzaren bi letrako kodea eta
+      <guilabel>Izena</guilabel> eta <guilabel>Iruzkina</guilabel> eremuen
+      itzulpenak beste itzulpenen zerrendaren azpian dauden eremu hutsetan, eta
+      ondoren, sakatu <guibutton>Gehitu/Ezarri</guibutton> botoia. Lehendik
+      dagoen itzulpena aldatzeko, hautatu zerrendan dagokion errenkada, editatu
+      aldatu nahi dituzun eremuak, eta sakatu
+      <guibutton>Gehitu/Ezarri</guibutton> botoia. Lehendik dagoen itzulpena
+      kentzeko, hautatu zerrendan eta sakatu <guibutton>Kendu</guibutton>
+      botoia.  
+   </para> 
+  
+
+   <para> 
+      GNOMEk onartzen dituen hizkuntza guztien zerrenda euren bi letrako
+      kodeekin <ulink type="http"	 
+      url="http://www.gnome.org/gnomefaq/html/x867.html">GNOME Frequently Asked
+      Questions</ulink> atalean aurkituko duzu.  
+   </para> 
+ </listitem> </itemizedlist>  
+
+   <para> 
+      <interface>Abiarazlearen propietateen</interface> elkarrizketa-koadroan
+      egindako aldaketa guztiek <guibutton>Aplikatu</guibutton> edo
+      <guibutton>Ados</guibutton> botoia sakatzean izango dute eragina.
+      <guibutton>Ados</guibutton> sakatuta elkarrizketa-koadroa itxiko da;
+      <guibutton>Aplikatu</guibutton> sakatuta, editatzen jarraitu ahal izango
+      duzu. 
+   </para> 
+ </sect1>   
+
+<!-- ###########  Applets  ############## --> 
+
+<sect1 id="applets"> 
+
+<title>Applet-ak</title> 
+
+   <para> 
+      Applet-ak <interface>Panel</interface>ean egoten diren GNOME aplikazioak
+      dira. Applet-aren itxurak normalean applet-aren egoeraren berri ematen du,
+      baina beste informazioaren bat ere adieraz dezake. Applet-ek sarritan
+      botoiak, graduatzaileak, sarrerak edo euren jokabidea kontrolatzeko beste
+      metodo batzuk izaten dituzte. 
+   </para> 
+ <figure id="example-applets-fig"> 
+
+<title>Applet-en adibideak</title> 
+<screenshot> 
+     <screeninfo>Applet-en adibideak</screeninfo> <graphic
+      fileref="./figures/panel_applets" format="png"     srccredit="muet">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      Applet-en adibide batzuk ikusten dira goian (ikus <xref  
+      linkend="example-applets-fig">). Ezker-ezkerrean dagoena
+      <application>Nahastailearen applet-a</application> da, eta soinuaren
+      bolumena aldatzeko eta mututzeko erabiltzen da. 
+     Jarraian <application>Soinu-monitorearen applet-a</application> dago, eta
+      unean erreproduzitzen ari den soinuaren bolumena erakusteaz gain,
+      soinuaren hainbat ezaugarri kontrolatzeko aukera ematen du.
+      Hirugarren applet-a <application>GTCD applet-a</application> da, kontrol
+      guztiak applet-ean erabilgarri dituen CD erreproduzigailua eta pista eta
+      denbora bistaratzen dituena. Hurrengo applet-a
+      <application>Unitate-muntatzailearen applet-a</application> da, saguaren
+      klik bakarraren bidez unitateak muntatzeko eta desmuntatzeko erabiltzen
+      dena. Horren jarraian <application>Mahai Gidaren applet-a</application>
+      dago; mahaigainak eta mahaigain horietan irekita dauzkazun aplikazioak
+      erakusten ditu. Eta azkenik, <application>Ataza-zerrendaren
+      applet-a</application> aurkituko duzu, irekita dituzun leiho edo
+      aplikazioetako bakoitzaren hainbat alderdi kontrolatzeko aukera ematen
+      duena. 
+   </para> 
+ 
+
+   <para> 
+      GNOMEk applet baliagarri asko ditu. Zein applet dituzun erabilgarri eta
+      zeintzuk diren gehien komeni zaizkizunak ikusteko, egin klik eskuineko
+      botoiaz <interface>Panel</interface>ean eta gehitu zenbait applet
+      <interface>Panel</interface>ari. Applet bakoitzean egin klik eskuineko
+      botoiaz, applet-ak egin ditzakeen eragiketak eta zenbait komando
+      zerrendatzen dituen menua ikusteko. 
+   </para> 
+ </sect1>   
+
+<!-- ###########  Drawers  ############## --> 
+
+<sect1 id="drawers"> 
+
+<title>Tiraderak</title> 
+
+   <para> 
+      Tiradera zer den ulertzeko modurik errazena gauzak gordetzeko ontzi edo
+      kutxa moduko zerbait dela pentsatzea da. Nolabait elkarrekin lotuta dauden
+      abiarazleak batera edukitzeko erabiltzen da normalean tiradera (GNOME
+      Office-ren aplikazio desberdinak, adibidez). GNOMEren
+      <interface>Panel</interface>eko tiraderak urrats bat aurrerantz egin eta
+      <interface>Panelaren</interface> beraren benetako hedapen bihurtzen du
+      tiradera. Eta ondorioz, tiradera <interface>Panela</interface>ren adar
+      tolesgarria da. <interface>Panela</interface>k izan dezakeen edozer eduki
+      dezake tiraderak ere: abiarazleak, applet-ak eta beste tiradera batzuk,
+      esate baterako. 
+   </para> 
+ <figure> 
+
+<title>Tiradera irekia</title> 
+<screenshot> 
+     <screeninfo>Tiradera irekia</screeninfo> <graphic
+      fileref="./figures/drawer_open" format="png"    srccredit="dcm">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      Tiradera <interface>Panel</interface>ean jarritakoan, bertan klik egin
+      dezakezu tiradera "ireki" eta edukia ikusi ahal izateko. Tiradera irekita
+      daukazunean, elementuak gehi ditzakezu bertan
+      <interface>Panel</interface>ean gehitzen dituzun bezalaxe: egin klik
+      eskuineko botoiaz tiraderaren goialdeko gezian eta <link  
+      linkend="globalmenu"><interface>Menu orokorra</interface></link> irekiko
+      da. Tiradera itxi nahi baduzu, egin klik berriro ikonoan edo goiko gezian.
+      
+   </para> 
+ 
+
+   <para> 
+      Tiraderaren propietateak konfiguratzeko, egin klik eskuineko botoiaz
+      tiraderaren ikonoan eta hautatu 
+     <guimenuitem>Propietateak...</guimenuitem>. <interface>Tiraderaren
+      propietateen</interface> elkarrizketa-koadroa irekiko da, eta hor,
+      tiraderarentzat erabili nahi duzun ikonoa hauta dezakezu ikonoan klik
+      eginez. Argibidea jarri nahi badiozu, idatzi
+      <guilabel>Argibidea/Izena</guilabel> sarreran. Sagua tiraderaren gainera
+      eramaten duzun bakoitzean argibidea bistaratuko da, barruan zer dagoen
+      adierazteko. Tiraderaren bukaeran tiradera ixteko dagoen
+      <guibutton>Ezkutatu</guibutton> botoia eta barneko gezia bistaratzea nahi
+      duzun ere hauta dezakezu. 
+   </para> 
+ <figure> 
+
+<title>Tiraderaren propietateen elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Tiraderaren propietateen elkarrizketa-koadroa</screeninfo>
+      <graphic fileref="./figures/drawer_properties" format="png"    
+      srccredit="dcm"> </graphic> </screenshot> </figure> 
+
+   <para> 
+      Tiraderaren atzeko planoko kolorea edo irudia ere kontrola dezakezu. Egin
+      klik eskuineko botoiaz tiraderan eta hautatu 
+     <guimenuitem>Propietateak...</guimenuitem> <interface>Tiraderaren
+      propietateen</interface> elkarrizketa-koadroa irekitzeko. Ondoren, hautatu
+      <guilabel>Atzeko planoa</guilabel> fitxa <interface>Panelaren atzeko
+      planoaren</interface> elkarrizketa-koadroa irekitzeko (ikus <xref  
+      linkend="panelbacktab">). 
+   </para> 
+ </sect1>    
+
+<!-- ###########  Special Panel Objects  ############## --> 
+
+<sect1 id="specialobjects"> 
+
+<title>Paneleko objektu bereziak</title> 
+
+   <para> 
+      Menu, applet edo abiarazletzat jotzen ez diren hainbat elementu berezi
+      izan ditzake panelak. Objektu berezi horiek azaltzen dira jarraian: 
+   </para> 
+ 
+<sect2 id="lockbutton"> 
+
+<title>Blokeatzeko botoia</title> <figure>
+
+<title>Blokeatzeko botoia</title> 
+<screenshot> 
+     <screeninfo>Blokeatzeko botoia</screeninfo> <graphic
+      fileref="./figures/panel_lockbut" format="png"     srccredit="muet">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      <guibutton>Blokeatzeko botoia</guibutton> <interface>Panel</interface>eko
+      botoi bat da, eta pantaila blokeatzen duen pantaila-babeslea abiarazten
+      du. Pantaila-babeslea kendu eta berriro ere GNOMEren saiora itzultzeko,
+      pasahitza idatzi behar duzu. Pantaila blokeatzeari buruzko informazio
+      gehiago nahi baduzu, ikus <xref    linkend="lockscreen">. 
+   </para> 
+ </sect2> 
+<sect2 id="logoutbutton"> 
+
+<title>Saioa amaitzeko botoia</title> <figure id="logoutbuttonfig"> 
+
+<title>Saioa amaitzeko botoia</title> 
+<screenshot> 
+     <screeninfo>Saioa amaitzeko botoia</screeninfo> <graphic
+      fileref="./figures/panel_logoutbut"     format="png" srccredit="muet">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      <guibutton>Saioa amaitzeko</guibutton> botoia GNOMEren mahaigaineko
+      ingurunetik irteteko erabiltzen da. Saioa amaitzeko sekuentzia hasten du,
+      eta <interface>Saio-amaieraren elkarrizketa-koadroa</interface> irekitzen
+      du, <xref    linkend="loggingout"> atalean azaltzen den bezala. 
+   </para> 
+ </sect2> 
+<sect2 id="runbutton"> 
+
+<title>Exekutatzeko botoia</title> <figure id="runbuttonfig"> 
+
+<title>Exekutatzeko botoia</title> 
+<screenshot> 
+     <screeninfo>Exekutatzeko botoia</screeninfo> <graphic
+      fileref="./figures/panel_runbutton"     format="png" srccredit="muet">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      <guibutton>Exekutatzeko</guibutton> botoiak <interface>Exekutatu
+      programa</interface> elkarrizketa-koadroa irekitzen du (<xref   
+      linkend="runprogramdialog-fig">). Komandoa idazteko gonbita egingo dizu.
+      Erabat garatutako shell-a ez denez, ez da <application>GNOMEren
+      terminala</application>ren ordezkoa, baina oso erabilgarria izaten da
+      komando bat azkar idatzi behar duzunean. Laster-teklen bidez ere ireki
+      dezakezu <interface>Exekutatu programa</interface> elkarrizketa-koadroa.
+      Laster-tekla lehenetsia <keycombo action=simul> <keycap>Alt</keycap>
+      <keycap>F2</keycap> </keycombo> da, baina nahi izanez gero alda dezakezu
+      <interface><link linkend="globalpanelprefs">Panelaren hobespen
+      orokorren</link> elkarrizketa-koadroko</interface> <link   
+      linkend="misctab"><guilabel>Hainbat</guilabel></link> fitxaren bidez. 
+   </para> 
+ <figure id="runprogramdialog-fig"> 
+
+<title>Exekutatu programa elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Exekutatu programa elkarrizketa-koadroa</screeninfo> <graphic
+      fileref="./figures/panel_runprogram"     format="png" srccredit="muet">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      Komando-sarrerak historia-buffer bat du, aurretik idatzitako komandoak
+      exekutatu ahal izateko testu-eremuaren eskuineko
+      <guiicon>behera gezia</guiicon>ren ikonoan klik egin eta komandoa
+      hautatuz. <guibutton>Arakatu&hellip;</guibutton> botoia ere badu
+      fitxategiak aukeratzen laguntzeko &mdash; fitxategi-izena komandoaren
+      bukaeran gehituko da. Adibidez, <userinput>emacs</userinput> (ahalmen
+      handiko testu-editorea) idatz dezakezu komando-lerroan, eta ondoren
+      <guibutton>Arakatu&hellip;</guibutton> botoia erabil dezakezu editatu nahi
+      duzun testua hautatzeko. 
+   </para> 
+ </sect2> 
+<sect2 id="swallowedapps"> 
+
+<title>Aplikazio barneratuak</title> 
+
+   <para> 
+      <interface>Panela</interface>ren barruko applet-ak ez diren hainbat
+      aplikazio exekuta ditzakezu applet-ak balira bezala. GNOMErenak izan gabe
+      ere <interface>Panel</interface>ean sartu eta bertan geratzen diren
+      aplikazioei "aplikazio barneratuak" deitzen zaie. Aplikazioek ez dute
+      ezinbestean GNOMEren araberakoak izan behar barneratuak izateko. Oro har,
+      aplikazioak barneratzeko ezinbesteko baldintza hauexek soilik izaten dira:
+      aplikazioak <interface>Panel</interface>ean sartzeko modukoa izan behar
+      duela eta barneratu nahi duzun leihoaren titulua jakin behar duzula. Kasu
+      askotan aplikazioa automatikoki txikitzen da
+      <interface>Panel</interface>ean sartzeko, <interface>Sortu barneratutako
+      aplikazioa</interface> elkarrizketa-koadroan adierazitako moduan.
+      Aplikazioa handiegia bada <interface>Panel</interface>ean sartzeko,
+      gehienetan <interface>Panela</interface> handitu egingo da, aplikazioa
+      sartu ahal izateko. 
+   </para> 
+ <figure id="swallappfig"> 
+
+<title>Sortu barneratutako aplikazioa elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Sortu barneratutako aplikazioa
+      elkarrizketa-koadroa</screeninfo> <graphic
+      fileref="./figures/panel_swallow" format="png"      srccredit="muet">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      <guilabel>Barneratzeko aplikazioaren titulua</guilabel> leihoaren titulua
+      da, eta normalean leihoaren goialdean ezkerrean agertzen da. (Kontuan izan
+      leihoaren tituluak maiuskulak eta minuskulak bereizten dituela).
+      <guilabel>Zabalera</guilabel> eta <guilabel>Altuera</guilabel> eremuetan
+      <interface>Panel</interface>ean barneratutako aplikazioaren tamaina
+      zehazten da, pixeletan. 
+   </para> 
+ 
+
+   <para> 
+      <guilabel>Komandoa</guilabel>ren eremua hutsik uzten baduzu,
+      elkarrizketa-koadro honek tamaina jakin bateko leiho hutsa sortuko du
+      panelean, eta bertan geratuko da zehaztutako titulua daraman leihoa
+      mahaigainean agertu zain. Horrelako leiho bat agertu bezain laster
+      (adibidez, dagokion elementua aukeratzen duzunean menuan), barneratu
+      egingo da. 
+   </para> 
+ 
+
+   <para> 
+      Gainera, <guilabel>Komandoa</guilabel>ren eremuan edozein komando sar
+      dezakezu; leihoa <interface>Panel</interface>ean barneratzen hasi baino
+      lehen exekutatuko da komando hori (eta baita gero
+      <interface>Panela</interface> berrabiarazten den bakoitzean ere).
+      <interface>Panelak</interface> barneratu behar dituen aplikazioak
+      abiarazteko erabiltzen da normalean. 
+   </para> 
+  </sect2> 
+<sect2 id="statusdock"> 
+
+<title>Egoera-taula</title> 
+
+   <para> 
+      <interface>Egoera-taula</interface> egoera-taulakiak (docklet-ak) biltzen
+      dituen <interface>panel</interface>-objektu bat da. Egoera-taulakiak
+      (docklet-ak) aplikazioek egoerari buruzko informazioa emateko
+      egoera-taulan jartzen dituzten leiho txikiak dira. Aplikazioa
+      kontrolatzeko ere erabil daitezke. Funtsean, docklet edo taulakiak applet
+      txikiak dira (tamainaz eta konplexutasunez). GNOMEk oraingoz ez du
+      <interface>egoera-taula</interface>n egoera-taulakiak edo docklet-ak
+      kokatzen dituen aplikazio asko. Dena den, GNOMEren
+      <interface>egoera-taula</interface> bateragarria da K Desktop
+      Environment-enarekin (KDE), beraz KDE aplikazioek, hala nola
+      <application>kscd</application>-ek, egoera-taulakiak jar ditzakete
+      GNOMEren <interface>egoera-taula</interface>n. GNOME aplikazioen
+      etorkizuneko bertsioek oraintsu gehitutako <interface>Panel</interface>eko
+      objektu hau erabiliko dute. 
+   </para> 
+ <figure id="statusdockfig"> 
+
+<title>Egoera-taularen adibidea taulakiarekin</title> 
+<screenshot> 
+     <screeninfo>Egoera-taularen adibidea taulakiarekin</screeninfo> <graphic
+      fileref="./figures/status_dock" format="png"      srccredit="lebl">
+      </graphic> </screenshot> </figure> 
+
+   <para> 
+      Goiko adibideak <interface>egoera-taula</interface> erakusten digu, CDak
+      erreproduzitzeko <application>kscd</application> programaren
+      egoera-taulakiarekin. Docklet edo taulaki hori
+      <application>kscd</application> programaren leihoa ireki eta ixteko
+      erabiltzen da programa itxi gabe.  
+   </para> 
+ </sect2> </sect1>   
+
+<!-- ####### Adding, Moving, and Removing Panel Objects ########## --> 
+
+<sect1 id="appletadd"> 
+
+<title>Paneleko objektuak gehitu, lekuz aldatu eta kendu</title> 
+<sect2 id="moving"> 
+
+<title>Objektuak lekuz aldatu</title> 
+
+   <para> 
+      <interface>Panel</interface>eko edozein objektu beste kokaleku batera
+      eramateko, mantendu sakatuta saguaren erdiko botoia eta arrastatu beste
+      leku batera. Edo, egin klik objektuan eskuineko botoiaz, aukeratu 
+     <guimenuitem>Lekuz aldatu</guimenuitem>, eraman sagua kokaleku berrira eta
+      sakatu saguaren edozein botoi bertan ainguratzeko.
+      <interface>Panel</interface> bereko beste leku batera eraman dezakezu, edo
+      beste <interface>Panel</interface> batera. Mugimendu hau egitean beste
+      objektu batzuekin topo egiten badu, jokabidea hobespen orokorren
+      araberakoa izango da (ikus <xref linkend="appletstab">): lekuz aldatzen
+      ari zaren objektuak beste objektu batekin truka dezake kokalekua,
+      aurkitzen dituen objektu guztiak "bultza" ditzake, edo beste objektuen
+      gainetik "jauzi" egin dezake, haiei trabarik egin gabe. Gainera,
+      lehenetsitako jokabideari jaramonik ez egiteko aukera duzu,
+      <keycap>Maius</keycap> tekla ("bultza" egiteko), <keycap>Ktrl</keycap>
+      tekla ("trukatzeko"), edo <keycap>Alt</keycap> ("libre" mugitzeko, hau da,
+      beste objektuen gainetik jauzi egiteko haiek oztopatu gabe) sakatuz
+      objektua mugitzen duzun bitartean. 
+   </para> 
+ </sect2>  
+<sect2 id="remove"> 
+
+<title>Objektuak paneletik kendu</title> 
+
+   <para> 
+      Objektu bat <interface>Panel</interface>etik kentzeko, egin klik bertan
+      eskuineko botoiaz eta aukeratu 
+<guimenuitem>Kendu paneletik</guimenuitem> laster-menuan. 
+   </para> 
+ </sect2>   
+<sect2 id="add"> 
+
+<title>Objektuak panelari gehitu</title> 
+
+   <para> 
+       Lehenespenez, GNOMEren <interface>Panela</interface>k oinarrizko objektu
+      bakan batzuk besterik ez ditu izaten, hala nola 
+     <guimenu>Menu nagusia</guimenu>. Hala ere, <interface>Panel</interface>ean
+      objektu asko gehi ditzakezu. Adibidez, 
+     <guimenu>Menu nagusi</guimenu>ko edo azpimenuetako menu-elementu guztiak
+      aplikazio-abiarazle gisa gehi daitezke <interface>Panel</interface>ean.
+      GNOMEk halaber <interface>Panel</interface>ean gehi daitezkeen applet asko
+      eta era askotakoak ditu, applet-era arrastatu eta jaregiten dituzun
+      fitxategiak inprimatzen dituen <application>Inprimagailuaren
+      applet</application>-etik hasi eta <application>Wanda
+      arraina</application>ren applet-eraino. GNOMEren applet eta aplikazio
+      gehigarri ugari dago Interneten eskuragarri. 
+   </para> 
+       <variablelist>  <varlistentry>  <term>
+      <emphasis>Applet-ak</emphasis></term>  
+
+<listitem>  
+
+   <para> 
+      <interface>Panel</interface>ean applet-ak gehitzeko, egin klik eskuineko
+      botoiaz <interface>Panel</interface>ean eta hautatu <menuchoice>
+<guisubmenu>Panela</guisubmenu>
+<guisubmenu>Gehitu panelari</guisubmenu> 
+     <guisubmenu>Applet-a</guisubmenu></menuchoice>. Sistemako applet guztien
+      menu bat azalduko zaizu, kategoriatan banatuta; menu horretako edozein
+      applet aukeratuz gero, <interface>Panel</interface>ari gehituko zaio.  
+   </para> 
+       </listitem>  </varlistentry>    <varlistentry>  <term>
+      <emphasis>Aplikazio-abiarazleak</emphasis></term>  
+
+<listitem>  
+
+   <para> 
+        Aplikazio-abiarazleak sortzeko,egin klik eskuineko botoiaz
+      <interface>Panel</interface>ean eta hautatu <menuchoice>
+<guisubmenu>Panela</guisubmenu>
+<guisubmenu>Gehitu panelari</guisubmenu>   
+     <guimenuitem>Abiarazlea</guimenuitem></menuchoice>.   Behean ikusten den
+      <interface>Sortu abiarazlea</interface> elkarrizketa-koadroa irekiko da.
+      Elkarrizketa-koadro horretan abiarazlearen izena, iruzkin bat eta
+      aplikazioa abiarazteko komando bat sartu behar dira. Elkarrizketa hau eta
+      <interface>Abiarazlearen propietateena</interface> ia berdinak dira.
+      Xehetasun gehiago nahi izanez gero, ikus <xref		linkend="launchers">.   
+   </para> 
+  <figure>   
+
+<title>Sortu abiarazlea elkarrizketa-koadroa</title>   
+<screenshot>   
+     <screeninfo>Sortu abiarazlea elkarrizketa-koadroa</screeninfo>   <graphic
+      fileref="./figures/create_launcher" format="png"			   srccredit="muet">  
+      </graphic>   </screenshot>  </figure>  
+
+   <para> 
+ 
+     <guimenu>Menu nagusi</guimenu>ko aplikazioak edo mahaigaineko
+      aplikazio-abiarazleak ere gehi ditzakezu <interface>Panel</interface>
+      batean. Erabili saguren ezkerreko botoia objektua
+      <interface>Panel</interface>era arrastatzeko. Kontuan izan
+      <interface>Panel</interface>eko leku huts batean jaregin behar duzula, eta
+      ez lehendik dagoen objektu baten gainean: adibidez,
+      <interface>Inprimagailuaren applet</interface>ean jaregiten baduzu,
+      inprimatu egingo da. Halaber, 
+     <guimenu>Menu nagusi</guimenu>ko elementu batean eskuineko botoiaz klik
+      egin dezakezu, eta 
+     <guimenuitem>Gehitu abiarazle hau panelari</guimenuitem> hautatu. Gero,
+      abiarazle horren edozein aukera alda dezakezu, bertan eskuineko botoiaz
+      klik eginez eta 
+<guimenuitem>Propietateak...</guimenuitem> hautatuz.  
+   </para> 
+       </listitem>  </varlistentry>   <varlistentry>  <term>
+      <emphasis>Menuak</emphasis></term>  
+
+<listitem>  
+
+   <para> 
+      Menu bat gehitzeko, egin klik eskuineko botoiaz 
+      <interface>Panel</interface>ean eta hautatu <menuchoice>
+<guisubmenu>Panela</guisubmenu> 
+<guisubmenu>Gehitu panelari</guisubmenu> 
+<guisubmenu>Menua</guisubmenu> </menuchoice>. 
+<guimenu>Menu nagusia</guimenu>, 
+<guimenu>Programak menua</guimenu> eta 
+<guimenu>Gogokoak menua</guimenu> aukerak emango dizkizu.  
+   </para> 
+  
+
+   <para> 
+ Gainera, 
+     <guimenu>Menu nagusia</guimenu> edo bere edozein azpimenu gehi dezakezu
+      <interface>Panel</interface>ean, menu-tituluan (menuko goiko lerroa,
+      menu-elementuetatik marra mehe batek bereizten duena) eskuineko botoiaz
+      klik eginez eta 
+<guimenuitem>Gehitu hau menu gisa panelari</guimenuitem> hautatuz.  
+   </para> 
+ <note> 
+
+<title>Menuak eskuz sortu</title>  
+
+   <para> 
+      Erabiltzaile aurreratuek eskuz ere sor ditzakete menu berriak.
+      Horretarako, kontuan izan behar duzu GNOMEren barruan menua direktorio
+      gisa irudikatzen dela, menu-elementuak mota bereziko fitxategi gisa
+      (<filename>.desktop</filename> fitxategiak &mdash; fitxategi horiek
+      aplikazio-abiarazleak ere adierazten dituzte), eta azpimenuak
+      azpidirektorio gisa. Adibidez, 
+     <guimenu>Gogokoak</guimenu> menua <filename>~/.gnome/apps</filename>
+      direktorioari dagokio (<filename>~</filename> etxeko direktorioa da), eta
+      
+     <guimenu>Programak</guimenu> menua
+      <filename>/usr/share/gnome/apps</filename> direktorioari dagokio. Horrela,
+      GNOMEren fitxategi-kudeatzailea erabil dezakezu beste direktorio bat
+      sortzeko, gero direktorio horretara arrastatu eta jaregin ditzakezu beste
+      direktorio batzuetako <filename>.desktop</filename> fitxategiak (adibidez,
+      <filename>/usr/share/gnome/apps</filename> direktoriokoak) edo
+      mahaigainekoak, eta, ondoren, sortu berri duzun direktorioa
+      fitxategi-kudeatzailearen leihotik <interface>Panel</interface>era
+      arrastatu eta jaregin dezakezu. Era horretan, zure direktorioa
+      <interface>Panel</interface>ean gehituko da menu gisa.  
+   </para> 
+ </note>  
+
+   <para> 
+      Goian deskribatutako edozein metodoren bidez menu bat
+      <interface>Panela</interface>ri gehitu ondoren, menuaren propietateak alda
+      ditzakezu (adibidez, menu horri elementu berriak gehitu edo menuaren
+      ikonoa aldatu), <xref                linkend="menus"> puntuan azaltzen den
+      bezala.  
+   </para> 
+       </listitem>  </varlistentry>   <varlistentry>  <term>
+      <emphasis>Tiraderak</emphasis></term>  
+
+<listitem>  
+
+   <para> 
+ Tiradera huts bat gehitzeko, hautatu <menuchoice>
+<guisubmenu>Panela</guisubmenu> 
+<guisubmenu>Gehitu panelari</guisubmenu> 
+     <guisubmenu>Tiradera</guisubmenu></menuchoice>. Propietateak aldatzeko
+      (erabiliko duen ikonoa, esate baterako), egin klik eskuineko botoiaz
+      tiraderan eta hautatu 
+     <guimenuitem>Propietateak...</guimenuitem>. Tiradera honi beste elementu
+      batzuk gehi dakizkioke, <interface>Panela</interface>ri gehitzen zaizkion
+      bezalaxe: <interface>Panela</interface>ri objektu berriak gehitzeko sekzio
+      honetan azaldutako metodo guztiek, tiradera bati beste elementu batzuk
+      gehitzeko ere balioko dute.  
+   </para> 
+  
+
+   <para> 
+ Halaber, 
+     <guimenu>Menu nagusia</guimenu> edo bere edozein azpimenu gehi dezakezu
+      <interface>Panel</interface>ean tiradera gisa, menu-tituluan eskuineko
+      botoiaz klik eginez eta 
+<guimenuitem>Gehitu hau tiradera gisa panelari</guimenuitem> hautatuz.  
+   </para> 
+       </listitem>  </varlistentry>  <varlistentry>  <term> <emphasis>Aplikazio
+      barneratua</emphasis></term>  
+
+<listitem>  
+
+   <para> 
+      <interface>Panela</interface>ri aplikazio barneratu bat gehitzeko, hautatu
+      <menuchoice>
+<guisubmenu>Panela</guisubmenu> 
+<guisubmenu>Gehitu panelari</guisubmenu> 
+     <guisubmenu>Aplikazio barneratua</guisubmenu></menuchoice>.
+      <interface>Sortu barneratutako aplikazioa</interface> elkarrizketa-koadroa
+      irekiko da. Elkarrizketa-koadro horri buruzko informazio xehea nahi izanez
+      gero, ikus <xref		linkend="swallowedapps">.  
+   </para> 
+  </listitem>  </varlistentry>  </variablelist>  </sect2> </sect1>     
+
+<!-- ########### Creating, Moving, and Removing Panels  ########### --> 
+
+<sect1 id="panelmove"> 
+
+<title>Panelak sortu, lekuz aldatu eta kendu</title> 
+<sect2 id="paneladd"> 
+
+<title>Panel berriak sortu</title> 
+
+   <para> 
+     Mahaigainean beste <interface>Panel</interface> bat sortzeko, hautatu
+      <menuchoice>
+<guisubmenu>Panela</guisubmenu>
+<guisubmenu>Sortu panela</guisubmenu></menuchoice> 
+     <guimenu>Menu nagusia</guimenu>n. Mota hauetako
+      <interface>Panelak</interface> dituzu aukeran: 
+   </para> 
+ 
+<itemizedlist mark="bullet"> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Menu-panela</guilabel> &mdash;
+      <interface>Menu-panela</interface> <interface>Panel</interface> berezi bat
+      da, beti pantailaren goiko aldean kokatuta egoten dena eta hainbat
+      goitibeherako menu dituena. Hauek dira menuak: 
+<guimenu>Programak</guimenu>, 
+<guimenu>Gogokoak</guimenu>, 
+<guimenu>Ezarpenak</guimenu>, 
+     <guimenu>Mahaigaina</guimenu>, eta GNOMEri buruzko Interneteko
+      baliabideetarako sarbide bizkorra ematen duen menu berezi bat (bilatu
+      bala-zuloaren ikonoa).  <interface>Panel</interface> honek beste
+      <interface>Panel</interface>ek eduki ditzaketen objektuak ere eduki
+      ditzake, baina ez ditu beste <interface>Panel</interface>ek dituzten
+      konfigurazio-propietateak. Kontuan izan <interface>Menu-panela</interface>
+      bestelako <interface>Panela</interface>k baino mugatuagoa dela, eta
+      <interface>Panel</interface>en eragiketa normal batzuk, adibidez
+      <interface>Panela</interface> lekuz aldatzea, ezin direla hemen egin. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Ertzeko panela</guilabel> &mdash; <interface>Ertzeko
+      panela</interface> GNOMErekin abiarazten den <interface>Panel</interface>
+      nagusia bezalakoa da zehazki; normalki pantailaren ertz baten luzera osora
+      egokitzen da. <interface>Panel</interface> mota hau hautatuz, beste
+      <interface>Panel</interface> bat gehi dezakezu pantailaren beste ertz
+      batean, funtzionaltasun handiagoa lortzeko. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Panel lerrokatua</guilabel> &mdash; <interface>Panel
+      lerrokatua</interface> ere pantailaren ertz batean kokatzen da. Baina
+      <interface>Ertzeko panela</interface>k ez bezala, <interface>Panel
+      lerrokatua</interface>k ez du pantaila-ertz osoa hartzen; bere baitan
+      dituen ikonoak eta applet-ak bistaratzeko adina soilik luzatuko da.
+      Izkinetako batean koka daiteke (kasu honetan, kontrako izkinarantz luzatuz
+      joango da) edo ertzaren erdian (kasu honetan, bi aldetarantz luzatuko da,
+      eta automatikoki erdiratuko da objektu berriak gehitu ahala). 
+   </para> 
+ 
+
+   <para> 
+      <interface>Panel lerrokatu</interface> bat izkina batean lerrokatzen bada,
+      ezkutatzeko botoiek ez dute erabat <interface>Ertzeko panel</interface>ean
+      bezala jokatuko. Pantailaren ertzetik hurbilen dagoen ezkutatzeko botoiak
+      <interface>Panela</interface> beti bezala ezkutatuko du, baina ezkutatzeko
+      beste botoiak <interface>Panel</interface> osoa kontrako izkinara bidaliko
+      du. Azken mugimendu hori egitean, <interface>Panela</interface> ez da
+      ezkutatuko, pantailaren beste aldean kokatuko baita. Ezkutatu nahi baduzu,
+      berriro sakatu beharko duzu ezkutatzeko botoia. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Panel lerragarria</guilabel> &mdash; <interface>Panel
+      lerragarria</interface> <interface>Panel lerrokatua</interface>ren oso
+      antzekoa da, baina pantaila-ertzaren edozein tokitan koka daiteke, ez
+      izkinetako batean edo erdian nahitaez. Objektuak gehitu ahala, alde
+      baterantz soilik luzatuko da &mdash; ez da automatikoki erdiratuko. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Panel mugikorra</guilabel> &mdash; <interface>Panel
+      mugikorra</interface> pantailaren edozein tokitan koka daiteke, ez
+      nahitaez ertz batean. 
+   </para> 
+ </listitem> </itemizedlist>  <tip> 
+
+<title>Panel-mota aldatu</title> 
+
+   <para> 
+      Lehendik dagoen panel baten mota ere alda dezakezu &mdash; adibidez,
+      ertzeko panela panel mugikor bihur dezakezu; ikus <xref      
+      linkend="panelproperties">. 
+   </para> 
+ </tip>  </sect2>  
+<sect2 id="panelmoving"> 
+
+<title>Panelak lekuz aldatu</title> 
+
+   <para> 
+      Mahaigainean dagoen edozein <interface>Panel</interface> (<interface>Menu
+      Panela</interface> izan ezik) alda daiteke lekuz saguaren erdiko botoia
+      sakatuz, edo saguaren ezkerreko eta eskuineko botoiak aldi berean sakatuz,
+      <interface>Panela</interface> pantailako beste leku batera arrastatzen den
+      bitartean. Saguaren erdiko botoirik ez baduzu eta erdiko botoia emulatzeko
+      sagua konfiguratu ez baduzu, <interface>Panel-propietateak</interface>
+      elkarrizketa-koadroaren bidez alda dezakezu
+      <interface>Panela</interface>ren kokalekua. Gai honi buruzko xehetasun
+      gehiago, dokumentazio honetako <xref linkend="panelproperties"> puntuan
+      aurkituko dituzu. 
+   </para> 
+ </sect2> 
+<sect2 id="panelremoving"> 
+
+<title>Panelak kendu</title> 
+
+   <para> 
+      Lehendik dagoen <interface>Panel</interface> bat kentzeko, egin klik
+      bertan eskuineko botoiaz eta aukeratu <menuchoice>
+<guisubmenu>Panela</guisubmenu>
+     <guisubmenu>Kendu panel hau</guisubmenu></menuchoice>.
+      <interface>Panela</interface> hutsik ez badago, berrespena eskatuko zaizu.
+      
+   </para> 
+ <note> 
+
+<title>Panel bakarra kendu</title> 
+
+   <para> 
+      Gutxienez <interface>Panel</interface> bat eduki behar duzu irekita beti.
+      GNOMEk ez dizu utziko <interface>Panel</interface> bakarra kentzen. 
+   </para> 
+ </note> </sect2> </sect1>   
+
+<!-- ############### Global Panel Preferences  ################## --> 
+
+<sect1 id="globalpanelprefs"> 
+
+<title>Panelaren hobespen orokorrak</title> 
+
+   <para> 
+      Zure <interface>Panel</interface> guztien jokabidea konfiguratzen hasteko,
+      hautatu <menuchoice>
+<guisubmenu>Panela</guisubmenu> 
+     <guisubmenu>Hobespen orokorrak</guisubmenu></menuchoice> <link    
+      linkend="mainmenu">
+<guimenu>Menu nagusian</guimenu></link>an.  
+   </para> 
+ 
+
+   <para> 
+      <interface>Panelaren hobespen orokorren</interface> elkarrizketa-koadroa
+      irekiko da. (Elkarrizketa hori <application>GNOMEren
+      kontrol-zentroa</application>ren osagaia da). Zure
+      <interface>Panel</interface> guztiek dituzten propietate asko kontrola
+      ditzakezu elkarrizketa-koadro honen bidez.<figure>
+
+<title>Panelaren konfigurazio orokorraren elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Panelaren konfigurazio orokorraren
+      elkarrizketa-koadroa</screeninfo> <graphic
+      fileref="./figures/glob_pref_anim"       format="png" srccredit="muet">
+      </graphic> </screenshot> </figure> 
+   </para> 
+ 
+
+   <para> 
+      Bost fitxa ditu <interface>Panelaren konfigurazio orokorraren</interface>
+      elkarrizketa-koadroak: <guilabel>Animazioa</guilabel>,
+      <guilabel>Botoiak</guilabel>, <guilabel>Paneleko objektuak</guilabel>,
+      <guilabel>Menua</guilabel>, eta <guilabel>Hainbat</guilabel>. Ondoren
+      azaltzen dira banan-banan. 
+   </para> 
+ 
+<sect2 id="animtab"> 
+
+<title>Animazioa fitxa</title> 
+<itemizedlist mark="bullet"> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Gaitu animazioak</guilabel> &mdash;
+      <interface>Panelak</interface> eta tiraderak animatzeko aukera ematen du,
+      ezkutatzean eta agertzean adibidez. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Abiadura konstanteko animazioak</guilabel> &mdash; Lehenespenez,
+      animazioak mantso hasten dira, baina gero azkartu egiten dira. Aukera hau
+      gaitzen baduzu, animazioek ez dute azeleraziorik izango. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>[Animazio-abiadura] Autoezkutatu</guilabel> &mdash; Saguak
+      <interface>Panel</interface>etik alde egiten duenean automatikoki
+      ezkutatzeko ezarrita dauden <interface>Panel</interface>en
+      animazio-abiadura kontrolatzen du. Ezarpenik mantsoena 1 da, eta azkarrena
+      100.
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>[Animazio-abiadura] Esplizituki ezkutatu</guilabel> &mdash;
+      <interface>Panela</interface> <guibutton>Ezkutatzeko botoia</guibutton>
+      sakatzen duzunean izango duen ezkutatze-abiadura kontrolatzen du.
+      Ezarpenik mantsoena 1 da, eta azkarrena 100.
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>[Animazio-abiadura] Tiradera lerratu</guilabel> &mdash;
+      Tiradera-menu bat agertzeko bizkortasuna kontrolatzen du,
+      <interface>Panel</interface> bateko tiradera-botoi bat sakatzen duzunean.
+      Ezarpenik mantsoena 1 da, eta azkarrena 100.
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>[Autoezkutatu] Atzerapena (ms)</guilabel> &mdash; Saguak
+      <interface>Panel</interface>etik alde egiten duenean automatikoki
+      ikonotzeko ezarrita baldin badaukazu <interface>Panela</interface>,
+      ikonotu arte igaroko den denbora kontrolatzeko aukera emango dizu honek.
+      Saguak <interface>Panela</interface> utzi ondoren hasiko da denbora
+      kontatzen. Panela berriro agertuko da, sagua ikusgai geratzen den
+      <interface>Panel</interface>-zatiaren gainetik igarotzean. Denbora hau
+      milisegundotan neurtzen da. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>[Autoezkutatu] Tamaina (pixelak)</guilabel> &mdash; Automatikoki
+      ezkutatzeko ezarrita dauden <interface>panel</interface>etan,
+      ikonotutakoan erakutsiko den pixel-kopurua zehazten da hemen.
+      <interface>Panela</interface> maximizatzeko, saguak
+      <interface>Panela</interface>ren arean sartu behar du. 
+   </para> 
+ </listitem> </itemizedlist> </sect2> 
+<sect2 id="launchtab"> 
+
+<title>Botoiak fitxa</title> 
+
+   <para> 
+      Sail honetan, hainbat botoi-motaren itxura ezar dezakezu:
+      abiarazle-botoiak, menu-botoiak, tiradera-botoiak eta botoi bereziak (hala
+      nola <link      linkend="logoutbutton">Saioa amaitzeko botoia</link> eta
+      <link      linkend="lockbutton">Blokeatzeko botoia</link>). 
+   </para> 
+ 
+<itemizedlist mark="bullet"> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Botoi-mota</guilabel> &mdash; Hautatu konfiguratu nahi duzun
+      botoi-mota. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Mosaikoak gaituta</guilabel> &mdash; Kontrol-lauki honek goian
+      zehaztutako <interface>Panel</interface>-botoien atzeko planoko mosaikoa
+      gaituko du. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Mosaiko normala</guilabel> &mdash; Botoia aktibatu gabe (sakatu
+      gabe) dagoenean atzeko planoan izango duen irudia erakusten du. Beste
+      irudi-fitxategi bat aukeratzeko, egin klik irudian, eta ikono-arakatzailea
+      abiaraziko da. Mosaikoek gaituta egon behar dute aukera hau edukitzeko. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Klik egindako mosaikoa</guilabel> &mdash; Botoia aktibatuta
+      (sakatuta) dagoenean atzeko planoan izango duen mosaikoa erakusten du.
+      Beste irudi-fitxategi bat aukeratzeko, egin klik irudian, eta.
+      ikono-arakatzailea abiaraziko da. Mosaikoek gaituta egon behar dute aukera
+      hau edukitzeko. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Ertz-zabalera (mosaikoa soilik)</guilabel> &mdash; Ikono baten
+      inguruko ertzaren zabalera zehazten du. Adibidez, ertzaren zabalera 5ean
+      ezartzen baduzu, mosaikoaren gutxienez 5 pixel erakutsiko dira ikonoaren
+      alde guztietan; behar izanez gero, ikonoa moztu egingo da. Hau oso
+      baliagarria da normalean mosaikoa estaliko lukeen ikonoa baduzu. Mosaikoek
+      gaituta egon behar dute aukera hau edukitzeko. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Sakonera (sakatzean desplazatuko dena)</guilabel> &mdash; Ikono
+      bat sakatzen denean desplazatuko duen sakonera erabakitzen du. Mosaikoek
+      gaituta egon behar dute aukera hau edukitzeko. 
+   </para> 
+ </listitem> </itemizedlist> 
+
+   <para> 
+      Fitxa honek beste 3 aukera ditu, botoi-mota guztietan aldi berean eragina
+      dutenak: 
+   </para> 
+ 
+
+<itemizedlist>  
+
+<listitem> 
+
+   <para> 
+      <guilabel>Berdindu botoiak panel-ertzarekin</guilabel>  &mdash; Botoia
+      <interface>Panela</interface>ren ertzarekin lerrokatzeko aukera ematen
+      dizu. Aukera hau ezartzen ez bada, ertzaren zabaleraren ezarpenari
+      jarraituko zaio.  Lehenespenez, aukera hau desaktibatuta egoten da.  
+   </para> 
+  </listitem>  
+
+<listitem>  
+
+   <para> 
+      <guilabel>Kurtsorea gainean dagoenean soilik erakutsi botoiaren
+      mosaikoa</guilabel> &mdash; Aukera hau gaitzen bada, saguaren kurtsorea
+      botoiaren gainean dagoenean soilik agertuko dira mosaikoak.  
+   </para> 
+  </listitem>  
+
+<listitem>  
+
+   <para> 
+       <guilabel>Argiztatu botoiak kurtsorea gainetik igarotzean</guilabel>
+      &mdash; Aukera hau hautatuz gero, botoiak argiztatu egingo dira kurtsorea
+      gainetik igarotzean   
+   </para> 
+  </listitem> </itemizedlist> </sect2> 
+<sect2 id="appletstab"> 
+
+<title>Paneleko objektuak fitxa</title> 
+
+   <para> 
+       Fitxa honek <interface>Panel</interface>eko objektuen kokapenari eta
+      mugimenduari buruzko aukera batzuk erakusten ditu.  
+   </para> 
+ 
+
+<itemizedlist>  
+
+<listitem>  
+
+   <para> 
+       <guilabel>Lehenetsitako mugimendu-modua</guilabel> &mdash;
+      <interface>Panel</interface>eko objektuak lekuz aldatzeko lehenetsitako
+      modua aukera dezakezu. Hauek dira aukerak:  
+   </para> 
+   
+
+<itemizedlist>  
+
+<listitem> 
+
+   <para> 
+       <emphasis>Trukatu</emphasis> &mdash; Lekuz aldatzen duzun objektuak beste
+      objektu bat ukitzen duenean, kokalekuak trukatzen dituzte.  
+   </para> 
+  </listitem>   
+
+<listitem> 
+
+   <para> 
+      <emphasis>Libre</emphasis> &mdash; Lekuz aldatzen ari zaren objektuak
+      beste objektu bat ukitzen duenean, haren gainetik "jauzi" egiten du,
+      oztoporik ez egiteko. Aukera egokia da, <interface>Panel</interface>aren
+      uneko antolamenduarekin ados bazaude eta gainerako objektuak dauden lekuan
+      utzi nahi badituzu.   
+   </para> 
+  </listitem>   
+
+<listitem>   
+
+   <para> 
+        <emphasis>Bultza egin</emphasis> &mdash; Lekuz aldatzen ari zaren
+      objektuak aurrean dituen guztiei bultza egingo die, elur-bola batek
+      bezala.   
+   </para> 
+  </listitem>  </itemizedlist>  
+
+   <para> 
+      Lehenetsitako mugimendu-moduari jaramonik ez egiteko aukera duzu, objektua
+      arrastatzen duzun bitartean hauetako tekla bat sakatuta mantentzen baduzu:
+      <keycap>Ktrl</keycap> (trukatzeko), <keycap>Alt</keycap> (libre
+      mugitzeko), edo <keycap>Maius</keycap> (bultza egiteko).  
+   </para> 
+  </listitem>  
+
+<listitem>  
+
+   <para> 
+       <guilabel>Betegarria</guilabel> &mdash; <interface>Panel</interface>eko
+      objektuen arteko hutsunea (betegarria) aldatzen du. Pixeletan neurtzen da.
+       
+   </para> 
+  </listitem> </itemizedlist> </sect2>  
+<sect2 id="menutab"> 
+
+<title>Menua fitxa</title> 
+
+   <para> 
+       Fitxa honetan, <interface>Panel</interface>eko menuen itxura erabakitzeko
+      aukerak ezar ditzakezu. 
+   </para> 
+  
+
+<itemizedlist> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Erabili ikono handiak</guilabel> &mdash; Ikono handiak erabiliko
+      ditu menuetan (lehenetsitako tamainaren ordez). Bereizmen handiko
+      pantailetan (1280x1024 eta gehiagokoetan) soilik da praktikoa. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Erakutsi [...] botoiak</guilabel> &mdash; Hiru puntudun (...)
+      botoi txikiak gehituko dizkie 
+     <guimenu>Menu nagusi</guimenu>ko elementu guztiei. Horrelako botoi batean
+      ezkerreko botoiaz klik egitean, elementu horren 
+     <guimenu>laster-menua</guimenu> agertuko da, hau da, menu-elementuan
+      eskuineko botoiaz klik egitean lortzen den menu bera.  
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Erakutsi laster-menuak paneletik kanpo</guilabel> &mdash; Botoi
+      hau hautatuta dagoenean, laster-menuak <interface>Panel</interface>etik
+      kanpo agertzeko aukera ematen du. Desaktibatuta dagoenean, laster-menuak
+      <interface>Panel</interface>aren gainean agertuko dira. Baliagarria izan
+      daiteke pantaila txikia denean edo mahaigaina gainezka dagoenean. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Eduki menuak memorian</guilabel> &mdash; Menuak memorian edukiko
+      ditu, eta ez du berreskaneatuko elementu berririk gehitu den ikusteko.
+      Horrek GNOMEren abiadura areagotu dezake, baina halaber menuan gehitutako
+      elementu berriak ez agertzea ere gerta daiteke.  
+   </para> 
+  </listitem>  
+
+<listitem> 
+
+   <para> 
+ <guilabel>Menu orokorra</guilabel> &mdash; <link linkend="globalmenu"> 
+     <guimenu> Menu orokorra</guimenu></link> konfiguratzeko aukera ematen du;
+      menu hori <interface>Panel</interface> batean eskuineko botoiaz klik
+      eginda edo laster-teklak sakatuta ateratzen da. Azpimenu posible bakoitza
+      (
+<guisubmenu>Programak</guisubmenu>, 
+<guisubmenu>Gogokoak</guisubmenu>, etab.), 
+     <guimenu>Menu orokor</guimenu>ean sartuko den, azpimenu gisa sartuko den,
+      edo ez den sartuko aukera dezakezu. Azpimenu horien azalpena <xref	 
+      linkend="submenus"> puntuan ematen da.  
+   </para> 
+  </listitem> </itemizedlist> </sect2>  
+<sect2 id="misctab"> 
+
+<title>Hainbat fitxa</title>  
+
+   <para> 
+      <guilabel>Hainbat</guilabel> fitxak beste inon sartzen ez diren hainbat
+      jokabide pertsonalizagarriren aukerak dauzka. 
+   </para> 
+  
+<itemizedlist mark="bullet"> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Argibideak gaituta</guilabel> &mdash; Saguaren erakuslea
+      <interface>Panel</interface>eko elementu baten gainean jartzen denean
+      GNOMEk argibide bat erakutsi behar duen ala ez zehazten du aukera honek.
+      
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Itxi tiradera, barruko abiarazle bat sakatzen denean</guilabel> 
+      &mdash; Lehenespenez, tiraderak irekita geratzen dira barruko elementu bat
+      hautatzen denean. Hori deserosoa izan daiteke, tiradera irekita egongo
+      baita saguaren klik batez itxi arte. Aukera hau hautatuz gero, tiraderak
+      automatikoki itxiko dira barruko elementuren bat hautatzean. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Goratu panelak sagua gainetik igarotzean</guilabel> &mdash;
+      GNOMErekin bateragarria ez den leiho-kudeatzailea erabiltzen baduzu, ez du
+      <interface>Panela</interface>rekin duen erlazioa ulertuko. Hori dela eta,
+      aplikazioek <interface>Panela</interface> estal dezakete. Eginbide hau
+      gaitzen baduzu, <interface>Panela</interface> automatikoki etorriko da
+      gainera sagua gainean daukanean. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Eduki panelak leihoen azpian</guilabel> &mdash; GNOMErekin
+      bateragarria den leiho-kudeatzailea erabiltzen baduzu, leiho-kudeatzaileak
+      ulertuko du <interface>Panela</interface>rekin duen erlazioa. Eginbide hau
+      aukeratzen baduzu, leiho-kudeatzaileak eta GNOMEk
+      <interface>Panela</interface>ren gainean agertzeko aukera emango diete
+      aplikazioei. Aukera egokia izan daiteke pantaila txikia baduzu. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Berretsi panel-kentzea elkarrizketa batez</guilabel> &mdash;
+      Aukera hau gaitzen bada, GNOMEk berrespena eskatuko du
+      <interface>Panela</interface> kendu aurretik. 
+   </para> 
+ </listitem> </itemizedlist> 
+
+   <para> 
+      Fitxa honek laster-tekla orokor batzuk konfiguratzeko aukera ere ematen
+      dizu. <link     linkend="globalmenu">
+<guimenu>Menu nagusi</guimenu></link>rako (hau da, 
+     <guimenu>laster-menurako</guimenu>) eta <link
+      linkend="runbutton"><interface>Exekutatu programa</interface></link>
+      elkarrizketarako defini ditzakezu laster-teklak. (Horientzako
+      lehenetsitako laster-teklak <keycombo action=simul>Alt</keycap>
+      <keycap>F1</keycap></keycombo> eta <keycombo
+      action=simul><keycap>Alt</keycap> <keycap>F2</keycap></keycombo> dira
+      hurrenez hurren). Laster-tekla horiek aldatzeko, hautatu goitibeherako
+      zerrendako tekla bat edo sakatu <guibutton>Hartu tekla&hellip;</guibutton>
+      botoia eta sakatu nahi duzun tekla.  
+   </para> 
+ <note>  
+
+<title>Menua eta Windows teklak erabiltzea</title>  
+
+   <para> 
+      <keycap>Menua</keycap> eta <keycap>Windows</keycap> tekla bereziak erabili
+      ahal izan behar dituzu laster-tekletan. Tekla horiek erabiltzeko arazoak
+      badituzu, ziur aski zure X zerbitzaria ez da behar bezala konfiguratuta
+      egongo: instalazioa egitean aukeratutako teklatua ez dator bat benetan
+      daukazun teklatuarekin. <application>XFree86</application> zerbitzaria
+      erabiltzen baduzu, konfigurazio-fitxategia eskuz editatuz konpon dezakezu.
+      Fitxategi horren izena <filename>XF86Config</filename> da eta <filename
+      class="directory">/etc</filename> edo <filename_ 
+      class="directory">/etc/X11</filename> direktorioan egoten da normalean.
+      Ireki ezazu edozein testu-editorerekin (ez testu-prozesadorearekin!) eta
+      aurkitu <literal>XkbModel</literal> hitza duen lerroa. Aldatu eta jarri
+      <programlisting>XkbModel "pc104"</programlisting>. Root
+      (sistema-administratzailea) izan behar duzu hori egiteko. Orain, irten
+      GNOMEtik eta berrabiarazi X zerbitzaria <keycombo> <keycap>Ktrl</keycap>
+      <keycap>Alt</keycap> <keycap>Atzera</keycap> </keycombo> sakatuz.  
+   </para> 
+ </note> <warning>  
+
+<title>Kontuz ibili XF86Config editatzean</title>  
+
+   <para> 
+       <filename>XF86Config</filename> fitxategia editatzean huts bat egiten
+      baduzu, teklatua edo pantaila erabili ezinda gera zaitezke X Windows-en.
+      Fitxategi hau editatzen hasi aurretik, egin iezaiozu babeskopia eta
+      ziurtatu badakizula nola leheneratu babeskopiatik X Windows edo GNOME
+      erabili gabe, hau da, terminal batetik. Hori egiten ez badakizu, ez
+      editatu fitxategi hau. 
+   </para> 
+ </warning> </sect2> </sect1>   
+
+<!-- ###############  Individual Panel Properties  ################ -->  
+
+<sect1 id="panelproperties"> 
+
+<title>Panel indibidualen propietateak</title> 
+
+   <para> 
+      <indexterm id="idx-a62"> <primary>Panela</primary> <secondary>Panel
+      indibidualen propietateak</secondary></indexterm> <indexterm id="idx-a63">
+      <primary>Panela</primary> <secondary>propietateak</secondary></indexterm> 
+      <xref      linkend="globalpanelprefs"> sailean azaldutako panel-propietate
+      orokorrez gain, propietate batzuk indibidualki konfigura daitezke
+      <interface>Panel</interface> bakoitzarentzat. Horien artean
+      <interface>Panel</interface>-mota (ertzekoa, lerrokatua, lerragarria,
+      mugikorra), tamaina, kokalekua, atzeko planoaren kolorea eta ezkutatzeko
+      hobespenak. <interface>Panel</interface> batean propietate horiek
+      aldatzeko, egin klik eskuineko botoiaz eta hautatu <menuchoice>
+<guimenu>Panela</guimenu> 
+     <guisubmenu>Propietateak</guisubmenu></menuchoice>. Halaber,
+      <guibutton>Menu nagusia</guibutton>ren botoia sakatu eta <menuchoice>
+<guimenu>Panela</guimenu> 
+<guisubmenu>Propietateak</guisubmenu></menuchoice> hauta dezakezu. 
+   </para> 
+ 
+
+   <para> 
+ 
+<guisubmenu>Propietateak</guisubmenu> azpimenuan, 
+     <guimenuitem>Propietate guztiak...</guimenuitem> hauta dezakezu
+      <interface>Panel-propietateak</interface> elkarrizketa irekitzeko.
+      Elkarrizketa hau erabiltzen ohituta bazaude, propietateetako batzuk
+      bizkorrago aldatu ahal izango dituzu &mdash;
+      <interface>Panela</interface>ren tamaina edo mota, esate baterako &mdash;
+      
+<guisubmenu>Propietateak</guisubmenu> menuan elementu egokia hautatuz. 
+   </para> 
+ 
+
+   <para> 
+      <interface>Panel-propietateak</interface> elkarrizketa-koadroak bi fitxa
+      ditu <interface>Panel</interface> aktiboaren propietateak ezartzen
+      laguntzeko: <guilabel>Ertzeko panela</guilabel> (edo
+      <guilabel>Lerrokatua</guilabel>, &hellip; - zure
+      <interface>Panel</interface>-motaren arabera) eta <guilabel>Atzeko
+      planoa</guilabel>. Bi fitxa horiek ondoren azaltzen dira. 
+   </para> 
+  
+<sect2 id="edgetab"> 
+
+<title>Ertzeko panelaren fitxa</title> <figure> 
+
+<title>Ertzeko panelaren propietateen elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Ertzeko panelaren propietateen
+      elkarrizketa-koadroa</screeninfo> <graphic
+      fileref="./figures/panel_props_edge"      format="png" srccredit="muet">
+      </graphic> </screenshot> </figure> 
+<itemizedlist mark="bullet">  
+
+<listitem>  
+
+   <para> 
+       <guilabel>Panelaren kokalekua</guilabel> &mdash;
+      <interface>Panela</interface>k pantailan duen kokalekua aldatzeko.
+      <interface>Ertzeko panel</interface>ean, ertz bat zehaztu behar duzu
+      (<guilabel>Goikoa</guilabel>, <guilabel>Eskuinekoa</guilabel>,
+      <guilabel>Ezkerrekoa</guilabel> edo <guilabel>Behekoa</guilabel>).
+      <interface>Panel lerrokatua</interface>n, ertz bat eta ertzaren
+      muturretako bat edo erdialdea zehaztu behar dituzu. <interface>Panel
+      lerragarria</interface>n, ertza eta izkinetako batetik dagoen tartea
+      zehaztu behar dituzu (pixeletan). Azkenik, <interface>Panel
+      mugikorra</interface>ren kasuan, <interface>Panela</interface>ren
+      orientazioa (horizontala edo bertikala) eta ezkerreko goiko izkinaren
+      kokalekua (pantailaren ezkerreko goiko izkinari buruz eta pixeletan
+      neurtua) zehaztu behar dituzu.  
+   </para> 
+  
+
+   <para> 
+       <interface>Panela</interface> kokalekuz aldatuko da
+      <guibutton>Aplikatu</guibutton> edo <guibutton>Ados</guibutton> botoia
+      sakatzen duzunean.  
+   </para> 
+  <tip>  
+
+<title>Panela eskuz aldatu lekuz</title>  
+
+   <para> 
+       <interface>Panela</interface>ren posizioa saguaren erdiko botoiaz
+      kokaleku berrira arrastatuz ere alda dezakezu. 
+   </para> 
+  </tip>  </listitem>   
+
+<listitem>  
+
+   <para> 
+      <guilabel>Panelaren tamaina</guilabel> &mdash; Hemen
+      <interface>Panela</interface>ren zabalera aukera dezakezu. Lehenetsitako
+      tamaina 48 pixelekoa da, GNOMEk ikonoentzat erabiltzen duen tamaina
+      lehenetsi bera. Bereizmen txikiko pantaila duten erabiltzaileek
+      <interface>Panela</interface>ren tamaina murriztu nahi izango dute agian,
+      pantailan leku gehiago izateko; bereizmen handiko pantailen
+      erabiltzaileak, berriz, <interface>Panela</interface> handiagoak
+      erabiltzen saia daitezke. 
+   </para> 
+ 
+
+   <para> 
+      <interface>Panela</interface>ren tamaina aldatzen denean,
+      <interface>Panel</interface> horretako ikono guztien tamaina ere
+      automatikoki aldatzen da, eta ondorioz kalitatea nolabait gal daiteke.
+      Halaber, <interface>Panel</interface>eko applet guztiek ere tamaina
+      egokituko beharko dute. Applet gehienek hala egingo dute; dena den, applet
+      batzuek eskakizun hori betetzen ez badute, <interface>Panela</interface>
+      bera aldatuko da tamainaz, applet guztiak doitu ahal izateko.  
+   </para> 
+  </listitem>  
+
+<listitem> 
+
+   <para> 
+      <indexterm id="idx-a64"> <primary>Panela</primary>
+      <secondary>Autoezkutatu</secondary> </indexterm>
+      <guilabel>Ezkutatzea</guilabel> &mdash; Sail honetan, <guilabel>Gaitu
+      autoezkutatzea</guilabel> aukera ezar dezakezu &mdash; hautatzen baduzu,
+      <interface>Panela</interface> automatikoki ezkutatuko da sagua
+      <interface>Panela</interface>ren gainean ez dagoenean. Autoezkutatzeko
+      parametroak <link linkend="animtab">Hobespen orokorren
+      elkarrizketa-koadroan</link>  konfigura daitezke. Autoezkutatzea
+      aukeratzen baduzu, beharbada autoezkutatzeko botoiak ere desgaitu nahi
+      izango dituzu. Halaber, ezkutatzeko botoietako gezien grafikoak desgaitu
+      ditzakezu. 
+   </para> 
+ </listitem> </itemizedlist> </sect2>  
+<sect2 id="panelbacktab"> 
+
+     <title>Atzeko planoaren fitxa</title> <indexterm id="idx-a65"> 
+      <primary>Panela</primary> <secondary>Atzeko planoa</secondary> 
+      </indexterm>  <figure>  
+
+<title>Atzeko planoaren propietateen elkarrizketa-koadroa</title>  
+<screenshot>  
+     <screeninfo>Panelaren atzeko planoaren propietateen
+      elkarrizketa-koadroa</screeninfo>  <graphic
+      fileref="./figures/panel_props_back"	       format="png" srccredit="muet">
+       </graphic>  </screenshot> </figure>   
+
+   <para> 
+       Aukera hauen bidez <interface>Panela</interface>ren beraren atzeko planoa
+      alda dezakezu. Nahi baduzu, atzeko plano <guilabel>Estandarra</guilabel>,
+      <guilabel>Pixmap-a</guilabel>, edo <guilabel>Kolorezkoa</guilabel> aukera
+      dezakezu. <interface>Panela</interface>ren itxura estandarra unean
+      erabiltzen ari zaren GTK gaiak (GTK gaia <application>GNOMEren
+      kontrol-zentroan konfigura dezakezu</application>) erabakitzen du.
+      <guilabel>Pixmap</guilabel> aukerarekin <interface>Panel</interface>ean
+      mosaiko gisa edo eskalan erakusteko irudi bat hauta dezakezu.
+      <guilabel>Kolorea</guilabel> aukerak <interface>Panela</interface>ren
+      atzeko planorako kolore bat zehazten du. 
+   </para> 
+  
+<itemizedlist mark="bullet">  
+
+<listitem> 
+
+   <para> 
+      <guilabel>Erabiltzeko kolorea</guilabel> &mdash;
+      <interface>Panela</interface>erako kolore bat aukeratzen baduzu, zein
+      kolore erabili zehazteko elkarrizketa bat irekiko du botoi honek. 
+   </para> 
+ </listitem>   
+
+<listitem> 
+
+   <para> 
+      <guilabel>Irudia</guilabel> &mdash; <guilabel>Pixmap</guilabel> bat eduki
+      nahi baduzu <interface>Panela</interface>ren atzeko planoan,
+      elkarrizketaren atal honetan zein irudi erabili aukeratu ahal izango duzu.
+      <guibutton>Arakatu</guibutton> botoia sakatuz gero, erabili nahi duzun
+      fitxategia bilatu ahal izango duzu. Uneko fitxategi-izena botoi honen
+      ezkerraldean ageri da. Goiko leihoak atzeko plano horren aurrebista
+      erakusten dizu. 
+   </para> 
+ </listitem> </itemizedlist>   <tip>  
+
+<title>Irudiak arrastatu eta jaregin</title>  
+
+   <para> 
+       <interface>Panela</interface>ren atzeko planoa aldatzeko modu erraza
+      <application>GNOMEren fitxategi-kudeatzaile</application>tik
+      <interface>Panel</interface>era irudi-fitxategi bat arrastatu eta
+      jaregitea da. <interface>Panel</interface>eko atzeko planoan automatikoki
+      jarriko da irudi hori.  
+   </para> 
+ </tip>  
+<itemizedlist mark="bullet"> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Ez jarri irudia eskalan egokitzeko</guilabel> &mdash; Botoi hau
+      hautatuz gero, atzeko planoko irudia mosaiko bihurtuko da
+      <interface>Panela</interface> estaltzeko, eskalan jarri ordez. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Jarri eskalan irudia (gorde proportzioak)</guilabel> &mdash;
+      Botoi hau hautatuz gero, atzeko planoko irudia ahalik eta gehien egokituko
+      da irudiaren proportzioak gordez, eta gero eskalan jarritako irudia
+      <interface>Panela</interface>ren atzeko planoa estaltzeko erabiliko da. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Tiratu irudia (aldatu proportzioak)</guilabel> &mdash; Botoi hau
+      hautatzen bada, atzeko planoko irudia bi dimentsioetan egokituko da
+      <interface>Panela</interface>ren tamaina osoa hartzeko. 
+   </para> 
+ </listitem> 
+
+<listitem> 
+
+   <para> 
+      <guilabel>Biratu irudia panel bertikaletan</guilabel> &mdash; Botoi hau
+      hautatzen bada, irudia biratu egingo da <interface>Panela</interface>ren
+      orientazioa (horizontala/bertikala) aldatzen duzunean. 
+   </para> 
+ </listitem> </itemizedlist> </sect2> </sect1>  
+
+<!-- ############### Current Bugs and Limitations ############### -->  
+
+<sect1 id="panelbugs">  
+
+<title>Uneko akatsak eta mugak</title> 
+
+   <para> 
+      Hemen aipatzen diren gauza gehienak ez dira berez akatsak;
+      <interface>Panela</interface>k zuk espero ez bezala jokatuko du batzuetan,
+      eta egoera horiek azaltzen dira sail honetan. 
+   </para> 
+  
+
+   <para> 
+       Fitxategi edo direktorio arruntik ezin da jarri
+      <interface>Panel</interface>ean. Fitxategi-kudeatzailearen leihotik
+      <interface>Panel</interface>era fitxategi bat arrastatzen eta jaregiten
+      saiatzen bazara, ez du funtzionatuko. <interface>Panel</interface>ean jar
+      daitezkeen fitxategi-mota bakarrak <filename>.desktop</filename>
+      fitxategiak dira, abiarazleak deskribatzen dituztenak (eta
+      <filename>.kdelnk</filename> fitxategiak, K Desktop Environment formatuko
+      abiarazleak deskribatzen dituztenak); <interface>Panel</interface>ean
+      jaregindako direktorio oro menutzat hartuko da &mdash; hau da,
+      <filename>.desktop</filename> ez diren fitxategiak ez dira kontuan
+      hartuko. 
+   </para> 
+  
+
+   <para> 
+ 
+     <guimenu>Menu nagusia</guimenu> kenduta, gainerako menuak editatzea nahiko
+      nahasgarria da. <application>Menu-editorea</application> oraingoz ezin da
+      erabili horretarako, eta eskuineko botoiko menuko 
+     <guimenuitem>Propietateak</guimenuitem> elementua ere ez da oso lagungarria
+      - adibidez, ez du menuaren ikonoa aldatzen uzten (horretarako argibide
+      gehiago nahi baduzu, ikus <xref linkend="menusconf">). Hurrengo bertsioan
+      hobetuz joango gara. 
+   </para> 
+  
+
+   <para> 
+ 
+     <guimenu>Menu orokorra</guimenu> (teklatuko
+      <keycombo><keycap>Alt</keycap><keycap>F1</keycap></keycombo> teklak
+      sakatuz edo eskuineko botoiaz <interface>Panel</interface>ean klik eginez
+      eskuratzen dena), eta 
+     <guimenu>Menu nagusia</guimenu> (oinaren ikonoan klik eginda agertzen dena)
+      aparte konfiguratuta daude. Horren arrazoia da, 
+     <guimenu>Menu nagusi</guimenu>ko hainbat botoi izan ditzakezula
+      <interface>Panel</interface> desberdinetan. 
+   </para> 
+  
+
+   <para> 
+      <guibutton>Pantaila blokeatzeko</guibutton> botoiak ez du pantaila
+      blokeatzen <guilabel>Pantaila-babeslerik ez</guilabel> ezarrita badago
+      <application>GNOMEren kontrol-zentroa</application>n. 
+   </para> 
+  
+
+   <para> 
+      <interface>Panel</interface> mota (Ertzekoa, Lerrokatua, etab.) aldatzeko
+      modu bakarra <menuchoice>
+<guisubmenu>Panela</guisubmenu> 
+<guisubmenu>Propietateak</guisubmenu> 
+<guisubmenu>Mota</guisubmenu>  </menuchoice> aukeratzea da, 
+<guimenu>Menu nagusia</guimenu>n edo 
+     <guimenu>Menu orokor</guimenu>rean: <interface>Panel</interface> mota ezin
+      duzu <interface>Panel-propietateak</interface> elkarrizketan aldatu.
+      Bestalde, <menuchoice> 
+<guisubmenu>Panela</guisubmenu> 
+<guisubmenu>Propietateak</guisubmenu> 
+     <guisubmenu>Atzeko planoaren mota</guisubmenu></menuchoice> aukerak atzeko
+      planoaren mota (Pixmap-a/Kolorea/Estandarra) aldatzen uzten dizu, baina ez
+      kolorea edo irudia aukeratzen. 
+   </para> 
+  </sect1>   
+
+<!-- ###############  Authors  ################## --> 
+
+<sect1 id="authors"> 
+
+<title>Egileak</title> 
+
+   <para> 
+      <application>GNOMEren panela</application> GNOMEren garatzaile askok
+      idatzi dute; zerrenda partzial bat <interface>Honi buruz</interface>
+      elkarrizketa-koadroan aurkituko duzu. Bide batez: <interface>Honi
+      buruz</interface> elkarrizketan ikusten den animaliaren izena jakin nahi
+      baduzu, "Gegl" da eta <ulink type="http" url="http://www.gegl.org/">web
+      orria</ulink> ere badu. 
+   </para> 
+ 
+
+   <para> 
+       Bidali zure iruzkin, iradokizun eta akatsen berri-emateak <ulink
+      url="http://bugzilla.gnome.org" type="http">GNOMEren akatsen segimendurako
+      datu-basera</ulink>. Akatsen berri emateko, <application>Akatsen berri
+      emateko tresna</application> (<command>bug-buddy</command>) ere erabil
+      dezakezu. Tresna hori 
+<guimenu>Menu nagusi</guimenu>ko 
+<guisubmenu>Utilitateak</guisubmenu> azpimenuan duzu eskuragarri. 
+   </para> 
+ 
+
+   <para> 
+      Eskuliburu hau Dave Mason-ek (<email>dcm@redhat.com</email>), Dan Mueth-ek
+      (<email>d-mueth@uchicago.edu</email>), eta Alexander Kirillov-ek
+      (<email>kirillov@math.sunysb.edu</email>) idatzi dute. Eskuliburuari
+      dagozkion iruzkinak eta iradokizunak GNOMEren Dokumentazio Proiektura
+      bidal ditzakezu: <email>docs@gnome.org</email>; iruzkinak linean ere egin
+      ditzakezu, <ulink type="http"     
+      url="http://developer.gnome.org/projects/gdp/doctable/">GNOMEren
+      dokumentazio-egoeraren taula</ulink> erabiliz. 
+   </para> 
+ </sect1>  
+
+<sect1 id="license"> 
+
+<title>Lizentzia</title> 
+
+   <para> 
+      Programa hau software librea da; birbana eta/edo alda dezakezu, 
+      Free Software Foundation-ek argitaratutako <ulink
+      type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>ren 2. bertsioan, edo (nahiago baduzu) bertsio
+      berriago batean, jasotako baldintzak betez gero. 
+   </para> 
+
+      Programa hau erabilgarria izango delakoan banatzen da, baina inolako 
+      bermerik gabe; era berean, ez da bermatzen beraren EGOKITASUNA 
+      MERKATURATZEKO edo HELBURU PARTIKULARRETARAKO ERABILTZEKO. 
+      Argibide gehiago nahi izanez gero, ikus <ulink
+      type="help" url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>. 
+   </para> 
+ 
+
+   <para> 
+      <ulink type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia
+      Publiko Orokorra</citetitle></ulink>ren kopia bat GNOMEren
+      dokumentazioarekin batera ematen da. GNU Lizentzia Publiko 
+      Orokorraren kopia Free Software Foundation-en bidez ere lor dezakezu 
+      <ulink type="http" url="http://www.fsf.org"> haren web gunea</ulink> 
+      bisitatuz edo hona idatziz: 
+     <address> Free Software Foundation, Inc. <street>59 Temple Place</street> -
+      Suite 330 <city>Boston</city>, <state>MA</state>
+      <postcode>02111-1307</postcode> <country>USA</country> </address> 
+   </para> 
+ </sect1>  </article>

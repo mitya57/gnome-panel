@@ -1,0 +1,251 @@
+ 
+
+<sect1 id="fish"> 
+
+<title>Arrainaren applet-a</title>  
+
+   <para> 
+      <application>Arrainaren</application> applet-ak, <xref  
+      linkend="fishapplet-fig">n ikusten denak, arrain txiki bat bistaratzen
+      dizu panelean eta ez du ezer baliagarririk egiten hortik kanpo. Applet hau
+      <interface>Panel</interface> bati gehitzeko, egin klik eskuineko botoiaz
+      <interface>Panel</interface>ean eta aukeratu <menuchoice>  
+<guimenu>Panela</guimenu>  
+<guisubmenu>Gehitu panelari</guisubmenu>  
+<guisubmenu>Applet-a</guisubmenu>  
+<guisubmenu>Denbora-pasa</guisubmenu>  
+<guimenuitem>Arraina</guimenuitem> </menuchoice>. 
+   </para> 
+  <figure id="fishapplet-fig"> 
+
+<title>Arrainaren applet-a</title> 
+<screenshot> 
+     <screeninfo>Arrainaren applet-a</screeninfo> <graphic format="png"
+      fileref="figures/fish_applet"     srccredit="muet"> </graphic>
+      </screenshot> </figure>  
+
+<!-- ============= Usage  ================================ --> 
+<sect2 id="fish-usage"> 
+
+<title>Erabilera</title> 
+
+   <para> 
+      Arrain gehienek ez bezala, honek ez du zaindu beharrik eta ez zaio ontzia
+      garbitu behar. Pozik ibiltzen da igerian uretan. Galdetuz gero, gogoeta
+      interesgarriak eskainiko dizkizu. 
+   </para> 
+  
+
+   <para> 
+      Applet-ean eskuineko botoiaz klik eginez gero, elementu hauek dituen menua
+      agertuko zaizu: 
+
+<itemizedlist>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Propietateak&hellip;</guimenuitem> &mdash; <link
+      linkend="fish-prefs"> <guilabel>Propietateak</guilabel></link>
+      elkarrizketa-koadroa irekitzen du. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+<guimenuitem>Laguntza</guimenuitem> &mdash; dokumentu hau bistaratzen du. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+ 
+     <guimenuitem>Honi buruz&hellip;</guimenuitem> &mdash;
+      <application>Arrainaren applet</application>-ari buruzko oinarrizko
+      informazioa erakusten du, esaterako, applet-aren bertsioa eta egilearen
+      izena. 
+   </para> 
+ </listitem>  </itemizedlist> 
+   </para> 
+ </sect2>   
+
+<!-- ============= Customization ============================= --> 
+<sect2 id="fish-prefs"> 
+
+<title>Pertsonalizazioa</title> 
+
+   <para> 
+      <application>Arraina</application>ren applet-a pertsonaliza dezakezu
+      bertan eskuineko botoiaz klik eginez eta 
+     <guimenuitem>Propietateak&hellip;</guimenuitem> aukeratuz.
+      <interface>Propietateen</interface> elkarrizketa-koadroa (<xref     
+      linkend="fish-settings-fig">) irekiko da, eta hainbat ezarpen aldatu ahal
+      izango duzu. 
+   </para> 
+  <figure id="fish-settings-fig"> 
+
+<title>Propietateen elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Propietateen elkarrizketa-koadroa</screeninfo> <graphic
+      format="png" fileref="figures/fish_settings"      srccredit="muet">
+      </graphic> </screenshot> </figure>  
+
+   <para> 
+ Hauek dira propietateak: 
+
+<itemizedlist>  
+
+<listitem> 
+
+   <para> 
+      GNOME arrainaren izena &mdash; Arrainaren izena alda dezakezu hemen.
+      Lehenetsitako izena Wanda da.  
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Animazio-fitxategiaren izena &mdash; Hainbat irudi dituzu aukeran.
+      Lehenespenez, irudien zerrenda <filename>$PREFIX/pixmaps/fish/</filename>
+      direktorioan dago, bertatik aukera dezakezu nahi duzun fitxategia. Zeure
+      irudietara iristeko beste bide-izen bat ere jar dezakezu. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Animazioko irudiak &mdash; Animazioko irudi-kopurua. Lehenetsia hiru da,
+      baina 1 eta 255 artean aukera dezakezu. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Irudi bakoitzeko pausa (seg) &mdash; Irudia eguneratu aurreko denbora
+      segundotan. Lehenetsia segundo bat da, baina 0,10etik 10 segundorako
+      bitartea dago aukeran. 
+   </para> 
+ </listitem>  
+
+<listitem> 
+
+   <para> 
+      Biratu panel bertikaletan &mdash; Kontrol-lauki hau panel bertikaletarako
+      erabiltzen da; hautatuta badago, panela bertikala denean goitik behera
+      egingo du igerian arrainak. Hautatu gabe badago, panel horizontalean
+      bezala agertuko da eta, beraz, panel bertikala zabalaraziko du,
+      egokitzeko. 
+   </para> 
+ </listitem>   </itemizedlist> 
+   </para> 
+  
+
+   <para> 
+       Nahi dituzun aldaketa guztiak egin ondoren, egin klik
+      <guibutton>Ados</guibutton> botoian aldaketak aplikatu eta
+      <interface>Propietateen</interface> elkarrizketa-koadroa ixteko. Aldaketak
+      bertan behera uzteko eta aurreko balioetara itzultzeko, egin klik
+      <guibutton>Utzi</guibutton> botoian. 
+   </para> 
+ </sect2>   
+
+<!-- ============= Bugs ================================== --> 
+
+     <!-- This section should describe known bugs and limitations of       the
+      program if there are any - please be frank and list all       problems you
+      know of --> 
+<sect2 id="fish-bugs"> 
+
+<title>Ezagutzen diren akatsak eta mugak</title> 
+
+   <para> 
+ Ez da ezagutzen applet honen akatsik. 
+   </para> 
+ </sect2>   
+
+<!-- ============= Authors ================================ -->  
+<sect2 id="fish-authors"> 
+
+<title>Egileak</title> 
+
+   <para> 
+      <application>Arraina</application> George Lebl-ek idatzi du
+      (<email>jirka@5z.com</email>). Bidali zure iruzkin, iradokizun eta akatsen
+      berri-emateak <ulink url="http://bugs.gnome.org/" type="http">GNOMEren
+      akatsen segimendurako datu-basera</ulink>. (Akatsei buruzko berriak
+      bidaltzeko argibideak <ulink    
+      url="http://bugs.gnome.org/Reporting.html" type="http">linean</ulink>
+      aurkituko dituzu.) GNOMEren 1.1 bertsioa edo berriagoa baduzu,
+      <application>Akatsen berri emateko tresna</application>
+      (<command>bug-buddy</command>) ere erabil dezakezu akatsen berri emateko.
+      Tresna hori 
+<guimenu>Menu nagusi</guimenu>ko 
+<guisubmenu>Utilitateak</guisubmenu> azpimenuan duzu eskuragarri. 
+   </para> 
+  
+
+   <para> 
+      Eskuliburu hau Telsa Gwynne-k idatzi du
+      (<email>hobbit@aloss.ukuu.org.uk</email>). Eskuliburuari dagozkion
+      iruzkinak eta iradokizunak <ulink    type="http"
+      url="http://developer.gnome.org/projects/gdp/">GNOMEren
+      dokumentazio-proiektura</ulink> bidal ditzakezu:
+      <email>docs@gnome.org</email>. Iruzkinak linean ere egin ditzakezu <ulink
+      type="http"   
+      url="http://developer.gnome.org/projects/gdp/doctable/">GNOMEren
+      dokumentazio-egoeraren taula</ulink> erabiliz. 
+   </para> 
+  
+
+ 
+   <para> 
+      Euskarazko itzulpena Hizkuntza Politikarako Sailburuordetzak egin du
+      (<email>hizkpol@ej-gv.es</email>). Itzulpenari buruzko oharrak eta
+      iradokizunak helbide honetara bidal ditzakezu:
+      <email>hizkpol@ej-gv.es</email> 
+   </para> 
+ </sect2>   
+
+<!-- ============= Application License ============================= -->  
+<sect2 id="license"> 
+
+<title>Lizentzia</title> 
+
+   <para> 
+      Programa hau software librea da; birbana eta/edo alda dezakezu, 
+      Free Software Foundation-ek argitaratutako <ulink
+      type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>ren 2. bertsioan, edo (nahiago baduzu) bertsio
+      berriago batean, jasotako baldintzak betez gero. 
+   </para> 
+ 
+
+   <para> 
+      Programa hau erabilgarria izango delakoan banatzen da, baina inolako 
+      bermerik gabe; era berean, ez da bermatzen beraren EGOKITASUNA 
+      MERKATURATZEKO edo HELBURU PARTIKULARRETARAKO ERABILTZEKO. 
+      Argibide gehiago nahi izanez gero, ikus <ulink
+      type="help" url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>. 
+   </para> 
+ 
+
+   <para> 
+      <ulink type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia
+      Publiko Orokorra</citetitle></ulink>ren kopia bat GNOMEren
+      dokumentazioarekin batera ematen da. GNU Lizentzia Publiko 
+      Orokorraren kopia Free Software Foundation-en bidez ere lor dezakezu 
+      <ulink type="http" url="http://www.fsf.org"> haren web gunea</ulink> 
+      bisitatuz edo hona idatziz: 
+     <address> Free Software Foundation, Inc. <street>59 Temple Place</street> -
+      Suite 330 <city>Boston</city>, <state>MA</state>
+      <postcode>02111-1307</postcode> <country>USA</country> </address> 
+   </para> 
+ </sect2>  </sect1>

@@ -1,0 +1,234 @@
+ 
+
+<!-- ###############   printer applet   ############### --> 
+
+<sect1 id="printer"> 
+
+<title>Inprimagailuaren applet-a</title>   
+
+   <para> 
+        <application>Inprimagailuaren</application> applet-ak (<xref
+      linkend="printer-fig">) fitxategiak inprimatzeko aukera ematen dizu,
+      <interface>mahaigainetik</interface> edo
+      <interface>fitxategi-kudeatzailetik</interface> applet-era arrastatuz. 
+   <para> 
+     Applet hau <interface>Panel</interface> bati gehitzeko, egin klik eskuineko
+      botoiaz <interface>Panel</interface>ean eta aukeratu <menuchoice>
+<guimenu>Panela</guimenu> 
+<guisubmenu>Gehitu panelari</guisubmenu> 
+<guisubmenu>Applet-a</guisubmenu> 
+<guisubmenu>Utilitatea</guisubmenu> 
+<guimenuitem>Inprimagailua</guimenuitem></menuchoice>.  
+   </para> 
+   <figure id="printer-fig"> 
+
+<title>Inprimagailuaren applet-a</title> 
+<screenshot> 
+     <screeninfo>Inprimagailuaren applet-a</screeninfo> <graphic format="png"
+      fileref="figures/printer-fig" srccredit="Michael Hall"> </graphic>
+      </screenshot> </figure>  
+<sect2 id="printer-usage"> 
+
+<title>Erabilera</title>  
+
+   <para> 
+      <interface>Mahaigainetik</interface> edo
+      <interface>fitxategi-kudeatzailetik</interface> inprimatzeko, arrastatu
+      fitxategia <application>inprimagailuaren</application> applet-era.  
+   </para> 
+ </sect2>  
+<sect2 id="printer-right-click"> 
+
+<title>Eskuin-klikaz agertzen den laster-menuko elementuak</title> 
+
+   <para> 
+      Applet-ean eskuineko botoiaz klik eginez gero, elementu hauek dituen menua
+      agertuko zaizu: 
+
+<itemizedlist>    
+
+<listitem>  
+
+   <para> 
+  
+     <guimenuitem>Propietateak...</guimenuitem> &mdash; Menu-elementu honek
+      <interface>Propietateen</interface> elkarrizketa-koadroa irekitzen du
+      (ikus <xref linkend="printer-properties">), applet honen itxura eta
+      jokabidea pertsonalizatu ahal izateko.  
+   </para> 
+  </listitem>    
+
+<listitem>  
+
+   <para> 
+  
+     <guimenuitem>Laguntza</guimenuitem> &mdash; dokumentu hau bistaratzen du. 
+      
+   </para> 
+  </listitem>    
+
+<listitem>  
+
+   <para> 
+  
+     <guimenuitem>Honi buruz&hellip;</guimenuitem> &mdash;
+      <application>inprimagailuaren applet</application>-ari buruzko oinarrizko
+      informazioa erakusten du, esaterako, applet-aren bertsioa eta egilearen
+      izena.  
+   </para> 
+  </listitem>  </itemizedlist>  
+   </para> 
+  </sect2>  
+<sect2 id="printer-properties"> 
+
+<title>Propietateen</title> 
+
+   <para> 
+      <application>Inprimagailuaren</application> applet-a konfigura dezakezu,
+      bertan eskuineko botoiaz klik eginez eta 
+     <guimenuitem>Propietateak...</guimenuitem> aukeratuz.
+      <interface>Propietateen</interface> elkarrizketa-koadroa irekiko da, <xref
+          linkend="printer-properties-fig">n ikusten den bezala.
+   </para> 
+ 
+   </para> 
+  <figure id="printer-properties-fig"> 
+
+<title>Propietateen elkarrizketa-koadroa</title> 
+<screenshot> 
+     <screeninfo>Propietateen elkarrizketa-koadroa</screeninfo>  <graphic
+      format="png" fileref="figures/printer-properties" srccredit="Michael
+      Hall"> </graphic> </screenshot> </figure>  
+
+   <para> 
+        <application>Inprimagailuaren</application> applet-ean bistaratutako
+      etiketa aldatzeko, ("Inprimatu" <xref    linkend="printer-fig">n) idatzi
+      beste izen bat <guilabel>Inprimagailuaren izena</guilabel> eremuan.
+      Ezarpen hau erosoa da inprimagailu bat baino gehiago duzunean eta
+      bakoitzarentzat <application>inprimagailuaren</application> applet-a
+      gehitu nahi duzunean <interface>Panelean</interface>.
+      <guilabel>Inprimagailuaren izenak</guilabel> ez du erabakitzen fitxategia
+      zein inprimagailutan inprimatuko den. Inprimagailuak erraz bereiztea da
+      bere egitekoa, <application>inprimagailuaren</application> applet bat
+      baino gehiago badituzu instalatuta <interface>Panelean</interface>.   
+   </para> 
+  
+
+   <para> 
+       Fitxategiak inprimatzeko erabili behar duen komandoa aldatzeko, idatzi
+      beste komando bat <guilabel>Inprimatzeko komandoa</guilabel> eremuan.
+      Lehenespenez, <application>inprimagailuaren</application> applet-ak
+      <command>lpr</command> komandoa erabiltzen du, sistema askotan ohikoa
+      dena. Baliteke zure sistemak beste komando bat erabiltzea. Ziur ez
+      bazaude, begiratu sistemaren dokumentazioan. 
+   </para> 
+ <note>  
+
+<title>Erabiltzaile aurreratuentzako oharra</title>  
+
+   <para> 
+        Inprimagailu bat baino gehiago baduzu, fitxategiak zein inprimagailutara
+      bidali erabaki dezakezu, <guilabel>Inprimatzeko komandoaren</guilabel>
+      ezarpena aldatuz. Adibidez, zure sistemak <command>lpr</command> komandoa
+      erabiltzen badu fitxategiak inprimatzeko, eta fitxategia "ljet5" izeneko
+      inprimagailuan inprimatu behar baduzu, <guilabel>Inprimatzeko
+      komandoa</guilabel> aldatu eta <command>lpr -Pljet5</command> ezarri
+      beharko duzu.   
+   </para> 
+ </note>  
+
+   <para> 
+       Nahi dituzun aldaketa guztiak egin ondoren, egin klik
+      <guibutton>Ados</guibutton> botoian aldaketak aplikatu eta
+      <interface>Propietateen</interface> elkarrizketa-koadroa ixteko. Aldaketak
+      bertan behera utzi eta aurreko balioetara itzultzeko, egin klik
+      <guibutton>Itxi</guibutton> botoian. 
+   </para> 
+ </sect2>  
+<sect2 id="printer-bugs"> 
+
+<title> Ezagutzen diren akatsak eta mugak</title> 
+
+   <para> 
+      Ez dago akats ezagunik <application>inprimagailuaren</application>
+      applet-ean.  
+   </para> 
+ </sect2>  
+
+<!-- ============= Authors ================================ -->  
+<sect2 id="authors"> 
+
+<title>Egileak</title> 
+
+   <para> 
+      <application>Inprimagailuaren applet-a</application> Miguel de Icaza-k
+      (<email>miguel@kernel.org</email>) eta Federico Mena-k
+      (<email>quartic@gimp.org</email>) idatzi dute.  Bidali zure iruzkin,
+      iradokizun eta akatsen berri-emateak <ulink url="http://bugs.gnome.org/"
+      type="http">GNOMEren akatsen segimendurako datu-basera</ulink>. (Akatsei
+      buruzko berriak bidaltzeko argibideak <ulink      
+      url="http://bugs.gnome.org/Reporting.html" type="http">linean</ulink>
+      aurkituko dituzu.) Akatsen berri emateko, <application>Akatsen berri
+      emateko tresna</application> (<command>bug-buddy</command>) ere erabil
+      dezakezu. Tresna hori 
+<guimenu>Menu nagusiko</guimenu> 
+<guisubmenu>Utilitateak</guisubmenu> azpimenuan duzu eskuragarri.
+
+   </para> 
+  
+
+   <para> 
+      Eskuliburu hau Michael Hall-ek idatzi du
+      (<email>mphall@cstone.net</email>). Eskuliburuari dagozkion iruzkinak eta
+      iradokizunak <ulink type="http" 	url="http://www.gnome.org/gdp">GNOMEren
+      dokumentazio-proiektura</ulink> bidal ditzakezu:
+      <email>docs@gnome.org</email>. Iruzkinak linean ere egin ditzakezu <ulink
+      type="http"     
+      url="http://developer.gnome.org/projects/gdp/doctable/">GNOMEren
+      dokumentazio-egoeraren taula</ulink> erabiliz. 
+   </para> 
+  
+
+   <para> 
+      Euskarazko itzulpena Hizkuntza Politikarako Sailburuordetzak egin du
+      (<email>hizkpol@ej-gv.es</email>). Itzulpenari buruzko oharrak eta
+      iradokizunak helbide honetara bidal ditzakezu:
+      <email>hizkpol@ej-gv.es</email> 
+   </para> 
+</sect2>   
+
+<!-- ============= Application License ============================= -->  
+<sect2 id="license"> 
+
+<title>Lizentzia</title> 
+
+   <para> 
+      Programa hau software librea da; birbana eta/edo alda dezakezu, 
+      Free Software Foundation-ek argitaratutako <ulink
+      type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>ren 2. bertsioan, edo (nahiago baduzu) bertsio
+      berriago batean, jasotako baldintzak betez gero. 
+   </para> 
+
+      Programa hau erabilgarria izango delakoan banatzen da, baina INOLAKO 
+      bermerik gabe; era berean, ez da bermatzen beraren EGOKITASUNA 
+      MERKATURATZEKO edo HELBURU PARTIKULARRETARAKO ERABILTZEKO. 
+      Argibide gehiago nahi izanez gero, ikus <ulink
+      type="help" url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko
+      Orokorra</citetitle></ulink>. 
+   </para> 
+ 
+
+   <para> 
+      <ulink type="help"    url="gnome-help:gpl"><citetitle>GNU Lizentzia
+      Publiko Orokorra</citetitle></ulink>ren kopia bat <citetitle>GNOME 
+      erabiltzailearen gida</citetitle>ren eranskinean daukazu. <ulink 
+      type="help" url="gnome-help:gpl"><citetitle>GNU Lizentzia Publiko 
+      Orokorra</citetitle></ulink>ren kopia Free Software Foundation-en 
+      bidez ere lor dezakezu <ulink type="http" url="http://www.fsf.org"> 
+      haren web gunea</ulink> bisitatuz edo hona idatziz: 
+     <address> Free Software Foundation, Inc. <street>59 Temple Place</street> -
+      Suite 330 <city>Boston</city>, <state>MA</state>
+      <postcode>02111-1307</postcode> <country>USA</country> </address> 
+   </para> 
+ </sect2>  </sect1>
