@@ -2367,12 +2367,12 @@ create_system_menu(GtkWidget *menu, int fake_submenus, int fake)
 	g_free (menu_base);
 	if (g_file_exists (menudir)) {
 		if(!fake || menu) {
-			menu = create_menu_at (menu,menudir,FALSE,_("GNOME menus"),
+			menu = create_menu_at (menu,menudir,FALSE,_("Programs"),
 					       gnome_pixmap_file ("gnome-logo-icon-transparent.png"),
 					       fake_submenus, FALSE);
 		} else {
 			menu = create_fake_menu_at (menudir, FALSE,
-						    _("GNOME menus"),
+						    _("Programs"),
 						    gnome_pixmap_file ("gnome-logo-icon-transparent.png"));
 		}
 		g_return_val_if_fail(menu,NULL);
@@ -2459,7 +2459,7 @@ create_panel_root_menu(GtkWidget *panel)
 				gnome_pixmap_new_from_file_at_size (
 					gnome_pixmap_file ("gnome-logo-icon-transparent.png"),
 					SMALL_ICON_SIZE, SMALL_ICON_SIZE),
-				_("GNOME menus"));
+				_("Programs"));
 		gtk_menu_append (GTK_MENU (panel_menu), menuitem);
 		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem),menu);
 		gtk_signal_connect(GTK_OBJECT(menu),"show",
@@ -2467,10 +2467,10 @@ create_panel_root_menu(GtkWidget *panel)
 				   menuitem);
 	}
 
-	menu = create_user_menu(_("User menus"),"apps",NULL,TRUE,TRUE,TRUE);
+	menu = create_user_menu(_("Favorites"),"apps",NULL,TRUE,TRUE,TRUE);
 	if(menu) {
 		menuitem = gtk_menu_item_new ();
-		setup_menuitem (menuitem, 0, _("User menus"));
+		setup_menuitem (menuitem, 0, _("Favorites"));
 		gtk_menu_append (GTK_MENU (panel_menu), menuitem);
 		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem),menu);
 		gtk_signal_connect(GTK_OBJECT(menu),"show",
@@ -3646,7 +3646,7 @@ create_root_menu(int fake_submenus, int flags)
 		need_separ = TRUE;
 	}
 	if(flags&MAIN_MENU_USER && !(flags&MAIN_MENU_USER_SUB)) {
-		root_menu = create_user_menu(_("User menus"), "apps",
+		root_menu = create_user_menu(_("Favorites"), "apps",
 					     root_menu, fake_submenus, FALSE,
 					     FALSE);
 		need_separ = TRUE;
@@ -3681,7 +3681,7 @@ create_root_menu(int fake_submenus, int flags)
 				gnome_pixmap_new_from_file_at_size (
 					gnome_pixmap_file ("gnome-logo-icon-transparent.png"),
 					SMALL_ICON_SIZE, SMALL_ICON_SIZE),
-				_("GNOME menus"));
+				_("Programs"));
 		gtk_menu_append (GTK_MENU (root_menu), menuitem);
 		if(menu) {
 			gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem),
@@ -3695,10 +3695,10 @@ create_root_menu(int fake_submenus, int flags)
 		if(need_separ)
 			add_menu_separator(root_menu);
 		need_separ = FALSE;
-		menu = create_user_menu(_("User menus"), "apps", 
+		menu = create_user_menu(_("Favorites"), "apps", 
 					NULL, fake_submenus, TRUE, TRUE);
 		menuitem = gtk_menu_item_new ();
-		setup_menuitem (menuitem, 0, _("User menus"));
+		setup_menuitem (menuitem, 0, _("Favorites"));
 		gtk_menu_append (GTK_MENU (root_menu), menuitem);
 		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem), menu);
 		gtk_signal_connect(GTK_OBJECT(menu),"show",
@@ -4207,11 +4207,11 @@ create_properties_dialog(Menu *menu)
 	gtk_container_add(GTK_CONTAINER(f),table);
 
 	add_menu_type_options(GTK_OBJECT(dialog),GTK_TABLE(table),0,
-			      _("GNOME menu: "),"system",
+			      _("Programs: "),"system",
 			      menu->main_menu_flags&MAIN_MENU_SYSTEM,
 			      menu->main_menu_flags&MAIN_MENU_SYSTEM_SUB);
 	add_menu_type_options(GTK_OBJECT(dialog),GTK_TABLE(table),1,
-			      _("User menu: "),"user",
+			      _("Favorites: "),"user",
 			      menu->main_menu_flags&MAIN_MENU_USER,
 			      menu->main_menu_flags&MAIN_MENU_USER_SUB);
 	add_menu_type_options(GTK_OBJECT(dialog),GTK_TABLE(table),2,

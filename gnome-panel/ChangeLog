@@ -1,5 +1,7 @@
 1999-08-20  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
+	* menu.c: s/GNOME menus/Programs/ s/User menus/Favorites/
+
 	* session.c (load_default_applets): added gnome-terminal.desktop
 
 	* menu.c (create_root_menu): use KDE_ICONDIR to get the exec.xpm
