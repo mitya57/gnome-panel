@@ -720,9 +720,7 @@ s_panelspot_sync_config(POA_GNOME_PanelSpot *servant,
 void
 panel_corba_clean_up(void)
 {
-  CORBA_Object ns = gnome_name_service_get();
-  goad_server_unregister(ns, "gnome_panel", "server", &ev);
-  CORBA_Object_release(ns, &ev);
+  goad_server_unregister(CORBA_OBJECT_NIL, "gnome_panel", "server", &ev);
   CORBA_ORB_shutdown(orb, CORBA_FALSE, &ev);
 }
 

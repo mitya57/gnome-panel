@@ -198,12 +198,10 @@ void applet_widget_corba_deactivate(PortableServer_POA poa,
 
 #define APPLET_ACTIVATE(func, goad_id, apldat) ({ CORBA_Environment ev; CORBA_exception_init(&ev); \
 CORBA_Object_release(func(CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), \
-"RootPOA", &ev), goad_id, NULL, &apldat, &ev)); CORBA_exception_free(&ev); })
+"RootPOA", &ev), goad_id, NULL, apldat, &ev), &ev); CORBA_exception_free(&ev); })
 
 #define APPLET_DEACTIVATE(func, goad_id, apldat) ({ CORBA_Environment ev; CORBA_exception_init(&ev); \
-CORBA_Object_release(func(CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), "RootPOA", &ev), goad_id, apldat, &ev));  CORBA_exception_free(&ev); })
-
-#define APPLET_DEACTIVATE_DEFAULT(goad_id, apldat) APPLET_DEACTIVATE(applet_widget_corba_deactivate, goad_id, apldat)
+func(CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), "RootPOA", &ev), goad_id, apldat, &ev); CORBA_exception_free(&ev); })
 
 END_GNOME_DECLS
 
