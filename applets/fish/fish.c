@@ -423,12 +423,14 @@ wanda_activator(PortableServer_POA poa,
 		CORBA_Environment *ev)
 {
   GtkWidget *fish, *applet;
+  
+  puts("ACTIVATING");
 
   applet = applet_widget_new(goad_id);
 
   load_properties(APPLET_WIDGET(applet)->privcfgpath);
 
-  gtk_widget_realize(applet);
+  /*gtk_widget_realize(applet);*/
   fish = create_fish_widget(applet);
   gtk_widget_show(fish);
   applet_widget_add(APPLET_WIDGET(applet), fish);
@@ -463,6 +465,7 @@ wanda_deactivator(PortableServer_POA poa,
 		  gpointer impl_ptr,
 		  CORBA_Environment *ev)
 {
+  puts("DE-ACTIVATING");
   applet_widget_corba_deactivate(poa, goad_id, impl_ptr, ev);
 }
 

@@ -644,7 +644,6 @@ gnome_panel_applet_corba_init(AppletWidget *applet, const char *goad_id)
 						 &applet_servant->winid, &ev);
     {
 	    FILE *fp = fopen("/tmp/bla","a");
-	    gdk_beep();
 	    fprintf(fp,"\nADD_APPLET_RETURNED:\nthe pspot %lX\n\n",
 		    (long)applet_servant->pspot);
 	    fclose(fp);
@@ -683,8 +682,15 @@ applet_widget_new(const char *goad_id)
 	CD(applet) = corbadat = gnome_panel_applet_corba_init(applet,goad_id);
 	corbadat->appwidget = applet;
 
-	gtk_plug_construct(GTK_PLUG(applet), corbadat->winid);
+    {
+	    FILE *fp = fopen("/tmp/bla","a");
+	    fprintf(fp,"\nBUILDING THE PLUG ON:\nwinid %lX\n\n",
+		    (long)corbadat->winid);
+	    fclose(fp);
+    }
 
+	gtk_plug_construct(GTK_PLUG(applet), corbadat->winid);
+	
 	corbadat->goad_id = g_strdup(goad_id);
 
 	gtk_signal_connect(GTK_OBJECT(applet),"destroy",
@@ -720,7 +726,6 @@ applet_event(GtkWidget *widget, GdkEvent *event, gpointer data)
     bevent = (GdkEventButton *) event;
     {
 	    FILE *fp = fopen("/tmp/bla","a");
-	    gdk_beep();
 	    fprintf(fp,"the applet %lX\n",(long)widget);
 	    fprintf(fp,"the pspot %lX\n",(long)(CD(widget)->pspot));
 	    fclose(fp);
@@ -823,7 +828,6 @@ applet_widget_add(AppletWidget *applet, GtkWidget *widget)
 	CORBA_exception_init(&ev);
     {
 	    FILE *fp = fopen("/tmp/bla","a");
-	    gdk_beep();
 	    fprintf(fp,"\nCALLING REGUISTER US ON:\nthe pspot %lX\n\n",
 		    (long)(CD(applet)->pspot));
 	    fclose(fp);
@@ -835,7 +839,6 @@ applet_widget_add(AppletWidget *applet, GtkWidget *widget)
 	bind_top_applet_events(GTK_WIDGET(applet));
     {
 	    FILE *fp = fopen("/tmp/bla","a");
-	    gdk_beep();
 	    fprintf(fp,"\nAPPLET_WIDGET_ADD\nthe applet widget %lX\n",(long)applet);
 	    fprintf(fp,"the pspot %lX\n\n",(long)(CD(applet)->pspot));
 	    fclose(fp);
