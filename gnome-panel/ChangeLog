@@ -1,5 +1,15 @@
 1999-08-20  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
+	* button-widget.c (button_widget_draw): don't draw the tile if
+	we are not in the button and we only draw when we are
+
+	* panel_config_global.h: added 'tile_when_over' variable
+
+	* panel_config_global.c (misc_notebook_page): added checkbox
+	for showing tiles only when the cursor is over
+
+	* session.c: save/load tile_when_over
+
 	* menu.c (update_hidebutton_menu): one stupid mistake...
 	(update_back_menu): two stupid mistakes...
 

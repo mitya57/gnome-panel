@@ -138,30 +138,8 @@ apply_global_config(void)
 			PanelData *pd = li->data;
 			if(!GTK_WIDGET_REALIZED(pd->panel))
 				continue;
-#if 0
-			if((IS_SNAPPED_WIDGET(pd->panel) &&
-			    SNAPPED_WIDGET(pd->panel)->mode != SNAPPED_AUTO_HIDE &&
-			    SNAPPED_WIDGET(pd->panel)->state == SNAPPED_SHOWN) ||
-			   (IS_CORNER_WIDGET(pd->panel) &&
-			    CORNER_WIDGET(pd->panel)->state == SNAPPED_SHOWN)) {
-				if(global_config.keep_bottom)
-					gnome_win_hints_set_layer(pd->panel, WIN_LAYER_BELOW);
-				else
-					gnome_win_hints_set_layer(pd->panel, WIN_LAYER_DOCK);
-			} else if(IS_DRAWER_WIDGET(pd->panel)) {
-				if(global_config.keep_bottom)
-					gnome_win_hints_set_layer(pd->panel, WIN_LAYER_BELOW);
-				else
-					gnome_win_hints_set_layer(pd->panel,
-								  WIN_LAYER_ABOVE_DOCK);
-			} else {
-				if(global_config.keep_bottom)
-					gnome_win_hints_set_layer(pd->panel, WIN_LAYER_ONTOP);
-				else
-					gnome_win_hints_set_layer(pd->panel,
-								  WIN_LAYER_ABOVE_DOCK);
-			}
-#endif
+			if (IS_BASEP_WIDGET (pd->panel))
+				basep_widget_update_winhints (BASEP_WIDGET (pd->panel));
 		}
 	}
 	keep_bottom_old = global_config.keep_bottom;
@@ -589,6 +567,8 @@ do_session_save(GnomeClient *client,
 				      global_config.simple_movement);
 		gnome_config_set_bool("hide_panel_frame",
 				      global_config.hide_panel_frame);
+		gnome_config_set_bool("tile_when_over",
+				      global_config.tile_when_over);
 		buf = g_string_new(NULL);
 		for(i=0;i<LAST_TILE;i++) {
 			g_string_sprintf(buf,"tiles_enabled_%d",i);
@@ -1125,6 +1105,7 @@ load_up_globals(void)
 	global_config.drawer_auto_close = gnome_config_get_bool("drawer_auto_close=FALSE");
 	global_config.simple_movement = gnome_config_get_bool("simple_movement=FALSE");
 	global_config.hide_panel_frame = gnome_config_get_bool("hide_panel_frame=FALSE");
+	global_config.tile_when_over = gnome_config_get_bool("tile_when_over=FALSE");
 	for(i=0;i<LAST_TILE;i++) {
 		g_string_sprintf(buf,"tiles_enabled_%d=TRUE",i);
 		global_config.tiles_enabled[i] =
