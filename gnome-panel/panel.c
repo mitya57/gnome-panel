@@ -15,6 +15,7 @@
 #include <gnome.h>
 
 #include "panel-include.h"
+#include "gnome-panel.h"
 
 #define PANEL_EVENT_MASK (GDK_BUTTON_PRESS_MASK |		\
 			   GDK_BUTTON_RELEASE_MASK |		\
@@ -232,9 +233,14 @@ orientation_change(AppletInfo *info, PanelWidget *panel)
 		Extern *ext = info->data;
 		g_assert(ext);
 		/*ingore this until we get an ior*/
-		if(ext->obj)
-		  send_applet_change_orient(ext->obj,
-					    get_applet_orient(panel));
+		if(ext->obj) {
+			CORBA_Environment ev;
+			CORBA_exception_init(&ev);
+			GNOME_Applet_change_orient(ext->obj, orient, &ev);
+			if(ev._major)
+				panel_clean_applet(ext->info);
+			CORBA_exception_free(&ev);
+		}
 	} else if(info->type == APPLET_MENU) {
 		Menu *menu = info->data;
 		set_menu_applet_orient(menu,get_applet_orient(panel));
@@ -315,11 +321,20 @@ back_change(AppletInfo *info, PanelWidget *panel)
 		Extern *ext = info->data;
 		g_assert(ext);
 		/*ignore until we have a valid IOR*/
-		if(ext->obj)
-			send_applet_change_back(ext->obj,
-						panel->back_type,
-						panel->back_pixmap,
-						&panel->back_color);
+		if(ext->obj) {
+			GNOME_Panel_BackInfoType backing;
+			CORBA_Environment ev;
+			CORBA_exception_init(&ev);
+			backing._d = panel->back_type;
+			if(panel->back_type == BACK_PIXMAP)
+				backing._u.pmap = panel->back_pixmap;
+			else if(panel->back_type == BACK_COLOR)
+				backing._u.c = panel->back_color;
+			GNOME_Applet_back_change(ext->obj, &backing, &ev);
+			if(ev._major)
+				panel_clean_applet(ext->info);
+			CORBA_exception_free(&ev);
+		}
 	} 
 }
 

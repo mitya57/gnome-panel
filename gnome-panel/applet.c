@@ -13,6 +13,7 @@
 #include <gdk/gdkx.h>
 
 #include "panel-include.h"
+#include "gnome-panel.h"
 
 #define APPLET_EVENT_MASK (GDK_BUTTON_PRESS_MASK |		\
 			   GDK_BUTTON_RELEASE_MASK |		\
@@ -69,13 +70,19 @@ applet_callback_callback(GtkWidget *widget, gpointer data)
 
 	g_return_if_fail(menu->info != NULL);
 
-	switch(info->type) {
+	switch(menu->info->type) {
 	case APPLET_EXTERN:
 		{
+			CORBA_Environment ev;
 			Extern *ext = menu->info->data;
 			g_assert(ext);
-			send_applet_do_callback(ext->obj,
-						menu->name);
+			g_assert(ext->obj);
+
+			CORBA_exception_init(&ev);
+			GNOME_Applet_do_callback(ext->obj, menu->name, &ev);
+			if(ev._major)
+				panel_clean_applet(ext->info);
+			CORBA_exception_free(&ev);
 			break;
 		}
 	case APPLET_LAUNCHER:

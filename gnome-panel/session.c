@@ -50,8 +50,14 @@ send_tooltips_state(int enabled)
 			/*if it's not set yet, don't send it, it will be sent
 			  when the ior is discovered anyhow, so this would be
 			  redundant anyway*/
-			if(ext->obj)
-				send_applet_tooltips_state(ext->obj,enabled);
+			if(ext->obj) {
+				CORBA_Environment ev;
+				CORBA_exception_init(&ev);
+				GNOME_Applet_set_tooltips_state(ext->obj, enabled, &ev);
+				if(ev._major)
+					panel_clean_applet(ext->info);
+				CORBA_exception_free(&ev);
+			}
 		}
 	}
 }
@@ -132,6 +138,26 @@ gnome_desktop_entry_save_no_sync (GnomeDesktopEntry *dentry)
 
 	gnome_config_pop_prefix ();
 }
+
+static int
+send_applet_session_save (CORBA_Object obj,
+			  const char *cfgpath,
+			  const char *globcfgpath)
+{
+  CORBA_short retval;
+  CORBA_Environment ev;
+
+  CORBA_exception_init(&ev);
+  retval = GNOME_Applet_session_save(obj,
+				     (CORBA_char *)cfgpath,
+				     (CORBA_char *)globcfgpath, &ev);
+  if(ev._major)
+    panel_clean_applet(applet_id);
+  CORBA_exception_free(&ev);
+
+  return retval;
+}
+
 
 
 static void

@@ -59,7 +59,9 @@ extern_start_new_goad_id(Extern *e)
 {
         CORBA_Environment ev;
 	if(!goad_id_starting) {
+		CORBA_exception_init(&ev);
 		CORBA_Object_release(goad_server_activate_with_id(NULL, e->goad_id, GOAD_ACTIVATE_NEW_ONLY|GOAD_ACTIVATE_ASYNC, NULL),&ev);
+		CORBA_exception_free(&ev);
 		goad_id_starting = g_strdup(e->goad_id);
 	} else {
 		if(start_timeout>-1)
@@ -257,11 +259,11 @@ s_panelspot_get_parent_orient(POA_GNOME_PanelSpot *servant,
 			      CORBA_Environment *ev);
 
 static void
-s_panelspot_register(POA_GNOME_PanelSpot *servant,
+s_panelspot_register_us(POA_GNOME_PanelSpot *servant,
 		     CORBA_Environment *ev);
 
 static void
-s_panelspot_unregister(POA_GNOME_PanelSpot *servant,
+s_panelspot_unregister_us(POA_GNOME_PanelSpot *servant,
 		       CORBA_Environment *ev);
 
 static void
@@ -326,8 +328,8 @@ static POA_GNOME_PanelSpot__epv panelspot_epv = {
   (gpointer)&s_panelspot_get_parent_panel,
   (gpointer)&s_panelspot_get_spot_pos,
   (gpointer)&s_panelspot_get_parent_orient,
-  (gpointer)&s_panelspot_register,
-  (gpointer)&s_panelspot_unregister,
+  (gpointer)&s_panelspot_register_us,
+  (gpointer)&s_panelspot_unregister_us,
   (gpointer)&s_panelspot_abort_load,
   (gpointer)&s_panelspot_start_menu,
   (gpointer)&s_panelspot_drag_start,
@@ -548,8 +550,8 @@ s_panelspot_get_parent_orient(POA_GNOME_PanelSpot *servant,
 }
 
 static void
-s_panelspot_register(POA_GNOME_PanelSpot *servant,
-		     CORBA_Environment *ev)
+s_panelspot_register_us(POA_GNOME_PanelSpot *servant,
+			CORBA_Environment *ev)
 {
 	PanelWidget *panel;
 	Extern *ext = (Extern *)servant;
@@ -572,13 +574,16 @@ s_panelspot_register(POA_GNOME_PanelSpot *servant,
 
 	orientation_change(info,panel);
 	back_change(info,panel);
-	send_applet_tooltips_state(ext->applet,
-				   global_config.tooltips_enabled);
+
+	GNOME_Applet_set_tooltips_state(ext->obj,
+					global_config.tooltips_enabled, &ev);
+	if(ev._major)
+		panel_clean_applet(info);
 }
 
 static void
-s_panelspot_unregister(POA_GNOME_PanelSpot *servant,
-		       CORBA_Environment *ev)
+s_panelspot_unregister_us(POA_GNOME_PanelSpot *servant,
+			  CORBA_Environment *ev)
 {
 	Extern *ext = (Extern *)servant;
 	panel_clean_applet(ext->info);

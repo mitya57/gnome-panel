@@ -17,6 +17,26 @@
 
 BEGIN_GNOME_DECLS
 
+#ifndef PANEL_TYPES_H
+/*from panel-types.h*/
+typedef enum {
+	ORIENT_UP,
+	ORIENT_DOWN,
+	ORIENT_LEFT,
+	ORIENT_RIGHT
+} PanelOrientType;
+#endif
+
+#ifndef __PANEL_WIDGET_H__
+/*from panel-widget.h*/
+typedef enum {
+	PANEL_BACK_NONE,
+	PANEL_BACK_COLOR,
+	PANEL_BACK_PIXMAP
+} PanelBackType;
+#endif
+
+
 #define APPLET_WIDGET(obj)          GTK_CHECK_CAST (obj, applet_widget_get_type (), AppletWidget)
 #define APPLET_WIDGET_CLASS(klass)  GTK_CHECK_CLASS_CAST (klass, applet_widget_get_type (), AppletWidgetClass)
 #define IS_APPLET_WIDGET(obj)       GTK_CHECK_TYPE (obj, applet_widget_get_type ())
@@ -29,6 +49,9 @@ typedef void (*AppletCallbackFunc)(AppletWidget *applet, gpointer data);
 struct _AppletWidget
 {
 	GtkPlug			window;
+	
+	char			*privcfgpath;
+	char			*globcfgpath;
 
         gpointer                corbadat; /* CORBA stuff */
 };
@@ -42,11 +65,11 @@ struct _AppletWidgetClass
 	   you get an initial change_orient signal during the add, so
 	   that you can update your orientation properly */
 	void (* change_orient) (AppletWidget *applet,
-				GNOME_Panel_OrientType orient);
+				PanelOrientType orient);
 	/* the panel background changes, the pixmap handeling is likely
 	   to change */
 	void (* back_change) (AppletWidget *applet,
-			      GNOME_Panel_BackType type,
+			      PanelBackType type,
 			      char *pixmap,
 			      GdkColor *color);
 	/*will send the current state of the tooltips, if they are enabled
@@ -88,7 +111,7 @@ void		applet_widget_add		(AppletWidget *applet,
 						 GtkWidget *widget);
 
 /* remove the plug from the panel, this will destroy the applet */
-void		applet_widget_remove (AppletWidget *applet);
+void		applet_widget_remove		(AppletWidget *applet);
 
 /* The callback functions control the applet's right click menu, the name
    is just a string, which has to be unique and which controls the nesting,
@@ -136,7 +159,7 @@ int		applet_widget_get_applet_count	(void);
 void		applet_widget_sync_config	(AppletWidget *applet);
 
 /* Get the oprientation the applet should use */
-GNOME_Panel_OrientType	applet_widget_get_panel_orient	(AppletWidget *applet);
+PanelOrientType	applet_widget_get_panel_orient	(AppletWidget *applet);
 
 /*use this instead of gnome init, if you want multi applet, you also
   have to specify a "start new applet" function which will launch a new
@@ -166,6 +189,9 @@ void		applet_widget_gtk_main		(void);
 /*quit the applet*/
 void		applet_widget_gtk_main_quit	(void);
 
+/*quit the panel (this will log out the gnome session)*/
+void		applet_widget_panel_quit	(void);
+
 /* Used by shlib applets */
 CORBA_Object applet_widget_corba_activate(GtkWidget *applet,
 					  PortableServer_POA poa,
@@ -179,9 +205,8 @@ void applet_widget_corba_deactivate(PortableServer_POA poa,
 				    gpointer impl_ptr,
 				    CORBA_Environment *ev);
 
-					  
-#define APPLET_ACTIVATE(func, goad_id, apldat) ({ CORBA_Environment
-ev; CORBA_exception_init(&ev); \
+
+#define APPLET_ACTIVATE(func, goad_id, apldat) ({ CORBA_Environment ev; CORBA_exception_init(&ev); \
 CORBA_Object_release(x(CORBA_ORB_resolve_initial_references(gnome_CORBA_ORB(), \
 "RootPOA", ev), goad_id, NULL, &apldat, &ev)); })
 
