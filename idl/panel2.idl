@@ -50,37 +50,24 @@ module GNOME {
 					  out unsigned long winid);
 		oneway void quit ();
 
-		/*dunno if this is good, since I don't want to mix
-		  corba into the panel-widget code*/
 		readonly attribute boolean in_drag;
-		/*there is only ONE Panel object for the entire 
-		  panel app, so this makes no sense*/
-		/*readonly attribute OrientType orient;*/
 	};
 
 	interface PanelSpot { /* panel half of applets */
 		/*accessors*/
-		/*readonly attribute short spot_pos;*/
 		attribute string tooltip;
 		
 		/*accessors for certain flags*/
-		/*gets the number of the panel which this is on,
+		/*the number of the panel which this is on,
 		  this is for those rare applets that want to save
 		  their prefs in a different way*/
-		short get_parent_panel();
-		/*similiar to the above, but gets the position*/
-		short get_spot_pos();
+		readonly attribute short parent_panel;
+		/*similiar to the above, but it's the position*/
+		readonly attribute short spot_pos;
 
-		/*gets the orient of the panel on which this applet
-		  resides*/
-		OrientType get_orient();
+		/*the orient of the panel on which this applet resides*/
+		readonly attribute Panel::OrientType parent_orient;
 
-		/* These are exact copies of the in_drag & orient
-		   attributes on parent_panel, for efficiency's sake
-		 XXX this doesn't make any sense to me -George*/
-		/*readonly attribute boolean parent_panel_in_drag;
-		readonly attribute OrientType parent_panel_orient;*/
-		
 		/* the applet is all done with building itself
 		   so it just tells us that it's all ready, this
 		   makes the panel start the next applet (otherwise,
