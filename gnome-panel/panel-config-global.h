@@ -28,6 +28,7 @@ struct _GlobalConfig {
 	char *tile_down[LAST_TILE];
 	int tile_border[LAST_TILE];
 	int tile_depth[LAST_TILE];
+	int hide_panel_frame;
 };
 
 void panel_config_global(void);

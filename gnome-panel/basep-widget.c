@@ -839,13 +839,13 @@ basep_back_change(PanelWidget *panel,
 		  GdkColor *color,
 		  BasePWidget *basep)
 {
-	if(type == PANEL_BACK_PIXMAP &&
+	if((type != PANEL_BACK_NONE || global_config.hide_panel_frame) &&
 	   basep->panel->parent == basep->frame) {
 		gtk_widget_show(basep->innerebox);
 		gtk_widget_reparent(basep->panel,basep->innerebox);
 		gtk_widget_hide(basep->frame);
-	} else if(type != PANEL_BACK_PIXMAP &&
-		  basep->panel->parent == basep->innerebox) {
+	} else if ((type == PANEL_BACK_NONE && !global_config.hide_panel_frame) &&
+		   basep->panel->parent == basep->innerebox) {
 		gtk_widget_show(basep->frame);
 		gtk_widget_reparent(basep->panel,basep->frame);
 		gtk_widget_hide(basep->innerebox);
@@ -950,7 +950,7 @@ basep_widget_construct (BasePWidget *basep,
 
 	gtk_widget_show(basep->panel);
 
-	if(back_type != PANEL_BACK_PIXMAP) {
+	if(back_type == PANEL_BACK_NONE || !global_config.hide_panel_frame) {
 		gtk_widget_show(basep->frame);
 		gtk_container_add(GTK_CONTAINER(basep->frame),basep->panel);
 	} else {

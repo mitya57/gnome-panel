@@ -1,3 +1,14 @@
+1999-08-18  Jacob Berkman  <jberkman@andrew.cmu.edu>
+
+	* panel_config_global.c (misc_notebook_page): add a check box
+	for keeping buttons flush with the edge
+
+	* panel_config_global.h: added hide_panel_frame variable for
+	keeping buttons flush with the edge
+
+	* basep-widget.c (basep_back_change): only draw the frame if we are
+	no-color and not hide-frame
+
 1999-08-10  Jacob Berkman  <jberkman@andrew.cmu.edu>
 
 	* applet-widget.c (applet_widget_register_stock_callback_dir): 
