@@ -1,3 +1,9 @@
+Sat Dec 02 23:22:43 2000  George Lebl <jirka@5z.com>
+
+	* panel.c: use gnome-globe.png for links, and on panel destroy
+	  make sure appelts are marked for clean remove to avoid the
+	  reload dialog
+
 2000-11-19  Karl Eichwalder  <ke@suse.de>
 
 	* extern.c (extern_before_remove): Improve message text layout

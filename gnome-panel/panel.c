@@ -559,6 +559,22 @@ panel_move_timeout(gpointer data)
 }
 
 static void
+clean_kill_applets (PanelWidget *panel)
+{
+	GList *li;
+	for (li = panel->applet_list; li != NULL; li = li->next) {
+		AppletData *ad = li->data;
+		AppletInfo *info =
+			gtk_object_get_data (GTK_OBJECT (ad->applet),
+					     "applet_info");
+		if (info->type == APPLET_EXTERN) {
+			Extern *ext = info->data;
+			ext->clean_remove = TRUE;
+		}
+	}
+}
+
+static void
 panel_destroy(GtkWidget *widget, gpointer data)
 {
 	PanelData *pd = gtk_object_get_user_data(GTK_OBJECT(widget));
@@ -568,6 +584,8 @@ panel_destroy(GtkWidget *widget, gpointer data)
 		panel = PANEL_WIDGET(BASEP_WIDGET(widget)->panel);
 	else if (IS_FOOBAR_WIDGET (widget))
 		panel = PANEL_WIDGET (FOOBAR_WIDGET (widget)->panel);
+
+	clean_kill_applets (panel);
 		
 	kill_config_dialog(widget);
 
@@ -861,7 +879,7 @@ static void
 drop_url(PanelWidget *panel, int pos, char *url)
 {
 	char *p = g_strdup_printf(_("Open URL: %s"),url);
-	load_launcher_applet_from_info_url(url, p, url, "netscape.png",
+	load_launcher_applet_from_info_url(url, p, url, "gnome-globe.png",
 					   panel, pos, TRUE);
 	g_free(p);
 }
