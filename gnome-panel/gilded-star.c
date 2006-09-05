@@ -163,7 +163,7 @@ typedef struct
   GtkWidget *drop_socket;
   GtkWidget *socket;
   GtkWidget *dialog;
-  GtkWidget *image;
+  GtkWidget *button;
 
   AppletInfo *info;
 
@@ -374,12 +374,14 @@ gilded_star_create_icon (GildedStar *star)
 
   if (priv->icon)
   {
-    GtkWidget *image;
+    GtkWidget *button;
 
-    image = gtk_image_new_from_icon_name (priv->icon, GTK_ICON_SIZE_MENU);
-    gtk_container_add (GTK_CONTAINER (star), image);
+    button = button_widget_new (priv->icon, FALSE, PANEL_ORIENTATION_TOP);
+    gtk_container_add (GTK_CONTAINER (star), button);
     gtk_widget_show_all (GTK_WIDGET (star));
-    priv->image = image;
+    priv->button = button;
+    g_signal_connect_swapped (button, "clicked",
+                              G_CALLBACK (gilded_star_invoke), star);
   }
   else
     gtk_widget_hide (GTK_WIDGET (star));
@@ -726,9 +728,13 @@ gilded_star_create_socket (GildedStar *star)
   if (priv->socket)
     return;
 
-  if (priv->image)
-    gtk_container_remove (GTK_CONTAINER (star), priv->image);
-  priv->image = NULL;
+  if (priv->button)
+    gtk_container_remove (GTK_CONTAINER (star), priv->button);
+  priv->button = NULL;
+
+  if (priv->dialog)
+    gtk_widget_destroy (priv->dialog);
+  priv->dialog = NULL;
 
   priv->socket = gtk_socket_new ();
   g_signal_connect_swapped (priv->socket, "plug-removed",
@@ -737,6 +743,9 @@ gilded_star_create_socket (GildedStar *star)
                           G_CALLBACK (gilded_star_setup_transparency), NULL);
   gtk_container_add (GTK_CONTAINER (star), priv->socket);
   gtk_widget_show_all (GTK_WIDGET (star));
+
+  priv->seen_child = TRUE;
+  priv->attached = TRUE;
 }
 
 static int
@@ -748,9 +757,6 @@ gilded_star_get_xid (GildedStar *applet)
     return 0;
 
   gilded_star_create_socket (applet);
-
-  priv->seen_child = TRUE;
-  priv->attached = TRUE;
 
   return gtk_socket_get_id (GTK_SOCKET (priv->socket));
 }
@@ -764,9 +770,6 @@ gilded_star_give_xid (GildedStar *applet, int xid)
     return FALSE;
 
   gilded_star_create_socket (applet);
-
-  priv->seen_child = TRUE;
-  priv->attached = TRUE;
 
   gtk_socket_add_id (GTK_SOCKET (priv->socket), xid);
   return TRUE;
