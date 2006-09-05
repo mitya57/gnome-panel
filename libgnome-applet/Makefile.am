@@ -11,6 +11,8 @@ libgnome_applet_la_SOURCES =		\
 	gnome-applet-background-type.h	\
 	gnome-applet-orientation.c	\
 	gnome-applet-orientation.h	\
+	gnome-applet-lifespan.c		\
+	gnome-applet-lifespan.h		\
 	gnome-applet-label.c		\
 	gnome-applet-label.h		\
 	gnome-applet-layout-box.c	\
@@ -23,6 +25,7 @@ libgnome_applet_la_SOURCES =		\
 BUILT_SOURCES = \
 	gnome-applet-orientation.c	\
 	gnome-applet-background-type.c	\
+	gnome-applet-lifespan.c		\
 	gnome-applet-marshal.c		\
 	gnome-applet-marshal.h		\
 	applet-server-client.h		\
@@ -48,6 +51,7 @@ libgnome_appletinclude_HEADERS =        \
 	gnome-applet-layout-box.h	\
 	gnome-applet-config.h		\
 	gnome-applet-orientation.h	\
+	gnome-applet-lifespan.h		\
 	gnome-applet-background-type.h
 
 CLEANFILES = \
@@ -63,6 +67,9 @@ gnome-applet-orientation.c: gnome-applet-orientation.h
 	glib-mkenums --template glib-mkenums.template $^ > $@
 
 gnome-applet-background-type.c: gnome-applet-background-type.h
+	glib-mkenums --template glib-mkenums.template $^ > $@
+
+gnome-applet-lifespan.c: gnome-applet-lifespan.h
 	glib-mkenums --template glib-mkenums.template $^ > $@
 
 gnome-applet-marshal.h: gnome-applet-marshal.list

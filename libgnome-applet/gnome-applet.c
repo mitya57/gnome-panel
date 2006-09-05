@@ -33,6 +33,7 @@
 
 #include "gnome-applet-background-type.h"
 #include "gnome-applet-orientation.h"
+#include "gnome-applet-lifespan.h"
 #include "gnome-applet-label.h"
 #include "gnome-applet-layout-box.h"
 
@@ -334,7 +335,7 @@ gnome_applet_devine_new_proxy (const char *id, const char *type)
   if (id)
     object = g_strdup_printf ("/ca/desrt/Applet/%s", id);
   else
-    if (!ca_desrt_AppletServer_create_applet_fakesync (server, type, &object, &error))
+    if (!ca_desrt_AppletServer_create_applet (server, type, &object, &error))
     {
       g_critical ("Unable to create remote applet instance: %s.  "
                   "Are you sure the panel is running?", error->message);
@@ -444,7 +445,7 @@ gnome_applet_orientation_changed (GnomeApplet *applet)
   GtkBin *bin = GTK_BIN (applet);
   int temp;
 
-  ca_desrt_Applet_get_orientation_fakesync (priv->proxy, &temp, NULL);
+  ca_desrt_Applet_get_orientation (priv->proxy, &temp, NULL);
   orientation = temp;
 
   if (priv->orientation == orientation)
@@ -462,7 +463,6 @@ static void
 gnome_applet_notify (DBusGProxy *proxy, const char *property,
                      GnomeApplet *applet)
 {
-  printf ("notify '%s'\n", property);
   if (!strcmp (property, "orientation"))
     gnome_applet_orientation_changed (applet);
   else if (!strcmp (property, "background-type"))
@@ -517,8 +517,8 @@ gnome_applet_initialise (GnomeApplet *applet, GType type)
     return;
 
   xid = gtk_plug_get_id (GTK_PLUG (applet));
-  if (!ca_desrt_Applet_give_xid_fakesync (priv->proxy, xid, NULL))
-  //if (!ca_desrt_Applet_get_xid_fakesync (priv->proxy, &xid, NULL))
+  if (!ca_desrt_Applet_give_xid (priv->proxy, xid, NULL))
+  //if (!ca_desrt_Applet_get_xid (priv->proxy, &xid, NULL))
   {
     g_critical ("Unable to connect to applet instance %s\n", priv->id);
     g_object_unref (priv->proxy);
@@ -632,7 +632,7 @@ gnome_applet_get_drop_container (GnomeApplet *ga)
     GtkWidget *plug;
     int xid;
 
-    ca_desrt_Applet_request_drop_socket_fakesync (priv->proxy, &xid, NULL);
+    ca_desrt_Applet_request_drop_socket (priv->proxy, &xid, NULL);
 
     plug = gtk_plug_new (xid);
     gtk_widget_show (plug);
@@ -801,11 +801,11 @@ gnome_applet_get_type (void)
 }
 
 void
-gnome_applet_set_persist (GnomeApplet *applet, gboolean persist)
+gnome_applet_set_life (GnomeApplet *applet, GnomeAppletLifespan life)
 {
   GnomeAppletPrivate *priv = GET_PRIVATE (applet);
 
-  ca_desrt_Applet_set_life_fakesync (priv->proxy, persist + 1, NULL);
+  ca_desrt_Applet_set_life (priv->proxy, life, NULL);
 }
 
 void
@@ -813,7 +813,7 @@ gnome_applet_set_name (GnomeApplet *applet, const char *name)
 {
   GnomeAppletPrivate *priv = GET_PRIVATE (applet);
 
-  ca_desrt_Applet_set_name_fakesync (priv->proxy, name, NULL);
+  ca_desrt_Applet_set_name (priv->proxy, name, NULL);
 }
 
 void
@@ -825,7 +825,7 @@ gnome_applet_add_menu_item (GnomeApplet *applet, const char *stock,
   MenuItem *item;
   int id;
 
-  if (!ca_desrt_Applet_add_menu_item_fakesync (priv->proxy, stock, text, &id, NULL))
+  if (!ca_desrt_Applet_add_menu_item (priv->proxy, stock, text, &id, NULL))
     return;
 
   item = g_new0 (MenuItem, 1);
@@ -842,7 +842,7 @@ gnome_applet_config_get (GnomeApplet *applet, const char *key, GValue *value)
 {
   GnomeAppletPrivate *priv = GET_PRIVATE (applet);
 
-  return ca_desrt_Applet_config_get_fakesync (priv->proxy, key, value, NULL);
+  return ca_desrt_Applet_config_get (priv->proxy, key, value, NULL);
 }
 
 gboolean
@@ -850,7 +850,7 @@ gnome_applet_config_set (GnomeApplet *applet, const char *key, const GValue *val
 {
   GnomeAppletPrivate *priv = GET_PRIVATE (applet);
 
-  return ca_desrt_Applet_config_set_fakesync (priv->proxy, key, value, NULL);
+  return ca_desrt_Applet_config_set (priv->proxy, key, value, NULL);
 }
 
 void
@@ -881,5 +881,5 @@ gnome_applet_config_touch (GnomeApplet *applet, const char *key)
 {
   GnomeAppletPrivate *priv = GET_PRIVATE (applet);
 
-  ca_desrt_Applet_config_touch_fakesync (priv->proxy, key, NULL);
+  ca_desrt_Applet_config_touch (priv->proxy, key, NULL);
 }

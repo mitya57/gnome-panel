@@ -27,6 +27,7 @@
 
 #include "gnome-applet-background-type.h"
 #include "gnome-applet-orientation.h"
+#include "gnome-applet-lifespan.h"
 
 #define GNOME_TYPE_APPLET gnome_applet_get_type()
 
@@ -124,7 +125,7 @@ GnomeAppletOrientation gnome_applet_get_orientation (GnomeApplet *ga);
 void gnome_applet_set_has_handle (GnomeApplet *ga, gboolean handle);
 gboolean gnome_applet_get_has_handle (GnomeApplet *ga);
 
-void gnome_applet_set_persist (GnomeApplet *ga, gboolean persist);
+void gnome_applet_set_life (GnomeApplet *ga, GnomeAppletLifespan life);
 
 void gnome_applet_set_name (GnomeApplet *applet, const char *name);
 

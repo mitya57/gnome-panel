@@ -1,0 +1,13 @@
+2006-09-05  Ryan Lortie  <desrt@desrt.ca>
+
+	* ChangeLog: create file -- first entry.
+	* .cvsignore:
+	* Makefile.am:
+	* gnome-applet-lifespan.h: create GnomeAppletLifeSpan enum for the
+	  gnome_applet_set_life function.
+	* libgnome-applet.h: include enumerations up front
+	* gnome-applet.h: change gnome_applet_set_persist to set_life.
+	* gnome-applet.c: change gnome_applet_set_persist to set_life.
+	  change all 'fakesync' calls to their non-fake variants, breaking
+	  dynamic loading of applets as shared libraries (for now) but
+	  removing the dependency on the binding tool patch.

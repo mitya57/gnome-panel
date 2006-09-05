@@ -19,8 +19,19 @@
  *     Ryan Lortie <desrt@desrt.ca>
  */
 
-#include "gnome-applet-background-type.h"
-#include "gnome-applet-orientation.h"
-#include "gnome-applet-lifespan.h"
-#include "gnome-applet.h"
-#include "gnome-applet-config.h"
+#ifndef _gnome_applet_lifespan_h_
+#define _gnome_applet_lifespan_h_
+
+#include <glib-object.h>
+
+typedef enum
+{
+  GNOME_APPLET_LIFESPAN_NORMAL,
+  GNOME_APPLET_LIFESPAN_TEMPORARY,
+  GNOME_APPLET_LIFESPAN_PERSISTENT
+} GnomeAppletLifespan;
+
+#define GNOME_TYPE_APPLET_LIFESPAN gnome_applet_lifespan_get_type ()
+GType gnome_applet_lifespan_get_type (void);
+
+#endif
