@@ -1,3 +1,26 @@
+2006-09-04  Ryan Lortie  <desrt@desrt.ca>
+
+	* Makefile.am:
+	* configure.in:
+	* gnome-panel/.cvsignore:
+	* gnome-panel/Makefile.am:
+	* gnome-panel/applet-server.c:
+	* gnome-panel/applet-server.h:
+	* gnome-panel/gilded-star.c:
+	* gnome-panel/gilded-star.h:
+	* gnome-panel/gilded-star-dbus.h:
+	* gnome-panel/applet.c:
+	* gnome-panel/applet.h:
+	* gnome-panel/main.c:
+	* gnome-panel/panel.c:
+	* gnome-panel/panel-enums.h:
+	* gnome-panel/panel-gconf.c:
+	* gnome-panel/panel-profile.c:
+	* gnome-panel/panel-profile.h:
+	* libgnome-applet/:
+	* libgnome-applet/*:
+	Open "super-sketchy" branch and commit summer of code work to it.
+
 2006-09-04  Vincent Untz  <vuntz@gnome.org>
 	
 	* .cvsignore: updated

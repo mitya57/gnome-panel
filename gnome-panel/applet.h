@@ -78,6 +78,8 @@ void            panel_applet_add_callback    (AppletInfo          *info,
 					      const gchar         *stock_item,
 					      const gchar         *menuitem_text,
 					      CallbackEnabledFunc  is_enabled_func);
+void            panel_applet_remove_callbacks (AppletInfo *info);
+
 
 AppletUserMenu *panel_applet_get_callback    (GList       *user_menu,
 					      const gchar *name);

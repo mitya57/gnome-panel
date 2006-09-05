@@ -1,4 +1,6 @@
 /*
+ * vim:set noet sw=8:
+ *
  * panel-profile.c:
  *
  * Copyright (C) 2003 Sun Microsystems, Inc.
@@ -27,6 +29,7 @@
 #include "panel-profile.h"
 
 #include <string.h>
+#include <stdlib.h>
 #include <glib/gi18n.h>
 
 #include "applet.h"
@@ -90,17 +93,18 @@ static GConfEnumStringPair panel_background_type_map [] = {
 };
 
 static GConfEnumStringPair panel_object_type_map [] = {
-	{ PANEL_OBJECT_DRAWER,    "drawer-object" },
-	{ PANEL_OBJECT_MENU,      "menu-object" },
-	{ PANEL_OBJECT_LAUNCHER,  "launcher-object" },
-	{ PANEL_OBJECT_BONOBO,    "bonobo-applet" },
-	{ PANEL_OBJECT_ACTION,    "action-applet" },
-	{ PANEL_OBJECT_MENU_BAR,  "menu-bar" },
-	{ PANEL_OBJECT_SEPARATOR, "separator" },
+	{ PANEL_OBJECT_DRAWER,      "drawer-object" },
+	{ PANEL_OBJECT_MENU,        "menu-object" },
+	{ PANEL_OBJECT_LAUNCHER,    "launcher-object" },
+	{ PANEL_OBJECT_BONOBO,      "bonobo-applet" },
+	{ PANEL_OBJECT_ACTION,      "action-applet" },
+	{ PANEL_OBJECT_MENU_BAR,    "menu-bar" },
+	{ PANEL_OBJECT_SEPARATOR,   "separator" },
 	/* The following two are for backwards compatibility with 2.0.x */
-	{ PANEL_OBJECT_LOCK,      "lock-object" },
-	{ PANEL_OBJECT_LOGOUT,    "logout-object" },
-	{ 0,                      NULL }
+	{ PANEL_OBJECT_LOCK,        "lock-object" },
+	{ PANEL_OBJECT_LOGOUT,      "logout-object" },
+	{ PANEL_OBJECT_GILDED_STAR, "gilded-star" },
+	{ 0,                        NULL }
 };
 
 static GQuark toplevel_id_quark = 0;
@@ -258,6 +262,10 @@ panel_profile_find_new_id (PanelGConfKeyType type)
 	case PANEL_GCONF_APPLETS:
 		prefix = "applet";
 		dir = "applets";
+		break;
+	case PANEL_GCONF_GILDED_STARS:
+		prefix = "applet";
+		dir = "gilded_stars";
 		break;
 	default:
 		prefix = dir = NULL;
@@ -1294,6 +1302,9 @@ panel_profile_save_other_id_lists (PanelGConfKeyType type)
 
 	if (type != PANEL_GCONF_APPLETS)
 		panel_profile_save_id_list (PANEL_GCONF_APPLETS, NULL, TRUE);
+
+	if (type != PANEL_GCONF_GILDED_STARS)
+		panel_profile_save_id_list (PANEL_GCONF_GILDED_STARS, NULL, TRUE);
 }
 
 void
@@ -1378,7 +1389,8 @@ panel_profile_id_lists_are_writable (void)
   return
     panel_profile_id_list_is_writable (PANEL_GCONF_TOPLEVELS) &&
     panel_profile_id_list_is_writable (PANEL_GCONF_APPLETS)   &&
-    panel_profile_id_list_is_writable (PANEL_GCONF_OBJECTS);
+    panel_profile_id_list_is_writable (PANEL_GCONF_OBJECTS)   &&
+    panel_profile_id_list_is_writable (PANEL_GCONF_GILDED_STARS);
 }
 
 static gboolean
@@ -1525,6 +1537,7 @@ panel_profile_delete_toplevel (PanelToplevel *toplevel)
 
 	panel_profile_delete_toplevel_objects (toplevel_id, PANEL_GCONF_OBJECTS);
 	panel_profile_delete_toplevel_objects (toplevel_id, PANEL_GCONF_APPLETS);
+	panel_profile_delete_toplevel_objects (toplevel_id, PANEL_GCONF_GILDED_STARS);
 
 	panel_profile_remove_from_list (PANEL_GCONF_TOPLEVELS, toplevel_id);
 }
@@ -1741,28 +1754,54 @@ panel_profile_destroy_toplevel (const char *id)
 	gtk_widget_destroy (GTK_WIDGET (toplevel));
 }
 
-char *
-panel_profile_prepare_object_with_id (PanelObjectType  object_type,
-				      const char      *toplevel_id,
-				      int              position,
-				      gboolean         right_stick)
+static PanelGConfKeyType
+panel_profile_type_to_gconf (PanelObjectType type)
+{
+	switch (type)
+	{
+	case PANEL_OBJECT_BONOBO:
+		return PANEL_GCONF_APPLETS;
+	case PANEL_OBJECT_GILDED_STAR:
+		return PANEL_GCONF_GILDED_STARS;
+	default:
+		return PANEL_GCONF_OBJECTS;
+	}
+}
+
+static const char *
+panel_profile_type_to_string (PanelGConfKeyType type)
+{
+	switch (type)
+	{
+	case PANEL_GCONF_GILDED_STARS:
+		return "gilded_stars";
+	case PANEL_GCONF_APPLETS:
+		return "applets";
+	default:
+		return "objects";
+	}
+}
+
+static void
+panel_profile_prepare_object_with_id_intern (PanelObjectType    object_type,
+					     const char        *toplevel_id,
+					     int                position,
+					     gboolean           right_stick,
+					     const char        *id)
 {
 	PanelGConfKeyType  key_type;
 	GConfClient       *client;
 	const char        *key;
-	char              *id;
 	char              *dir;
 
-	key_type = (object_type == PANEL_OBJECT_BONOBO) ? PANEL_GCONF_APPLETS : PANEL_GCONF_OBJECTS;
+	key_type = panel_profile_type_to_gconf (object_type);
 
 	client  = panel_gconf_get_client ();
 
-	id = panel_profile_find_new_id (key_type);
-
 	dir = g_strdup_printf (PANEL_CONFIG_DIR "/%s/%s",
-			       (key_type == PANEL_GCONF_APPLETS) ? "applets" : "objects",
-			       id);
+			       panel_profile_type_to_string (key_type), id);
 	panel_gconf_associate_schemas_in_dir (client, dir, PANEL_SCHEMAS_DIR "/objects");
+	g_free (dir);
 
 	key = panel_gconf_full_key (key_type, id, "object_type");
 	gconf_client_set_string (client,
@@ -1778,9 +1817,23 @@ panel_profile_prepare_object_with_id (PanelObjectType  object_type,
 
 	key = panel_gconf_full_key (key_type, id, "panel_right_stick");
 	gconf_client_set_bool (client, key, right_stick, NULL);
+}					   
 
-	g_free (dir);
+char *
+panel_profile_prepare_object_with_id (PanelObjectType  object_type,
+				      const char      *toplevel_id,
+				      int              position,
+				      gboolean         right_stick)
+{
+	PanelGConfKeyType  key_type;
+	char *id;
 
+	key_type = panel_profile_type_to_gconf (object_type);
+
+	id = panel_profile_find_new_id (key_type);
+	panel_profile_prepare_object_with_id_intern (object_type,
+						     toplevel_id, position,
+						     right_stick, id);
 	return id;
 }
 
@@ -1796,14 +1849,63 @@ panel_profile_prepare_object (PanelObjectType  object_type,
 						     right_stick);
 }
 
+static char *
+panel_profile_find_new_applet_id (const char *type)
+{
+	GConfClient *client;
+	GSList      *l, *existing_ids;
+	const char  *key;
+	int          i;
+
+	client  = panel_gconf_get_client ();
+
+	key = panel_gconf_sprintf (PANEL_CONFIG_DIR "/gilded_stars/%s", type);
+	l = existing_ids = gconf_client_all_dirs (client, key, NULL);
+
+	for (i = 0; l; i++)
+		for (l = existing_ids; l; l = l->next)
+		{
+			char *s, *end;
+			long value;
+
+			if ((s = strrchr (l->data, '/')) == NULL)
+				continue;
+			s++;
+			value = strtol (s, &end, 10);
+
+			if (*end == '\0' && value == i)
+				break;
+		}
+
+	for (l = existing_ids; l; l = l->next)
+		g_free (l->data);
+	g_slist_free (existing_ids);
+
+	return g_strdup_printf ("%s/%d", type, i);
+}
+
+char *
+panel_profile_prepare_applet (PanelToplevel   *toplevel,
+			      int              position,
+			      gboolean         right_stick,
+			      const char      *type)
+{
+	char *id;
+
+	id = panel_profile_find_new_applet_id (type);
+	panel_profile_prepare_object_with_id_intern (PANEL_OBJECT_GILDED_STAR,
+						     panel_profile_get_toplevel_id (toplevel),
+						     position, right_stick, id);
+	return id;
+}
+
 void
 panel_profile_delete_object (AppletInfo *applet_info)
 {
 	PanelGConfKeyType  type;
 	const char        *id;
 
-	type = (applet_info->type) == PANEL_OBJECT_BONOBO ? PANEL_GCONF_APPLETS :
-							    PANEL_GCONF_OBJECTS;
+	type = panel_profile_type_to_gconf (applet_info->type);
 	id = panel_applet_get_id (applet_info);
 
 	panel_profile_remove_from_list (type, id);
@@ -1826,7 +1928,7 @@ panel_profile_load_object (GConfClient       *client,
 
 	object_dir = g_strdup_printf ("%s/%s/%s",
 				      profile_dir,
-				      type == PANEL_GCONF_OBJECTS ? "objects" : "applets",
+				      panel_profile_type_to_string (type),
 				      id);
 
 	gconf_client_add_dir (client, object_dir, GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
@@ -1892,6 +1994,9 @@ panel_profile_delete_dir (GConfClient       *client,
 		break;
 	case PANEL_GCONF_APPLETS:
 		type_str = "applets";
+		break;
+	case PANEL_GCONF_GILDED_STARS:
+		type_str = "gilded_stars";
 		break;
 	default:
 		type_str = NULL;
@@ -2107,8 +2212,7 @@ panel_profile_object_id_list_notify (GConfClient *client,
 	for (l = existing_applets; l; l = l->next) {
 		AppletInfo *info = l->data;
 
-		if ((type == PANEL_GCONF_APPLETS && info->type == PANEL_OBJECT_BONOBO) ||
-		    (type == PANEL_GCONF_OBJECTS && info->type != PANEL_OBJECT_BONOBO))
+		if (panel_profile_type_to_gconf (info->type) == type)
 			sublist = g_slist_prepend (sublist, info);
 	}
 
@@ -2345,6 +2449,8 @@ panel_profile_load_defaults_on_screen (GConfClient *client,
 				client, profile_dir, screen_n, PANEL_GCONF_OBJECTS);
 	panel_profile_copy_default_objects_for_screen (
 				client, profile_dir, screen_n, PANEL_GCONF_APPLETS);
+	panel_profile_copy_default_objects_for_screen (
+				client, profile_dir, screen_n, PANEL_GCONF_GILDED_STARS);
 }
 
 static void
@@ -2407,6 +2513,11 @@ panel_profile_load (void)
 	panel_profile_load_list (client,
 				 PANEL_CONFIG_DIR,
 				 PANEL_GCONF_APPLETS,
+				 panel_profile_load_object,
+				 (GConfClientNotifyFunc) panel_profile_object_id_list_notify);
+	panel_profile_load_list (client,
+				 PANEL_CONFIG_DIR,
+				 PANEL_GCONF_GILDED_STARS,
 				 panel_profile_load_object,
 				 (GConfClientNotifyFunc) panel_profile_object_id_list_notify);
 

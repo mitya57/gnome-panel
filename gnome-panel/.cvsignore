@@ -24,3 +24,5 @@ panel-marshal.c
 panel-marshal.h
 *.schemas
 *.gladep
+applet-service.h
+applet-server-service.h

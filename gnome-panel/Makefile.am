@@ -48,7 +48,9 @@ BUILT_SOURCES = \
 	panel-typebuiltins.c	\
 	panel-typebuiltins.h	\
 	panel-marshal.c		\
-	panel-marshal.h
+	panel-marshal.h		\
+	applet-service.h	\
+	applet-server-service.h
 
 panel_sources =			\
 	panel-typebuiltins.c	\
@@ -99,6 +101,8 @@ panel_sources =			\
 	panel-gdm.c		\
 	panel-power-manager.c   \
 	panel-ditem-editor.c	\
+	gilded-star.c		\
+	applet-server.c		\
 	$(NULL)
 
 panel_headers =			\
@@ -148,6 +152,10 @@ panel_headers =			\
 	panel-gdm.h		\
 	panel-power-manager.h	\
 	panel-ditem-editor.h	\
+	gilded-star.h		\
+	applet-server.h		\
+	applet-service.h	\
+	applet-server-service.h	\
 	$(NULL)
 
 gnome_panel_SOURCES =			\
@@ -231,6 +239,12 @@ panel-typebuiltins.h: @REBUILD@ $(panel_enum_headers)
 			--eprod "#define PANEL_TYPE_@ENUMSHORT@ @enum_name@_get_type()\n" \
 			--eprod "GType @enum_name@_get_type (void);\n" \
 		$(panel_enum_headers) >  $@
+
+applet-service.h: ../libgnome-applet/applet-service.xml
+	dbus-binding-tool --prefix=gilded_star --mode=glib-server --output=$@ $<
+
+applet-server-service.h: ../libgnome-applet/applet-server-service.xml
+	dbus-binding-tool --prefix=applet_server --mode=glib-server --output=$@ $<
 
 uidir   = $(datadir)/gnome-2.0/ui
 ui_DATA = GNOME_Panel_Popup.xml

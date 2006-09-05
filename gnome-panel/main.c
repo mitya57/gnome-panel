@@ -25,6 +25,7 @@
 #include "panel-stock-icons.h"
 #include "panel-action-protocol.h"
 #include "panel-lockdown.h"
+#include "applet-server.h"
 #include "xstuff.h"
 
 #include "nothing.cP"
@@ -84,6 +85,8 @@ main (int argc, char **argv)
 	panel_global_config_load ();
 	panel_lockdown_init ();
 	panel_profile_load ();
+
+	applet_server_initialise ();
 
 	/*add forbidden lists to ALL panels*/
 	g_slist_foreach (panels,

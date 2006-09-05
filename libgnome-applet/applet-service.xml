@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<node name='/ca/desrt/Applet'>
+ <interface name='ca.desrt.Applet'>
+
+  <method name='GetXid'>
+   <arg type='i' name='xid' direction='out'>
+    <annotation name='org.freedesktop.DBus.GLib.ReturnVal' value=''/>
+   </arg>
+  </method>
+
+  <method name='GiveXid'>
+   <arg type='i' name='xid' direction='in'/>
+  </method>
+
+  <method name='RequestDropSocket'>
+   <arg type='i' name='xid' direction='out'>
+    <annotation name='org.freedesktop.DBus.GLib.ReturnVal' value=''/>
+   </arg>
+  </method>
+
+  <method name='GetBackgroundType'>
+   <arg type='i' name='type' direction='out'>
+    <annotation name='org.freedesktop.DBus.GLib.ReturnVal' value=''/>
+   </arg>
+  </method>
+
+  <method name='GetOrientation'>
+   <arg type='i' name='orientation' direction='out'>
+    <annotation name='org.freedesktop.DBus.GLib.ReturnVal' value=''/>
+   </arg>
+  </method>
+
+  <method name='SetLife'>
+   <arg type='i' name='life' direction='in'/>
+  </method>
+
+  <method name='SetName'>
+   <arg type='s' name='name' direction='in'/>
+  </method>
+
+  <method name='SetIcon'>
+   <arg type='s' name='name' direction='in'/>
+  </method>
+
+  <method name='AddMenuItem'>
+   <arg type='s' name='stock' direction='in'/>
+   <arg type='s' name='label' direction='in'/>
+   <arg type='i' name='id' direction='out'>
+    <annotation name='org.freedesktop.DBus.GLib.ReturnVal' value=''/>
+   </arg>
+  </method>
+
+  <method name='ConfigGet'>
+   <arg type='s' name='name' direction='in'/>
+   <arg type='v' name='value' direction='out'/>
+  </method>
+
+  <method name='ConfigSet'>
+   <arg type='s' name='name' direction='in'/>
+   <arg type='v' name='value' direction='in'/>
+  </method>
+
+  <method name='ConfigTouch'>
+   <arg type='s' name='name' direction='in'/>
+  </method>
+
+  <signal name='Notify'/>
+  <signal name='MenuItemSelected'/>
+  <signal name='ConfigChanged'/>
+ </interface>
+</node>

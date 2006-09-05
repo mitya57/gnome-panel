@@ -34,6 +34,8 @@
 #include "panel-properties-dialog.h"
 #include "panel-lockdown.h"
 
+#include "gilded-star.h"
+
 #define SMALL_ICON_SIZE 20
 
 static GSList *registered_applets = NULL;
@@ -66,6 +68,7 @@ panel_applet_set_dnd_enabled (AppletInfo *info,
 		break;
 	case PANEL_OBJECT_MENU_BAR:
 	case PANEL_OBJECT_SEPARATOR:
+	case PANEL_OBJECT_GILDED_STAR:
 		break;
 	default:
 		g_assert_not_reached ();
@@ -193,7 +196,7 @@ panel_applet_locked_change_notify (GConfClient *client,
 
 	panel_applet_toggle_locked (info);
 
-	if (info->type == PANEL_OBJECT_BONOBO)
+	if (info->type == PANEL_OBJECT_BONOBO) /* XXX ? */
 		panel_applet_frame_sync_menu_state (PANEL_APPLET_FRAME (info->widget));
 	else
 		panel_applet_recreate_menu (info);
@@ -273,6 +276,10 @@ applet_callback_callback (GtkWidget      *widget,
 		break;
 	case PANEL_OBJECT_SEPARATOR:
 		break;
+	case PANEL_OBJECT_GILDED_STAR:
+		gilded_star_menu_item_callback (
+			GILDED_STAR (menu->info->widget), menu->name);
+		break;
 	default:
 		g_assert_not_reached ();
 		break;
@@ -342,6 +349,27 @@ panel_applet_add_callback (AppletInfo          *info,
 	menu->submenu         = NULL;
 
 	info->user_menu = g_list_append (info->user_menu, menu);
+
+	panel_applet_recreate_menu (info);
+}
+
+void
+panel_applet_remove_callbacks (AppletInfo *info)
+{
+	GList *l;
+
+	for (l = info->user_menu; l != NULL; l = l->next) {
+		AppletUserMenu *umenu = l->data;
+
+		g_free (umenu->name);
+		g_free (umenu->stock_item);
+		g_free (umenu->text);
+
+		g_free (umenu);
+	}
+
+	g_list_free (info->user_menu);
+	info->user_menu = NULL;
 
 	panel_applet_recreate_menu (info);
 }
@@ -905,6 +933,13 @@ panel_applet_load_idle_handler (gpointer dummy)
 						 applet->locked,
 						 applet->position,
 						 applet->id);
+		break;
+        case PANEL_OBJECT_GILDED_STAR:
+		gilded_star_load_from_gconf (panel_widget,
+				applet->locked,
+				applet->position,
+				applet->id);
+		break;
 	default:
 		break;
 	}
@@ -1004,6 +1039,20 @@ panel_applet_position_save_timeout (gpointer dummy)
 	return FALSE;
 }
 
+static PanelGConfKeyType
+panel_applet_type_to_gconf (PanelObjectType type)
+{
+	switch (type)
+	{
+	case PANEL_OBJECT_BONOBO:
+		return PANEL_GCONF_APPLETS;
+	case PANEL_OBJECT_GILDED_STAR:
+		return PANEL_GCONF_GILDED_STARS;
+	default:
+		return PANEL_GCONF_OBJECTS;
+	}
+}
+
 void
 panel_applet_save_position (AppletInfo *applet_info,
 			    const char *id,
@@ -1040,7 +1089,7 @@ panel_applet_save_position (AppletInfo *applet_info,
 
 	client  = panel_gconf_get_client ();
 
-	key_type = applet_info->type == PANEL_OBJECT_BONOBO ? PANEL_GCONF_APPLETS : PANEL_GCONF_OBJECTS;
+	key_type = panel_applet_type_to_gconf (applet_info->type);
 	
 	panel_widget = PANEL_WIDGET (applet_info->widget->parent);
 
@@ -1182,12 +1231,11 @@ panel_applet_register (GtkWidget       *applet,
 
 	g_object_set_data (G_OBJECT (applet), "applet_info", info);
 
-	if (type != PANEL_OBJECT_BONOBO)
+	if (type != PANEL_OBJECT_BONOBO) /* XXX ? */
 		panel_lockdown_notify_add (G_CALLBACK (panel_applet_recreate_menu),
 					   info);
 
-	key = panel_gconf_full_key ((type == PANEL_OBJECT_BONOBO) ?
-				     PANEL_GCONF_APPLETS : PANEL_GCONF_OBJECTS,
+	key = panel_gconf_full_key (panel_applet_type_to_gconf (type),
 				    id, "locked");
 	panel_gconf_notify_add_while_alive (key,
 					    (GConfClientNotifyFunc) panel_applet_locked_change_notify,
@@ -1252,7 +1300,7 @@ panel_applet_register (GtkWidget       *applet,
 	size_change (info, panel);
 	back_change (info, panel);
 
-	if (type != PANEL_OBJECT_BONOBO)
+	if (type != PANEL_OBJECT_BONOBO) /* XXX? */
 		gtk_widget_grab_focus (applet);
 	else
 		gtk_widget_child_focus (applet, GTK_DIR_TAB_FORWARD);
@@ -1285,7 +1333,7 @@ panel_applet_can_freely_move (AppletInfo *applet)
 
 	client  = panel_gconf_get_client ();
 	
-	key_type = (applet->type == PANEL_OBJECT_BONOBO) ? PANEL_GCONF_APPLETS : PANEL_GCONF_OBJECTS;
+	key_type = panel_applet_type_to_gconf (applet->type);
        
 	key = panel_gconf_full_key (key_type, applet->id, "position");
 	if (!gconf_client_key_is_writable (client, key, NULL))

@@ -71,7 +71,8 @@ typedef enum {
 typedef enum {
 	PANEL_GCONF_TOPLEVELS,
 	PANEL_GCONF_OBJECTS,
-	PANEL_GCONF_APPLETS
+	PANEL_GCONF_APPLETS,
+	PANEL_GCONF_GILDED_STARS
 } PanelGConfKeyType;
 
 typedef enum {
@@ -84,7 +85,8 @@ typedef enum {
 	PANEL_OBJECT_SEPARATOR,
 	/* The following two are for backwards compatibility with 2.0.x */
 	PANEL_OBJECT_LOGOUT,
-	PANEL_OBJECT_LOCK
+	PANEL_OBJECT_LOCK,
+	PANEL_OBJECT_GILDED_STAR
 } PanelObjectType;
 
 typedef enum {

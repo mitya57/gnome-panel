@@ -65,6 +65,11 @@ char          *panel_profile_prepare_object         (PanelObjectType    object_t
 						     PanelToplevel     *toplevel,
 						     int                position,
 						     gboolean           right_stick);
+char          *panel_profile_prepare_applet         (PanelToplevel   *toplevel,
+						     int              position,
+						     gboolean         right_stick,
+						     const char      *type);
+
 char          *panel_profile_prepare_object_with_id (PanelObjectType    object_type,
 						     const char        *toplevel_id,
 						     int                position,

@@ -24,6 +24,7 @@ SUBDIRS =			\
 	icons			\
 	gnome-panel		\
 	libpanel-applet		\
+	libgnome-applet		\
 	applets			\
 	help			\
 	doc			\

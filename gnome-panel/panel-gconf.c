@@ -111,6 +111,9 @@ panel_gconf_key_type_to_id_list (PanelGConfKeyType type)
 	case PANEL_GCONF_OBJECTS:
 		retval = "object_id_list";
 		break;
+	case PANEL_GCONF_GILDED_STARS:
+		retval = "gilded_stars_list";
+		break;
 	default:
 		retval = NULL;
 		g_assert_not_reached ();
@@ -148,6 +151,9 @@ panel_gconf_full_key (PanelGConfKeyType  type,
 		break;
 	case PANEL_GCONF_APPLETS:
 		subdir = "applets";
+		break;
+	case PANEL_GCONF_GILDED_STARS:
+		subdir = "gilded_stars";
 		break;
 	default:
 		g_assert_not_reached ();

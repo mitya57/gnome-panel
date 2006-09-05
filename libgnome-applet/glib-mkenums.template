@@ -1,0 +1,28 @@
+/*** BEGIN file-production ***/
+#include "@filename@"
+
+/*** END file-production ***/
+/*** BEGIN value-header ***/
+GType
+@enum_name@_get_type (void)
+{
+  static GType type;
+
+  if (!type)
+  {
+    static const GEnumValue values[] = {
+/*** END value-header ***/
+/*** BEGIN value-production ***/
+      { @VALUENAME@, "@VALUENAME@", "@valuenick@" },
+/*** END value-production ***/
+/*** BEGIN value-tail ***/
+      { 0, }
+    };
+
+    type = g_enum_register_static ("@EnumName@", values);
+  }
+
+  return type;
+}
+/*** END value-tail ***/
+

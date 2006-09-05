@@ -1,0 +1,10 @@
+Makefile
+Makefile.in
+applet-client.h
+applet-server-client.h
+gnome-applet-background-type.c
+gnome-applet-marshal.c
+gnome-applet-marshal.h
+gnome-applet-orientation.c
+libgnome-applet-uninstalled.pc
+libgnome-applet.pc

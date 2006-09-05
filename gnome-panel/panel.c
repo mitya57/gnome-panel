@@ -27,6 +27,8 @@
 
 #include "panel.h"
 
+#include "gilded-star.h"
+
 #include "applet.h"
 #include "drawer.h"
 #include "button-widget.h"
@@ -101,6 +103,10 @@ orientation_change (AppletInfo  *info,
 		panel_separator_set_orientation (PANEL_SEPARATOR (info->widget),
 						 orientation);
 		break;
+	case PANEL_OBJECT_GILDED_STAR:
+		gilded_star_set_panel_orientation (GILDED_STAR (info->widget),
+						   orientation);
+		break;
 	default:
 		break;
 	}
@@ -131,7 +137,7 @@ void
 size_change (AppletInfo  *info,
 	     PanelWidget *panel)
 {
-	if (info->type == PANEL_OBJECT_BONOBO)
+	if (info->type == PANEL_OBJECT_BONOBO) /* XXX ? */
 		panel_applet_frame_change_size (
 			PANEL_APPLET_FRAME (info->widget), panel->sz);
 }
@@ -167,6 +173,10 @@ back_change (AppletInfo  *info,
 		break;
 	case PANEL_OBJECT_SEPARATOR:
 		panel_separator_change_background (PANEL_SEPARATOR (info->widget));
+		break;
+        case PANEL_OBJECT_GILDED_STAR:
+		gilded_star_set_panel_background_type (GILDED_STAR (info->widget),
+						panel->background.type);
 		break;
 	default:
 		break;
