@@ -23,7 +23,9 @@
 
 #include "gnome-applet-layout-box.h"
 
-G_DEFINE_TYPE (GnomeAppletLayoutBox, gnome_applet_layout_box, GTK_TYPE_ALIGNMENT);
+G_DEFINE_TYPE (GnomeAppletLayoutBox,
+               gnome_applet_layout_box,
+               GTK_TYPE_ALIGNMENT);
 
 #define GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), GNOME_TYPE_APPLET_LAYOUT_BOX, \

@@ -42,6 +42,8 @@
 #define HANDLE_SIZE 10
 
 static GtkWidgetClass *parent_class = NULL;
+static int gnome_applet_instances;
+static gboolean exit_with_last_instance;
 
 typedef struct _MenuItem MenuItem;
 
@@ -552,6 +554,14 @@ gnome_applet_initialise (GnomeApplet *applet, GType type)
   gnome_applet_orientation_changed (applet);
   gnome_applet_background_changed (applet);
   //gtk_plug_construct (GTK_PLUG (applet), xid);
+
+  gnome_applet_instances++;
+}
+
+void
+gnome_applet_exit_with_last_instance (gboolean flag)
+{
+  exit_with_last_instance = flag;
 }
 
 static GObject *
@@ -567,6 +577,15 @@ gnome_applet_constructor (GType type, guint n_properties,
   gnome_applet_initialise (GNOME_APPLET (obj), type);
 
   return obj;
+}
+
+static void
+gnome_applet_finalize (GObject *object)
+{
+  G_OBJECT_CLASS (parent_class)->finalize (object);
+
+  if (!--gnome_applet_instances && exit_with_last_instance)
+    gtk_main_quit ();
 }
 
 static void
@@ -589,6 +608,7 @@ gnome_applet_class_init (GnomeAppletClass *class)
   oc->get_property = gnome_applet_get_property;
   oc->set_property = gnome_applet_set_property;
   oc->constructor = gnome_applet_constructor;
+  oc->finalize = gnome_applet_finalize;
 
   g_object_class_install_property (oc, PROP_ID,
     g_param_spec_string ("applet-id", "Applet ID",
@@ -814,6 +834,14 @@ gnome_applet_set_name (GnomeApplet *applet, const char *name)
   GnomeAppletPrivate *priv = GET_PRIVATE (applet);
 
   ca_desrt_Applet_set_name (priv->proxy, name, NULL);
+}
+
+void
+gnome_applet_set_icon (GnomeApplet *applet, const char *icon)
+{
+  GnomeAppletPrivate *priv = GET_PRIVATE (applet);
+
+  ca_desrt_Applet_set_icon (priv->proxy, icon, NULL);
 }
 
 void

@@ -79,6 +79,7 @@ void gnome_applet_add_dropdown_widget (GnomeApplet *ga, GtkWidget *widget);
     \
     gtk_init (&argc, &argv); \
     \
+    gnome_applet_exit_with_last_instance (TRUE); \
     widget = instfunction (argv[0]?argv[1]:NULL); \
     gtk_widget_show (widget); \
     \
@@ -129,9 +130,13 @@ void gnome_applet_set_life (GnomeApplet *ga, GnomeAppletLifespan life);
 
 void gnome_applet_set_name (GnomeApplet *applet, const char *name);
 
+void gnome_applet_set_icon (GnomeApplet *applet, const char *name);
+
 void gnome_applet_add_menu_item (GnomeApplet *applet, const char *stock,
                                  const char *text, gpointer callback,
                                  gpointer user_data, GDestroyNotify unref);
+
+void gnome_applet_exit_with_last_instance (gboolean flag);
 
 
 #endif
