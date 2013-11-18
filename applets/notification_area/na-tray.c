@@ -23,7 +23,6 @@
 #include <string.h>
 
 #include <panel-applet.h>
-#include <panel-applet-gconf.h>
 
 #include <gtk/gtk.h>
 

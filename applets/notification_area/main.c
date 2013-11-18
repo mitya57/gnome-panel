@@ -24,7 +24,6 @@
 #include <string.h>
 
 #include <panel-applet.h>
-#include <panel-applet-gconf.h>
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
