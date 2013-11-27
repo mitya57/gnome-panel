@@ -705,12 +705,12 @@ msgstr "Wyświetlanie _nazw obszarów roboczych"
 msgid "Workspaces"
 msgstr "Obszary robocze"
 
-#: ../data/gnome-fallback.desktop.in.h:1
+#: ../data/gnome-flashback.desktop.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "Tradycyjne środowisko GNOME"
 
-#: ../data/gnome-fallback.desktop.in.h:2
+#: ../data/gnome-flashback.desktop.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Ta sesja loguje do środowiska GNOME z tradycyjnym panelem"
 

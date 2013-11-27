@@ -716,12 +716,12 @@ msgstr "Vis arbejdsområde_navne i skifteren"
 msgid "Workspaces"
 msgstr "Arbejdsområder"
 
-#: ../data/gnome-fallback.desktop.in.h:1
+#: ../data/gnome-flashback.desktop.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "GNOME-flashback"
 
-#: ../data/gnome-fallback.desktop.in.h:2
+#: ../data/gnome-flashback.desktop.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Denne session logger dig ind i GNOME med det traditionelle panel"
 

@@ -698,12 +698,12 @@ msgstr "Rādīt darba vietu _nosaukumus pārslēdzējā"
 msgid "Workspaces"
 msgstr "Darba vieta"
 
-#: ../data/gnome-fallback.desktop.in.in.h:1
+#: ../data/gnome-flashback.desktop.in.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "GNOME Flashback"
 
-#: ../data/gnome-fallback.desktop.in.in.h:2
+#: ../data/gnome-flashback.desktop.in.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Šī sesija ieraksta jūs GNOME vidē ar tradicionālo paneli"
 

@@ -699,12 +699,12 @@ msgstr "_Rodyti darbalaukių vardus jungiklyje"
 msgid "Workspaces"
 msgstr "Darbalaukių vardai"
 
-#: ../data/gnome-fallback.desktop.in.h:1
+#: ../data/gnome-flashback.desktop.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "GNOME Prisiminimas"
 
-#: ../data/gnome-fallback.desktop.in.h:2
+#: ../data/gnome-flashback.desktop.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Šis seansas prisijungia prie Jūsų GNOME su tradiciniu skydeliu"
 

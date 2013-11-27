@@ -705,12 +705,12 @@ msgstr "Mostrar os _nomes de espazo de traballo no selector"
 msgid "Workspaces"
 msgstr "Nomes dos espazos de traballo"
 
-#: ../data/gnome-fallback.desktop.in.h:1
+#: ../data/gnome-flashback.desktop.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "Retrospectiva de GNOME"
 
-#: ../data/gnome-fallback.desktop.in.h:2
+#: ../data/gnome-flashback.desktop.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Esta sesión inicia sesión en GNOME co panel tradicional"
 

@@ -714,12 +714,12 @@ msgstr "Mostrar os _nomes dos espaços de trabalho no alternador"
 msgid "Workspaces"
 msgstr "Espaços de trabalho"
 
-#: ../data/gnome-fallback.desktop.in.h:1
+#: ../data/gnome-flashback.desktop.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "GNOME Retrô"
 
-#: ../data/gnome-fallback.desktop.in.h:2
+#: ../data/gnome-flashback.desktop.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Inicia sua sessão no GNOME com o painel tradicional"
 

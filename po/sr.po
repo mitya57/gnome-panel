@@ -699,12 +699,12 @@ msgstr "Прикажи _називе радних простора у преба
 msgid "Workspaces"
 msgstr "Радни простори"
 
-#: ../data/gnome-fallback.desktop.in.in.h:1
+#: ../data/gnome-flashback.desktop.in.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "Стари Гном"
 
-#: ../data/gnome-fallback.desktop.in.in.h:2
+#: ../data/gnome-flashback.desktop.in.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Ова сесија вас пријављује у Гном са традиционалним панелом"
 

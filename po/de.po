@@ -714,12 +714,12 @@ msgstr "_Namen der Arbeitsflächen im Umschalter anzeigen"
 msgid "Workspaces"
 msgstr "Arbeitsflächen"
 
-#: ../data/gnome-fallback.desktop.in.h:1
+#: ../data/gnome-flashback.desktop.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
 msgid "GNOME Flashback"
 msgstr "GNOME Flashback"
 
-#: ../data/gnome-fallback.desktop.in.h:2
+#: ../data/gnome-flashback.desktop.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Diese Sitzung meldet Sie bei GNOME an mit dem traditionellen Panel"
 

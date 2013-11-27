@@ -1,5 +1,5 @@
 [Desktop Entry]
-_Name=GNOME Flashback
+_Name=GNOME Flashback (Metacity)
 _Comment=This session logs you into GNOME with the traditional panel
 Exec=@libexecdir@/gnome-session-flashback
 TryExec=@libexecdir@/gnome-session-flashback
