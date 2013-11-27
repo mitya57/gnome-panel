@@ -31,12 +31,12 @@ gsettings_SCHEMAS = $(gsettings_schemas_in:.xml.in=.xml)
 @GSETTINGS_RULES@
 
 sessiondir = $(datadir)/gnome-session/sessions
-session_in_files = gnome-flashback.session.desktop.in
+session_in_files = gnome-flashback.session.desktop.in gnome-flashback-mutter.session.desktop.in
 session_DATA = $(session_in_files:.session.desktop.in=.session)
 
 xsessiondir = $(datadir)/xsessions
-xsession_in_in_files = gnome-flashback.desktop.in.in
-xsession_in_files = gnome-flashback.desktop.in
+xsession_in_in_files = gnome-flashback.desktop.in.in gnome-flashback-mutter.desktop.in.in
+xsession_in_files = $(xsession_in_in_files:.desktop.in.in=.desktop.in)
 xsession_DATA = $(xsession_in_files:.desktop.in=.desktop)
 
 %.session: %.session.desktop.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
