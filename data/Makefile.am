@@ -31,11 +31,11 @@ gsettings_SCHEMAS = $(gsettings_schemas_in:.xml.in=.xml)
 @GSETTINGS_RULES@
 
 sessiondir = $(datadir)/gnome-session/sessions
-session_in_files = gnome-flashback.session.desktop.in gnome-flashback-mutter.session.desktop.in
+session_in_files = gnome-flashback.session.desktop.in gnome-flashback-mutter.session.desktop.in gnome-flashback-compiz.session.desktop.in
 session_DATA = $(session_in_files:.session.desktop.in=.session)
 
 xsessiondir = $(datadir)/xsessions
-xsession_in_in_files = gnome-flashback.desktop.in.in gnome-flashback-mutter.desktop.in.in
+xsession_in_in_files = gnome-flashback.desktop.in.in gnome-flashback-mutter.desktop.in.in gnome-flashback-compiz.desktop.in.in
 xsession_in_files = $(xsession_in_in_files:.desktop.in.in=.desktop.in)
 xsession_DATA = $(xsession_in_files:.desktop.in=.desktop)
 
