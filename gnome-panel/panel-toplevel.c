@@ -2668,7 +2668,6 @@ static void
 panel_toplevel_check_resize (GtkContainer *container)
 {
 	GtkAllocation   allocation;
-	GtkAllocation   widget_allocation;
 	GtkRequisition  requisition;
 	GtkWidget      *widget;
 
@@ -2677,17 +2676,13 @@ panel_toplevel_check_resize (GtkContainer *container)
 	if (!gtk_widget_get_visible (widget))
 		return;
 
-	requisition.width  = -1;
-	requisition.height = -1;
-
 	gtk_widget_get_preferred_size (widget, &requisition, NULL);
-	gtk_widget_get_allocation (widget, &widget_allocation);
+	gtk_widget_get_allocation (widget, &allocation);
 
-	if (widget_allocation.width  != requisition.width ||
-	    widget_allocation.height != requisition.height)
+	if (allocation.width  != requisition.width ||
+	    allocation.height != requisition.height)
 		return;
 
-	allocation = widget_allocation;
 	gtk_widget_size_allocate (widget, &allocation);
 }
 
