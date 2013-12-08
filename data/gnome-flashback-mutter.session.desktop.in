@@ -1,3 +1,0 @@
-[GNOME Session]
-_Name=GNOME Flashback (Mutter)
-RequiredComponents=gnome-panel;gnome-settings-daemon;gnome-screensaver;mutter;
