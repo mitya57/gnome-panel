@@ -21,15 +21,16 @@
 # Jonh Wendell <jwendell@gnome.org>, 2010.
 # Rodrigo Padula de Oliveira <contato@rodrigopadula.com>, 2011.
 # Rafael Ferreira <rafael.f.f1@gmail.com>, 2013.
+# Adorilson Bezerra <adorilson@gmail.com>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-panel\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "panel&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-07-02 08:18+0000\n"
-"PO-Revision-Date: 2013-07-03 20:56-0300\n"
-"Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
+"POT-Creation-Date: 2013-12-13 18:25+0000\n"
+"PO-Revision-Date: 2013-12-14 22:18-0300\n"
+"Last-Translator: Adorilson Bezerra <adorilson@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +80,7 @@ msgstr "Tarefas"
 
 #: ../applets/clock/calendar-window.c:831
 #: ../applets/clock/calendar-window.c:1014
-#: ../applets/clock/calendar-window.c:1552
+#: ../applets/clock/calendar-window.c:1550
 msgid "Edit"
 msgstr "Editar"
 
@@ -99,104 +100,104 @@ msgstr "Aniversários e datas especiais"
 msgid "Weather Information"
 msgstr "Informações meteorológicas"
 
-#: ../applets/clock/calendar-window.c:1552 ../applets/clock/clock.ui.h:22
+#: ../applets/clock/calendar-window.c:1550 ../applets/clock/clock.ui.h:22
 msgid "Locations"
 msgstr "Locais"
 
-#: ../applets/clock/calendar-window.c:1807
+#: ../applets/clock/calendar-window.c:1805
 msgid "Calendar"
 msgstr "Calendário"
 
 #. Translators: This is a strftime format string.
 #. * It is used to display a date. Please leave "%%s" as it is:
 #. * it will be used to insert the timezone name later.
-#: ../applets/clock/clock.c:309
+#: ../applets/clock/clock.c:297
 msgid "%A %B %d (%%s)"
 msgstr "%A %d %B (%%s)"
 
-#: ../applets/clock/clock.c:321
+#: ../applets/clock/clock.c:309
 msgid "Click to hide your appointments and tasks"
 msgstr "Clique para ocultar seus compromissos e tarefas"
 
-#: ../applets/clock/clock.c:324
+#: ../applets/clock/clock.c:312
 msgid "Click to view your appointments and tasks"
 msgstr "Clique para ver os seus compromissos e tarefas"
 
-#: ../applets/clock/clock.c:328
+#: ../applets/clock/clock.c:316
 msgid "Click to hide month calendar"
 msgstr "Clique para ocultar o calendário do mês"
 
-#: ../applets/clock/clock.c:331
+#: ../applets/clock/clock.c:319
 msgid "Click to view month calendar"
 msgstr "Clique para ver o calendário do mês"
 
-#: ../applets/clock/clock.c:991
+#: ../applets/clock/clock.c:956
 msgid "Computer Clock"
 msgstr "Relógio do computador"
 
-#: ../applets/clock/clock.c:1170
+#: ../applets/clock/clock.c:1120
 msgid "Failed to open the time settings"
 msgstr "Falha ao abrir definições de hora"
 
-#: ../applets/clock/clock.c:1190 ../applets/fish/fish.c:1307
+#: ../applets/clock/clock.c:1140 ../applets/fish/fish.c:1307
 #: ../applets/wncklet/window-list.c:155
 #: ../applets/wncklet/workspace-switcher.c:218
 msgid "_Preferences"
 msgstr "_Preferências"
 
-#: ../applets/clock/clock.c:1193
+#: ../applets/clock/clock.c:1143
 msgid "Copy Date and _Time"
 msgstr "Copiar Data e _hora"
 
-#: ../applets/clock/clock.c:1196
+#: ../applets/clock/clock.c:1146
 msgid "Ad_just Date & Time"
 msgstr "A_justar data e hora"
 
-#: ../applets/clock/clock.c:1767
+#: ../applets/clock/clock.c:1714
 msgid "Choose Location"
 msgstr "Escolher local"
 
-#: ../applets/clock/clock.c:1846
+#: ../applets/clock/clock.c:1793
 msgid "Edit Location"
 msgstr "Editar local"
 
-#: ../applets/clock/clock.c:1880
+#: ../applets/clock/clock.c:1827
 msgid "Kelvin"
 msgstr "Kelvin"
 
-#: ../applets/clock/clock.c:1881
+#: ../applets/clock/clock.c:1828
 msgid "Celsius"
 msgstr "Celsius"
 
-#: ../applets/clock/clock.c:1882
+#: ../applets/clock/clock.c:1829
 msgid "Fahrenheit"
 msgstr "Fahrenheit"
 
-#: ../applets/clock/clock.c:1887
+#: ../applets/clock/clock.c:1834
 msgid "Meters per second (m/s)"
 msgstr "Metros por segundo (m/s)"
 
-#: ../applets/clock/clock.c:1888
+#: ../applets/clock/clock.c:1835
 msgid "Kilometers per hour (kph)"
 msgstr "Quilômetros por hora (qph)"
 
-#: ../applets/clock/clock.c:1889
+#: ../applets/clock/clock.c:1836
 msgid "Miles per hour (mph)"
 msgstr "Milhas por hora (mph)"
 
-#: ../applets/clock/clock.c:1890
+#: ../applets/clock/clock.c:1837
 msgid "Knots"
 msgstr "Nós"
 
-#: ../applets/clock/clock.c:1891
+#: ../applets/clock/clock.c:1838
 msgid "Beaufort scale"
 msgstr "Escala Beaufort"
 
-#: ../applets/clock/clock.c:1944
+#: ../applets/clock/clock.c:1891
 msgid "City Name"
 msgstr "Nome da cidade"
 
-#: ../applets/clock/clock.c:1948
+#: ../applets/clock/clock.c:1895
 msgid "City Time Zone"
 msgstr "Fuso horário da cidade"
 
@@ -372,12 +373,12 @@ msgstr "Meteorologia"
 msgid "Time _Settings"
 msgstr "_Configurar hora"
 
-#: ../applets/clock/clock-utils.c:97 ../applets/fish/fish.c:164
+#: ../applets/clock/clock-utils.c:96 ../applets/fish/fish.c:164
 #, c-format
 msgid "Could not display help document '%s'"
 msgstr "Não foi possível exibir o documento de ajuda \"%s\""
 
-#: ../applets/clock/clock-utils.c:126 ../applets/fish/fish.c:190
+#: ../applets/clock/clock-utils.c:125 ../applets/fish/fish.c:190
 msgid "Error displaying help document"
 msgstr "Não foi possível exibir o documento de ajuda"
 
@@ -532,7 +533,7 @@ msgstr "Peixe"
 msgid "Display a swimming fish or another animated creature"
 msgstr "Exiba um peixe nadando ou uma outra criatura animada"
 
-#: ../applets/notification_area/main.c:245
+#: ../applets/notification_area/main.c:244
 msgid "Panel Notification Area"
 msgstr "Área de notificação do painel"
 
@@ -571,7 +572,7 @@ msgstr "Alterna entre janelas abertas usando um menu "
 
 #: ../applets/wncklet/org.gnome.panel.Wncklet.panel-applet.in.in.h:5
 msgid "Workspace Switcher"
-msgstr "Alternador de áreas de trabalho"
+msgstr "Alternador de espaço de trabalho"
 
 #: ../applets/wncklet/org.gnome.panel.Wncklet.panel-applet.in.in.h:6
 msgid "Switch between workspaces"
@@ -668,13 +669,13 @@ msgid "Restore to na_tive workspace"
 msgstr "Restaurar no espaço de trabalho _original"
 
 #: ../applets/wncklet/workspace-switcher.c:194
-#: ../applets/wncklet/workspace-switcher.c:716
+#: ../applets/wncklet/workspace-switcher.c:714
 #: ../applets/wncklet/workspace-switcher.ui.h:4
 msgid "rows"
 msgstr "linhas"
 
 #: ../applets/wncklet/workspace-switcher.c:194
-#: ../applets/wncklet/workspace-switcher.c:716
+#: ../applets/wncklet/workspace-switcher.c:714
 msgid "columns"
 msgstr "colunas"
 
@@ -714,12 +715,12 @@ msgstr "Mostrar os _nomes dos espaços de trabalho no alternador"
 msgid "Workspaces"
 msgstr "Espaços de trabalho"
 
-#: ../data/gnome-flashback.desktop.in.h:1
+#: ../data/gnome-flashback.desktop.in.in.h:1
 #: ../data/gnome-flashback.session.desktop.in.h:1
-msgid "GNOME Flashback"
-msgstr "GNOME Retrô"
+msgid "GNOME Flashback (Metacity)"
+msgstr "GNOME Retrô (Metacity)"
 
-#: ../data/gnome-flashback.desktop.in.h:2
+#: ../data/gnome-flashback.desktop.in.in.h:2
 msgid "This session logs you into GNOME with the traditional panel"
 msgstr "Inicia sua sessão no GNOME com o painel tradicional"
 
@@ -1552,29 +1553,29 @@ msgstr "_Mover"
 msgid "_Remove From Panel"
 msgstr "_Remover do painel"
 
-#: ../gnome-panel/gnome-desktop-item-edit.c:29
+#: ../gnome-panel/gnome-desktop-item-edit.c:27
 msgid "Create new file in the given directory"
 msgstr "Cria novo arquivo no diretório especificado"
 
-#: ../gnome-panel/gnome-desktop-item-edit.c:30
+#: ../gnome-panel/gnome-desktop-item-edit.c:28
 msgid "[FILE...]"
 msgstr "[ARQUIVO...]"
 
-#: ../gnome-panel/gnome-desktop-item-edit.c:108
+#: ../gnome-panel/gnome-desktop-item-edit.c:106
 msgid "- Edit .desktop files"
 msgstr "- Editar arquivos .desktop"
 
-#: ../gnome-panel/gnome-desktop-item-edit.c:146
-#: ../gnome-panel/gnome-desktop-item-edit.c:200 ../gnome-panel/launcher.c:892
+#: ../gnome-panel/gnome-desktop-item-edit.c:144
+#: ../gnome-panel/gnome-desktop-item-edit.c:198 ../gnome-panel/launcher.c:894
 msgid "Create Launcher"
 msgstr "Criar lançador"
 
-#: ../gnome-panel/gnome-desktop-item-edit.c:171
-#: ../gnome-panel/gnome-desktop-item-edit.c:194
+#: ../gnome-panel/gnome-desktop-item-edit.c:169
+#: ../gnome-panel/gnome-desktop-item-edit.c:192
 msgid "Directory Properties"
 msgstr "Propriedades do diretório"
 
-#: ../gnome-panel/gnome-desktop-item-edit.c:177 ../gnome-panel/launcher.c:732
+#: ../gnome-panel/gnome-desktop-item-edit.c:175 ../gnome-panel/launcher.c:732
 msgid "Launcher Properties"
 msgstr "Propriedades do lançador"
 
@@ -1618,24 +1619,24 @@ msgid "Unable to open desktop file %s for panel launcher%s%s\n"
 msgstr ""
 "Não foi possível abrir o arquivo desktop %s para o lançador do painel%s%s\n"
 
-#: ../gnome-panel/launcher.c:796
+#: ../gnome-panel/launcher.c:798
 msgid "_Launch"
 msgstr "_Lançar"
 
-#: ../gnome-panel/launcher.c:802 ../gnome-panel/panel-action-button.c:139
+#: ../gnome-panel/launcher.c:804 ../gnome-panel/panel-action-button.c:172
 #: ../gnome-panel/panel-context-menu.c:133
 msgid "_Properties"
 msgstr "_Propriedades"
 
-#: ../gnome-panel/launcher.c:833
+#: ../gnome-panel/launcher.c:835
 #, c-format
 msgid "Launcher location is not set, cannot load launcher\n"
 msgstr ""
 "A localização do lançador não está definida, impossível carregar o lançador\n"
 
-#: ../gnome-panel/launcher.c:963 ../gnome-panel/panel-ditem-editor.c:1352
-#: ../gnome-panel/panel-ditem-editor.c:1386
-#: ../gnome-panel/panel-ditem-editor.c:1417
+#: ../gnome-panel/launcher.c:965 ../gnome-panel/panel-ditem-editor.c:1317
+#: ../gnome-panel/panel-ditem-editor.c:1351
+#: ../gnome-panel/panel-ditem-editor.c:1382
 msgid "Could not save launcher"
 msgstr "Não foi possível salvar lançador"
 
@@ -1737,80 +1738,80 @@ msgstr "Nenhum aplicativo para manipular pesquisas de pastas está instalado."
 msgid "Replace a currently running panel"
 msgstr "Substituir o painel atualmente em execução"
 
-#: ../gnome-panel/panel-action-button.c:127
+#: ../gnome-panel/panel-action-button.c:160
 msgid "_Lock Screen"
 msgstr "Blo_quear tela"
 
-#: ../gnome-panel/panel-action-button.c:133
+#: ../gnome-panel/panel-action-button.c:166
 msgid "_Activate Screensaver"
 msgstr "_Ativar proteção de tela"
 
-#: ../gnome-panel/panel-action-button.c:239
+#: ../gnome-panel/panel-action-button.c:272
 msgid "Connect to server"
 msgstr "Conectar ao servidor"
 
-#: ../gnome-panel/panel-action-button.c:263
+#: ../gnome-panel/panel-action-button.c:296
 msgid "Could not connect to server"
 msgstr "Não foi possível se conectar ao servidor"
 
-#: ../gnome-panel/panel-action-button.c:293
+#: ../gnome-panel/panel-action-button.c:326
 msgid "Lock Screen"
 msgstr "Bloquear tela"
 
-#: ../gnome-panel/panel-action-button.c:294
+#: ../gnome-panel/panel-action-button.c:327
 msgid "Protect your computer from unauthorized use"
 msgstr "Proteja seu computador de uso não autorizado"
 
 #. when changing one of those two strings, don't forget to
 #. * update the ones in panel-menu-items.c (look for
 #. * "1" (msgctxt: "panel:showusername"))
-#: ../gnome-panel/panel-action-button.c:307
+#: ../gnome-panel/panel-action-button.c:340
 msgid "Log Out"
 msgstr "Encerrar sessão"
 
-#: ../gnome-panel/panel-action-button.c:308
+#: ../gnome-panel/panel-action-button.c:341
 msgid "Log out of this session to log in as a different user"
 msgstr "Encerre essa sessão para entrar como um usuário diferente"
 
-#: ../gnome-panel/panel-action-button.c:316
+#: ../gnome-panel/panel-action-button.c:349
 msgid "Run Application..."
 msgstr "Executar aplicativo..."
 
-#: ../gnome-panel/panel-action-button.c:317
+#: ../gnome-panel/panel-action-button.c:350
 msgid "Run an application by typing a command or choosing from a list"
 msgstr "Execute um aplicativo digitando um comando ou escolhendo de uma lista"
 
-#: ../gnome-panel/panel-action-button.c:325
+#: ../gnome-panel/panel-action-button.c:358
 msgid "Search for Files..."
 msgstr "Pesquisar arquivos..."
 
-#: ../gnome-panel/panel-action-button.c:326
+#: ../gnome-panel/panel-action-button.c:359
 msgid "Locate documents and folders on this computer by name or content"
 msgstr "Localize documentos e pastas neste computador por nome ou conteúdo"
 
-#: ../gnome-panel/panel-action-button.c:333
+#: ../gnome-panel/panel-action-button.c:366
 #: ../gnome-panel/panel-force-quit.c:241
 msgid "Force Quit"
 msgstr "Fechar forçado"
 
-#: ../gnome-panel/panel-action-button.c:334
+#: ../gnome-panel/panel-action-button.c:367
 msgid "Force a misbehaving application to quit"
 msgstr "Force um aplicativo mal comportado a sair"
 
 #. FIXME icon
-#: ../gnome-panel/panel-action-button.c:342
+#: ../gnome-panel/panel-action-button.c:375
 msgid "Connect to Server..."
 msgstr "Conectar ao servidor..."
 
-#: ../gnome-panel/panel-action-button.c:343
+#: ../gnome-panel/panel-action-button.c:376
 msgid "Connect to a remote computer or shared disk"
 msgstr "Conecte-se a um servidor remoto ou disco partilhado"
 
-#: ../gnome-panel/panel-action-button.c:350
+#: ../gnome-panel/panel-action-button.c:383
 msgid "Power Off"
 msgstr "Desligar"
 
-#: ../gnome-panel/panel-action-button.c:351
+#: ../gnome-panel/panel-action-button.c:384
 msgid "Power off the computer"
 msgstr "Desligue o computador"
 
@@ -1919,7 +1920,7 @@ msgid "Open URL: %s"
 msgstr "Abre o URL: %s"
 
 #. Translators: %s is a URI
-#: ../gnome-panel/panel.c:596 ../gnome-panel/panel-menu-items.c:645
+#: ../gnome-panel/panel.c:596 ../gnome-panel/panel-menu-items.c:640
 #, c-format
 msgid "Open '%s'"
 msgstr "Abre \"%s\""
@@ -1927,30 +1928,30 @@ msgstr "Abre \"%s\""
 #. is_exec?
 #. exec
 #. name
-#: ../gnome-panel/panel.c:644 ../gnome-panel/panel-menu-items.c:1200
+#: ../gnome-panel/panel.c:644 ../gnome-panel/panel-menu-items.c:1194
 msgid "Open your personal folder"
 msgstr "Abre sua pasta pessoal"
 
 #. is_exec?
 #. exec
-#: ../gnome-panel/panel.c:653 ../gnome-panel/panel-menu-items.c:1236
+#: ../gnome-panel/panel.c:653 ../gnome-panel/panel-menu-items.c:1223
 msgid "Computer"
 msgstr "Computador"
 
 #. name
-#: ../gnome-panel/panel.c:654 ../gnome-panel/panel-menu-items.c:1242
+#: ../gnome-panel/panel.c:654 ../gnome-panel/panel-menu-items.c:1224
 msgid ""
 "Browse all local and remote disks and folders accessible from this computer"
 msgstr "Navega em todos os discos e pastas locais e remotas deste computador"
 
 #. is_exec?
 #. exec
-#: ../gnome-panel/panel.c:661 ../gnome-panel/panel-menu-items.c:1252
+#: ../gnome-panel/panel.c:661 ../gnome-panel/panel-menu-items.c:1233
 msgid "Network"
 msgstr "Rede"
 
 #. name
-#: ../gnome-panel/panel.c:662 ../gnome-panel/panel-menu-items.c:1253
+#: ../gnome-panel/panel.c:662 ../gnome-panel/panel-menu-items.c:1234
 msgid "Browse bookmarked and local network locations"
 msgstr "Navega nos locais favoritos e locais da rede"
 
@@ -1999,58 +2000,58 @@ msgid "Location"
 msgstr "Localização"
 
 #. Type
-#: ../gnome-panel/panel-ditem-editor.c:616
+#: ../gnome-panel/panel-ditem-editor.c:602
 msgid "_Type:"
 msgstr "_Tipo:"
 
 #. Name
-#: ../gnome-panel/panel-ditem-editor.c:623
+#: ../gnome-panel/panel-ditem-editor.c:609
 msgid "_Name:"
 msgstr "_Nome:"
 
-#: ../gnome-panel/panel-ditem-editor.c:650
+#: ../gnome-panel/panel-ditem-editor.c:634
 msgid "_Browse..."
 msgstr "_Navegar..."
 
 #. Comment
-#: ../gnome-panel/panel-ditem-editor.c:657
+#: ../gnome-panel/panel-ditem-editor.c:641
 msgid "Co_mment:"
 msgstr "Co_mentário:"
 
-#: ../gnome-panel/panel-ditem-editor.c:1003
+#: ../gnome-panel/panel-ditem-editor.c:968
 msgid "Choose an application..."
 msgstr "Escolha um aplicativo..."
 
-#: ../gnome-panel/panel-ditem-editor.c:1007
+#: ../gnome-panel/panel-ditem-editor.c:972
 msgid "Choose a file..."
 msgstr "Escolha um arquivo..."
 
-#: ../gnome-panel/panel-ditem-editor.c:1172
-#: ../gnome-panel/panel-ditem-editor.c:1181
+#: ../gnome-panel/panel-ditem-editor.c:1137
+#: ../gnome-panel/panel-ditem-editor.c:1146
 msgid "Comm_and:"
 msgstr "Co_mando:"
 
-#: ../gnome-panel/panel-ditem-editor.c:1190
+#: ../gnome-panel/panel-ditem-editor.c:1155
 msgid "_Location:"
 msgstr "_Localização:"
 
-#: ../gnome-panel/panel-ditem-editor.c:1353
+#: ../gnome-panel/panel-ditem-editor.c:1318
 msgid "The name of the launcher is not set."
 msgstr "O nome do lançador não está definido."
 
-#: ../gnome-panel/panel-ditem-editor.c:1357
+#: ../gnome-panel/panel-ditem-editor.c:1322
 msgid "Could not save directory properties"
 msgstr "Não foi possível salvar as propriedades do diretório"
 
-#: ../gnome-panel/panel-ditem-editor.c:1358
+#: ../gnome-panel/panel-ditem-editor.c:1323
 msgid "The name of the directory is not set."
 msgstr "O nome do diretório não está definido."
 
-#: ../gnome-panel/panel-ditem-editor.c:1374
+#: ../gnome-panel/panel-ditem-editor.c:1339
 msgid "The command of the launcher is not set."
 msgstr "O comando do lançador não está definido."
 
-#: ../gnome-panel/panel-ditem-editor.c:1377
+#: ../gnome-panel/panel-ditem-editor.c:1342
 msgid "The location of the launcher is not set."
 msgstr "A localização do lançador não está definida."
 
@@ -2073,7 +2074,7 @@ msgstr ""
 "Se você escolher forçar um aplicativo a sair, qualquer mudança não salva em "
 "algum documento aberto será perdida."
 
-#: ../gnome-panel/panel-layout.c:1197 ../gnome-panel/panel-layout.c:1211
+#: ../gnome-panel/panel-layout.c:1219 ../gnome-panel/panel-layout.c:1233
 #, c-format
 msgid "Cannot create initial panel layout.\n"
 msgstr "Não foi possível criar a disposição inicial do painel.\n"
@@ -2094,63 +2095,63 @@ msgstr "Aplicativos"
 msgid "_Edit Menus"
 msgstr "_Editar menus"
 
-#: ../gnome-panel/panel-menu-items.c:491
+#: ../gnome-panel/panel-menu-items.c:486
 msgid "Switch User"
 msgstr "Alternar usuário"
 
-#: ../gnome-panel/panel-menu-items.c:621
+#: ../gnome-panel/panel-menu-items.c:616
 msgid "Bookmarks"
 msgstr "Marcadores"
 
-#: ../gnome-panel/panel-menu-items.c:716
+#: ../gnome-panel/panel-menu-items.c:711
 #, c-format
 msgid "Unable to scan %s for media changes"
 msgstr "Não foi possível varrer %s por alterações na mídia"
 
-#: ../gnome-panel/panel-menu-items.c:758
+#: ../gnome-panel/panel-menu-items.c:753
 #, c-format
 msgid "Rescan %s"
 msgstr "Varrer novamente %s"
 
-#: ../gnome-panel/panel-menu-items.c:795
+#: ../gnome-panel/panel-menu-items.c:790
 #, c-format
 msgid "Unable to mount %s"
 msgstr "Não foi possível montar %s"
 
-#: ../gnome-panel/panel-menu-items.c:857
+#: ../gnome-panel/panel-menu-items.c:852
 #, c-format
 msgid "Mount %s"
 msgstr "Montar %s"
 
-#: ../gnome-panel/panel-menu-items.c:1065
+#: ../gnome-panel/panel-menu-items.c:1060
 msgid "Removable Media"
 msgstr "Mídia removível"
 
-#: ../gnome-panel/panel-menu-items.c:1156
+#: ../gnome-panel/panel-menu-items.c:1151
 msgid "Network Places"
 msgstr "Locais de rede"
 
 #. Translators: Desktop is used here as in
 #. * "Desktop Folder" (this is not the Desktop
 #. * environment).
-#: ../gnome-panel/panel-menu-items.c:1220
+#: ../gnome-panel/panel-menu-items.c:1211
 msgctxt "Desktop Folder"
 msgid "Desktop"
 msgstr "Mostrar área de trabalho"
 
-#: ../gnome-panel/panel-menu-items.c:1221
+#: ../gnome-panel/panel-menu-items.c:1212
 msgid "Open the contents of your desktop in a folder"
 msgstr "Abra a área de trabalho como uma pasta"
 
-#: ../gnome-panel/panel-menu-items.c:1358
+#: ../gnome-panel/panel-menu-items.c:1336
 msgid "Available"
 msgstr "Disponível"
 
-#: ../gnome-panel/panel-menu-items.c:1368
+#: ../gnome-panel/panel-menu-items.c:1346
 msgid "Busy"
 msgstr "Ocupado"
 
-#: ../gnome-panel/panel-menu-items.c:1621
+#: ../gnome-panel/panel-menu-items.c:1578
 msgid "Places"
 msgstr "Locais"
 
@@ -2502,90 +2503,90 @@ msgstr "Ocultar painel"
 
 #. translators: these string will be shown in MetaCity's switch window
 #. * popup when you pass the focus to a panel
-#: ../gnome-panel/panel-toplevel.c:1657
+#: ../gnome-panel/panel-toplevel.c:1648
 msgid "Top Expanded Edge Panel"
 msgstr "Painel de canto superior estendido"
 
-#: ../gnome-panel/panel-toplevel.c:1658
+#: ../gnome-panel/panel-toplevel.c:1649
 msgid "Top Centered Panel"
 msgstr "Painel central superior"
 
-#: ../gnome-panel/panel-toplevel.c:1659
+#: ../gnome-panel/panel-toplevel.c:1650
 msgid "Top Floating Panel"
 msgstr "Painel flutuante superior"
 
-#: ../gnome-panel/panel-toplevel.c:1660
+#: ../gnome-panel/panel-toplevel.c:1651
 msgid "Top Edge Panel"
 msgstr "Painel de canto superior"
 
-#: ../gnome-panel/panel-toplevel.c:1664
+#: ../gnome-panel/panel-toplevel.c:1655
 msgid "Bottom Expanded Edge Panel"
 msgstr "Painel de canto inferior expandido"
 
-#: ../gnome-panel/panel-toplevel.c:1665
+#: ../gnome-panel/panel-toplevel.c:1656
 msgid "Bottom Centered Panel"
 msgstr "Painel central inferior"
 
-#: ../gnome-panel/panel-toplevel.c:1666
+#: ../gnome-panel/panel-toplevel.c:1657
 msgid "Bottom Floating Panel"
 msgstr "Painel flutuante inferior"
 
-#: ../gnome-panel/panel-toplevel.c:1667
+#: ../gnome-panel/panel-toplevel.c:1658
 msgid "Bottom Edge Panel"
 msgstr "Painel de canto inferior"
 
-#: ../gnome-panel/panel-toplevel.c:1671
+#: ../gnome-panel/panel-toplevel.c:1662
 msgid "Left Expanded Edge Panel"
 msgstr "Painel de canto esquerdo expandido"
 
-#: ../gnome-panel/panel-toplevel.c:1672
+#: ../gnome-panel/panel-toplevel.c:1663
 msgid "Left Centered Panel"
 msgstr "Painel central esquerdo"
 
-#: ../gnome-panel/panel-toplevel.c:1673
+#: ../gnome-panel/panel-toplevel.c:1664
 msgid "Left Floating Panel"
 msgstr "Painel flutuante esquerdo"
 
-#: ../gnome-panel/panel-toplevel.c:1674
+#: ../gnome-panel/panel-toplevel.c:1665
 msgid "Left Edge Panel"
 msgstr "Painel de canto esquerdo"
 
-#: ../gnome-panel/panel-toplevel.c:1678
+#: ../gnome-panel/panel-toplevel.c:1669
 msgid "Right Expanded Edge Panel"
 msgstr "Painel de canto direito expandido"
 
-#: ../gnome-panel/panel-toplevel.c:1679
+#: ../gnome-panel/panel-toplevel.c:1670
 msgid "Right Centered Panel"
 msgstr "Painel central direito"
 
-#: ../gnome-panel/panel-toplevel.c:1680
+#: ../gnome-panel/panel-toplevel.c:1671
 msgid "Right Floating Panel"
 msgstr "Painel flutuante direito"
 
-#: ../gnome-panel/panel-toplevel.c:1681
+#: ../gnome-panel/panel-toplevel.c:1672
 msgid "Right Edge Panel"
 msgstr "Painel de canto direito"
 
-#: ../gnome-panel/panel-util.c:314
+#: ../gnome-panel/panel-util.c:313
 #, c-format
 msgid "Icon '%s' not found"
 msgstr "Ícone \"%s\" não localizado"
 
-#: ../gnome-panel/panel-util.c:557
+#: ../gnome-panel/panel-util.c:556
 msgid "file"
 msgstr "arquivo"
 
-#: ../gnome-panel/panel-util.c:734
+#: ../gnome-panel/panel-util.c:731
 msgid "Home Folder"
 msgstr "Pasta pessoal"
 
 #. Translators: this is the same string as the one found in
 #. * nautilus
-#: ../gnome-panel/panel-util.c:746
+#: ../gnome-panel/panel-util.c:743
 msgid "File System"
 msgstr "Sistema de arquivos"
 
-#: ../gnome-panel/panel-util.c:919
+#: ../gnome-panel/panel-util.c:916
 msgid "Search"
 msgstr "Pesquisar"
 
@@ -2594,7 +2595,7 @@ msgstr "Pesquisar"
 #. * example, "Trash: some-directory". It means that the
 #. * directory called "some-directory" is in the trash.
 #.
-#: ../gnome-panel/panel-util.c:965
+#: ../gnome-panel/panel-util.c:962
 #, c-format
 msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
