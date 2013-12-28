@@ -52,12 +52,15 @@ CLOCK_CPPFLAGS =						\
 	$(CLOCK_EDS_CFLAGS)					\
 	-I$(srcdir)/../../libpanel-applet			\
 	-I$(top_builddir)/libpanel-applet			\
+	-I$(srcdir)/../../gnome-panel               \
+	-I$(top_builddir)/gnome-panel               \
 	-DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
 	-DCLOCK_EDS_ICONDIR="\"$(CLOCK_EDS_ICONDIR)\""		\
 	-DGWEATHER_I_KNOW_THIS_IS_UNSTABLE
 
 CLOCK_LDADD =						\
 	../../libpanel-applet/libpanel-applet-4.la	\
+	../../gnome-panel/libpanel-util/libpanel-util.la	\
 	$(CLOCK_LIBS)					\
 	$(CLOCK_EDS_LIBS)					\
 	$(LIBPANEL_APPLET_LIBS)				\
