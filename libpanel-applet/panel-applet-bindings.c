@@ -159,8 +159,10 @@ panel_bindings_mouse_modifier_changed (GSettings *settings, const gchar *key)
 	panel_bindings_mouse_modifier_set_from_string (g_settings_get_string (settings, key));
 }
 
-static void
-panel_applet_bindings_init (void)
+void panel_applet_bindings_clean (GConfClient *client) {}
+
+void
+panel_applet_bindings_init (GConfClient *client)
 {
 	char *str;
 
@@ -189,7 +191,7 @@ panel_applet_bindings_get_mouse_button_modifier_keymask (void)
 	g_assert (mouse_button_modifier_keymask != 0);
 
 	if (!initialised)
-		panel_applet_bindings_init ();
+		panel_applet_bindings_init (NULL);
 
 	mod = panel_applet_bindings_get_real_modifier_mask (mouse_button_modifier_keymask);
 
