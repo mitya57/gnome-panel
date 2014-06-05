@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-25 17:50+0200\n"
-"PO-Revision-Date: 2014-05-25 17:52+0200\n"
+"POT-Creation-Date: 2014-06-05 17:34+0200\n"
+"PO-Revision-Date: 2014-06-05 17:35+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -1516,15 +1516,15 @@ msgstr ""
 "zarządzane. Wartość \"fit\" powoduje skalowanie obrazu (zachowując proporcje "
 "obrazu) do wysokości panelu (jeśli jest poziomy)."
 
-#: ../gnome-panel/applet.c:359
+#: ../gnome-panel/applet.c:348
 msgid "???"
 msgstr "???"
 
-#: ../gnome-panel/applet.c:498 ../libpanel-applet/panel-applet.c:167
+#: ../gnome-panel/applet.c:486 ../libpanel-applet/panel-applet.c:167
 msgid "_Move"
 msgstr "_Przesuń"
 
-#: ../gnome-panel/applet.c:505 ../libpanel-applet/panel-applet.c:164
+#: ../gnome-panel/applet.c:493 ../libpanel-applet/panel-applet.c:164
 msgid "_Remove From Panel"
 msgstr "U_suń z panelu"
 
@@ -1541,7 +1541,7 @@ msgid "- Edit .desktop files"
 msgstr "- modyfikowanie plików .desktop"
 
 #: ../gnome-panel/gnome-desktop-item-edit.c:144
-#: ../gnome-panel/gnome-desktop-item-edit.c:198 ../gnome-panel/launcher.c:894
+#: ../gnome-panel/gnome-desktop-item-edit.c:198 ../gnome-panel/launcher.c:892
 msgid "Create Launcher"
 msgstr "Nowy aktywator"
 
@@ -1593,21 +1593,21 @@ msgstr "Dla pliku aktywatora panelu nie określono adresu URI\n"
 msgid "Unable to open desktop file %s for panel launcher%s%s\n"
 msgstr "Nie można otworzyć pliku %s z aktywatorem panelu%s%s\n"
 
-#: ../gnome-panel/launcher.c:798
+#: ../gnome-panel/launcher.c:797
 msgid "_Launch"
 msgstr "_Uruchom"
 
-#: ../gnome-panel/launcher.c:804 ../gnome-panel/panel-action-button.c:170
+#: ../gnome-panel/launcher.c:802 ../gnome-panel/panel-action-button.c:167
 #: ../gnome-panel/panel-context-menu.c:131
 msgid "_Properties"
 msgstr "_Właściwości"
 
-#: ../gnome-panel/launcher.c:835
+#: ../gnome-panel/launcher.c:833
 #, c-format
 msgid "Launcher location is not set, cannot load launcher\n"
 msgstr "Położenie aktywatora nie jest ustawione, nie można go wczytać\n"
 
-#: ../gnome-panel/launcher.c:965 ../gnome-panel/panel-ditem-editor.c:1316
+#: ../gnome-panel/launcher.c:963 ../gnome-panel/panel-ditem-editor.c:1316
 #: ../gnome-panel/panel-ditem-editor.c:1350
 #: ../gnome-panel/panel-ditem-editor.c:1381
 msgid "Could not save launcher"
@@ -1694,11 +1694,13 @@ msgid "Choose an icon"
 msgstr "Wybór ikony"
 
 #: ../gnome-panel/libpanel-util/panel-icon-chooser.c:386
-#: ../gnome-panel/panel.c:1402
+#: ../gnome-panel/panel.c:1402 ../gnome-panel/panel-ditem-editor.c:656
+#: ../gnome-panel/panel-ditem-editor.c:998
 msgid "_Cancel"
 msgstr "_Anuluj"
 
 #: ../gnome-panel/libpanel-util/panel-icon-chooser.c:388
+#: ../gnome-panel/panel-ditem-editor.c:1000
 msgid "_Open"
 msgstr "_Otwórz"
 
@@ -1720,81 +1722,81 @@ msgstr "Brak programu do obsługi przeszukiwania katalogów."
 msgid "Replace a currently running panel"
 msgstr "Zamienia bieżąco uruchomiony panel"
 
-#: ../gnome-panel/panel-action-button.c:158
+#: ../gnome-panel/panel-action-button.c:157
 msgid "_Lock Screen"
 msgstr "Za_blokuj ekran"
 
-#: ../gnome-panel/panel-action-button.c:164
+#: ../gnome-panel/panel-action-button.c:162
 msgid "_Activate Screensaver"
 msgstr "Włącz wyg_aszacz ekranu"
 
-#: ../gnome-panel/panel-action-button.c:270
+#: ../gnome-panel/panel-action-button.c:267
 msgid "Connect to server"
 msgstr "Połącz z serwerem"
 
-#: ../gnome-panel/panel-action-button.c:294
+#: ../gnome-panel/panel-action-button.c:291
 msgid "Could not connect to server"
 msgstr "Nie można połączyć się z serwerem"
 
-#: ../gnome-panel/panel-action-button.c:324
+#: ../gnome-panel/panel-action-button.c:321
 msgid "Lock Screen"
 msgstr "Zablokuj ekran"
 
-#: ../gnome-panel/panel-action-button.c:325
+#: ../gnome-panel/panel-action-button.c:322
 msgid "Protect your computer from unauthorized use"
 msgstr "Zabezpiecza komputer przed nieupoważnionym dostępem"
 
 #. when changing one of those two strings, don't forget to
 #. * update the ones in panel-menu-items.c (look for
 #. * "1" (msgctxt: "panel:showusername"))
-#: ../gnome-panel/panel-action-button.c:338
+#: ../gnome-panel/panel-action-button.c:335
 msgid "Log Out"
 msgstr "Wyloguj się"
 
-#: ../gnome-panel/panel-action-button.c:339
+#: ../gnome-panel/panel-action-button.c:336
 msgid "Log out of this session to log in as a different user"
 msgstr ""
 "Kończy bieżącą sesję, pozwalając na zalogowanie się innemu użytkownikowi"
 
-#: ../gnome-panel/panel-action-button.c:347
+#: ../gnome-panel/panel-action-button.c:344
 msgid "Run Application..."
 msgstr "Uruchom program..."
 
-#: ../gnome-panel/panel-action-button.c:348
+#: ../gnome-panel/panel-action-button.c:345
 msgid "Run an application by typing a command or choosing from a list"
 msgstr "Uruchamia program wybrany z listy lub wprowadzone polecenie"
 
-#: ../gnome-panel/panel-action-button.c:356
+#: ../gnome-panel/panel-action-button.c:353
 msgid "Search for Files..."
 msgstr "Wyszukaj pliki..."
 
-#: ../gnome-panel/panel-action-button.c:357
+#: ../gnome-panel/panel-action-button.c:354
 msgid "Locate documents and folders on this computer by name or content"
 msgstr "Wyszukuje dokumenty i katalogi według nazwy lub zawartości"
 
-#: ../gnome-panel/panel-action-button.c:364
+#: ../gnome-panel/panel-action-button.c:361
 #: ../gnome-panel/panel-force-quit.c:239
 msgid "Force Quit"
 msgstr "Wymuś zamknięcie"
 
-#: ../gnome-panel/panel-action-button.c:365
+#: ../gnome-panel/panel-action-button.c:362
 msgid "Force a misbehaving application to quit"
 msgstr "Wymusza zakończenie źle działającego programu"
 
 #. FIXME icon
-#: ../gnome-panel/panel-action-button.c:373
+#: ../gnome-panel/panel-action-button.c:370
 msgid "Connect to Server..."
 msgstr "Połącz z serwerem..."
 
-#: ../gnome-panel/panel-action-button.c:374
+#: ../gnome-panel/panel-action-button.c:371
 msgid "Connect to a remote computer or shared disk"
 msgstr "Łączy ze zdalnym serwerem lub udostępnionym dyskiem"
 
-#: ../gnome-panel/panel-action-button.c:381
+#: ../gnome-panel/panel-action-button.c:378
 msgid "Power Off"
 msgstr "Wyłącz komputer"
 
-#: ../gnome-panel/panel-action-button.c:382
+#: ../gnome-panel/panel-action-button.c:379
 msgid "Power off the computer"
 msgstr "Wyłącza komputer"
 
@@ -1862,6 +1864,22 @@ msgstr "_Wyszukiwany element do dodania do panelu:"
 #: ../gnome-panel/panel-addto.c:1018
 msgid "Add to Panel"
 msgstr "Dodawanie do panelu"
+
+#: ../gnome-panel/panel-addto.c:1141
+msgid "_Forward"
+msgstr "_Dalej"
+
+#: ../gnome-panel/panel-addto.c:1144 ../gnome-panel/panel-addto.c:1240
+msgid "_Add"
+msgstr "_Dodaj"
+
+#: ../gnome-panel/panel-addto.c:1237
+msgid "_Back"
+msgstr "_Wstecz"
+
+#: ../gnome-panel/panel-addto.c:1243 ../gnome-panel/panel-ditem-editor.c:653
+msgid "_Close"
+msgstr "Za_mknij"
 
 #: ../gnome-panel/panel-applet-frame.c:774
 #, c-format
@@ -2007,6 +2025,14 @@ msgstr "P_rzeglądaj..."
 msgid "Co_mment:"
 msgstr "_Komentarz:"
 
+#: ../gnome-panel/panel-ditem-editor.c:647
+msgid "_Revert"
+msgstr "_Przywróć"
+
+#: ../gnome-panel/panel-ditem-editor.c:659
+msgid "_OK"
+msgstr "_OK"
+
 #: ../gnome-panel/panel-ditem-editor.c:967
 msgid "Choose an application..."
 msgstr "Wybór programu..."
@@ -2080,7 +2106,7 @@ msgstr "Dostęp do dokumentów, katalogów i miejsc sieciowych"
 msgid "Applications"
 msgstr "Programy"
 
-#: ../gnome-panel/panel-menu-bar.c:223 ../gnome-panel/panel-menu-button.c:559
+#: ../gnome-panel/panel-menu-bar.c:222 ../gnome-panel/panel-menu-button.c:559
 msgid "_Edit Menus"
 msgstr "_Modyfikuj menu"
 
