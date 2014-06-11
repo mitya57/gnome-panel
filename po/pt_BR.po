@@ -20,25 +20,25 @@
 # Henrique P. Machado <hpmachado@gnome.org>, 2010.
 # Jonh Wendell <jwendell@gnome.org>, 2010.
 # Rodrigo Padula de Oliveira <contato@rodrigopadula.com>, 2011.
-# Rafael Ferreira <rafael.f.f1@gmail.com>, 2013.
 # Adorilson Bezerra <adorilson@gmail.com>, 2013.
 # Enrico Nicoletto <liverig@gmail.com>, 2014.
+# Rafael Ferreira <rafael.f.f1@gmail.com>, 2013, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-panel\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "panel&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-06-03 07:10+0000\n"
-"PO-Revision-Date: 2014-06-03 10:30-0300\n"
-"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
+"POT-Creation-Date: 2014-06-11 07:13+0000\n"
+"PO-Revision-Date: 2014-06-11 10:45-0300\n"
+"Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.4\n"
 
 # Usuário escolheu 12h sem segundos.
 #. Translators: This is a strftime format string.
@@ -1542,15 +1542,15 @@ msgstr ""
 "da imagem. Com \"fit\", a imagem será redimensionada (mantendo as suas "
 "proporções) à altura do painel (se horizontal)."
 
-#: ../gnome-panel/applet.c:359
+#: ../gnome-panel/applet.c:348
 msgid "???"
 msgstr "???"
 
-#: ../gnome-panel/applet.c:498 ../libpanel-applet/panel-applet.c:167
+#: ../gnome-panel/applet.c:486 ../libpanel-applet/panel-applet.c:167
 msgid "_Move"
 msgstr "_Mover"
 
-#: ../gnome-panel/applet.c:505 ../libpanel-applet/panel-applet.c:164
+#: ../gnome-panel/applet.c:493 ../libpanel-applet/panel-applet.c:164
 msgid "_Remove From Panel"
 msgstr "_Remover do painel"
 
@@ -1567,7 +1567,7 @@ msgid "- Edit .desktop files"
 msgstr "- Editar arquivos .desktop"
 
 #: ../gnome-panel/gnome-desktop-item-edit.c:144
-#: ../gnome-panel/gnome-desktop-item-edit.c:198 ../gnome-panel/launcher.c:894
+#: ../gnome-panel/gnome-desktop-item-edit.c:198 ../gnome-panel/launcher.c:892
 msgid "Create Launcher"
 msgstr "Criar lançador"
 
@@ -1620,22 +1620,22 @@ msgid "Unable to open desktop file %s for panel launcher%s%s\n"
 msgstr ""
 "Não foi possível abrir o arquivo desktop %s para o lançador do painel%s%s\n"
 
-#: ../gnome-panel/launcher.c:798
+#: ../gnome-panel/launcher.c:797
 msgid "_Launch"
 msgstr "_Lançar"
 
-#: ../gnome-panel/launcher.c:804 ../gnome-panel/panel-action-button.c:170
+#: ../gnome-panel/launcher.c:802 ../gnome-panel/panel-action-button.c:167
 #: ../gnome-panel/panel-context-menu.c:131
 msgid "_Properties"
 msgstr "_Propriedades"
 
-#: ../gnome-panel/launcher.c:835
+#: ../gnome-panel/launcher.c:833
 #, c-format
 msgid "Launcher location is not set, cannot load launcher\n"
 msgstr ""
 "A localização do lançador não está definida, impossível carregar o lançador\n"
 
-#: ../gnome-panel/launcher.c:965 ../gnome-panel/panel-ditem-editor.c:1316
+#: ../gnome-panel/launcher.c:963 ../gnome-panel/panel-ditem-editor.c:1316
 #: ../gnome-panel/panel-ditem-editor.c:1350
 #: ../gnome-panel/panel-ditem-editor.c:1381
 msgid "Could not save launcher"
@@ -1722,11 +1722,13 @@ msgid "Choose an icon"
 msgstr "Escolha um ícone"
 
 #: ../gnome-panel/libpanel-util/panel-icon-chooser.c:386
-#: ../gnome-panel/panel.c:1402
+#: ../gnome-panel/panel.c:1402 ../gnome-panel/panel-ditem-editor.c:656
+#: ../gnome-panel/panel-ditem-editor.c:998
 msgid "_Cancel"
 msgstr "_Cancelar"
 
 #: ../gnome-panel/libpanel-util/panel-icon-chooser.c:388
+#: ../gnome-panel/panel-ditem-editor.c:1000
 msgid "_Open"
 msgstr "_Abrir"
 
@@ -1748,80 +1750,80 @@ msgstr "Nenhum aplicativo para manipular pesquisas de pastas está instalado."
 msgid "Replace a currently running panel"
 msgstr "Substituir o painel atualmente em execução"
 
-#: ../gnome-panel/panel-action-button.c:158
+#: ../gnome-panel/panel-action-button.c:157
 msgid "_Lock Screen"
 msgstr "Blo_quear tela"
 
-#: ../gnome-panel/panel-action-button.c:164
+#: ../gnome-panel/panel-action-button.c:162
 msgid "_Activate Screensaver"
 msgstr "_Ativar proteção de tela"
 
-#: ../gnome-panel/panel-action-button.c:270
+#: ../gnome-panel/panel-action-button.c:267
 msgid "Connect to server"
 msgstr "Conectar ao servidor"
 
-#: ../gnome-panel/panel-action-button.c:294
+#: ../gnome-panel/panel-action-button.c:291
 msgid "Could not connect to server"
 msgstr "Não foi possível se conectar ao servidor"
 
-#: ../gnome-panel/panel-action-button.c:324
+#: ../gnome-panel/panel-action-button.c:321
 msgid "Lock Screen"
 msgstr "Bloquear tela"
 
-#: ../gnome-panel/panel-action-button.c:325
+#: ../gnome-panel/panel-action-button.c:322
 msgid "Protect your computer from unauthorized use"
 msgstr "Proteja seu computador de uso não autorizado"
 
 #. when changing one of those two strings, don't forget to
 #. * update the ones in panel-menu-items.c (look for
 #. * "1" (msgctxt: "panel:showusername"))
-#: ../gnome-panel/panel-action-button.c:338
+#: ../gnome-panel/panel-action-button.c:335
 msgid "Log Out"
 msgstr "Encerrar sessão"
 
-#: ../gnome-panel/panel-action-button.c:339
+#: ../gnome-panel/panel-action-button.c:336
 msgid "Log out of this session to log in as a different user"
 msgstr "Encerre essa sessão para entrar como um usuário diferente"
 
-#: ../gnome-panel/panel-action-button.c:347
+#: ../gnome-panel/panel-action-button.c:344
 msgid "Run Application..."
 msgstr "Executar aplicativo..."
 
-#: ../gnome-panel/panel-action-button.c:348
+#: ../gnome-panel/panel-action-button.c:345
 msgid "Run an application by typing a command or choosing from a list"
 msgstr "Execute um aplicativo digitando um comando ou escolhendo de uma lista"
 
-#: ../gnome-panel/panel-action-button.c:356
+#: ../gnome-panel/panel-action-button.c:353
 msgid "Search for Files..."
 msgstr "Pesquisar arquivos..."
 
-#: ../gnome-panel/panel-action-button.c:357
+#: ../gnome-panel/panel-action-button.c:354
 msgid "Locate documents and folders on this computer by name or content"
 msgstr "Localize documentos e pastas neste computador por nome ou conteúdo"
 
-#: ../gnome-panel/panel-action-button.c:364
+#: ../gnome-panel/panel-action-button.c:361
 #: ../gnome-panel/panel-force-quit.c:239
 msgid "Force Quit"
 msgstr "Fechar forçado"
 
-#: ../gnome-panel/panel-action-button.c:365
+#: ../gnome-panel/panel-action-button.c:362
 msgid "Force a misbehaving application to quit"
 msgstr "Force um aplicativo mal comportado a sair"
 
 #. FIXME icon
-#: ../gnome-panel/panel-action-button.c:373
+#: ../gnome-panel/panel-action-button.c:370
 msgid "Connect to Server..."
 msgstr "Conectar ao servidor..."
 
-#: ../gnome-panel/panel-action-button.c:374
+#: ../gnome-panel/panel-action-button.c:371
 msgid "Connect to a remote computer or shared disk"
 msgstr "Conecte-se a um servidor remoto ou disco partilhado"
 
-#: ../gnome-panel/panel-action-button.c:381
+#: ../gnome-panel/panel-action-button.c:378
 msgid "Power Off"
 msgstr "Desligar"
 
-#: ../gnome-panel/panel-action-button.c:382
+#: ../gnome-panel/panel-action-button.c:379
 msgid "Power off the computer"
 msgstr "Desligue o computador"
 
@@ -1889,6 +1891,22 @@ msgstr "Localizar um _item para adicionar ao painel:"
 #: ../gnome-panel/panel-addto.c:1018
 msgid "Add to Panel"
 msgstr "Adicionar ao painel"
+
+#: ../gnome-panel/panel-addto.c:1141
+msgid "_Forward"
+msgstr "_Avançar"
+
+#: ../gnome-panel/panel-addto.c:1144 ../gnome-panel/panel-addto.c:1240
+msgid "_Add"
+msgstr "A_dicionar"
+
+#: ../gnome-panel/panel-addto.c:1237
+msgid "_Back"
+msgstr "_Voltar"
+
+#: ../gnome-panel/panel-addto.c:1243 ../gnome-panel/panel-ditem-editor.c:653
+msgid "_Close"
+msgstr "_Fechar"
 
 #: ../gnome-panel/panel-applet-frame.c:774
 #, c-format
@@ -1978,7 +1996,6 @@ msgstr ""
 "configurações são perdidos."
 
 #: ../gnome-panel/panel.c:1403
-#| msgid "D_on't Delete"
 msgid "_Delete"
 msgstr "E_xcluir"
 
@@ -2032,6 +2049,14 @@ msgstr "_Navegar..."
 #: ../gnome-panel/panel-ditem-editor.c:640
 msgid "Co_mment:"
 msgstr "Co_mentário:"
+
+#: ../gnome-panel/panel-ditem-editor.c:647
+msgid "_Revert"
+msgstr "_Reverter"
+
+#: ../gnome-panel/panel-ditem-editor.c:659
+msgid "_OK"
+msgstr "_OK"
 
 #: ../gnome-panel/panel-ditem-editor.c:967
 msgid "Choose an application..."
@@ -2106,7 +2131,7 @@ msgstr "Acesse documentos, pastas e locais da rede"
 msgid "Applications"
 msgstr "Aplicativos"
 
-#: ../gnome-panel/panel-menu-bar.c:223 ../gnome-panel/panel-menu-button.c:559
+#: ../gnome-panel/panel-menu-bar.c:222 ../gnome-panel/panel-menu-button.c:559
 msgid "_Edit Menus"
 msgstr "_Editar menus"
 
