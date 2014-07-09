@@ -1,3 +1,0 @@
-[GNOME Session]
-_Name=GNOME Flashback (Metacity)
-RequiredComponents=gnome-panel;gnome-settings-daemon;gnome-screensaver;metacity;
