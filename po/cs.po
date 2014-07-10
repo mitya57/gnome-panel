@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: gnome-panel master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "panel&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-05-31 07:10+0000\n"
-"PO-Revision-Date: 2014-05-31 14:49+0200\n"
+"POT-Creation-Date: 2014-07-10 19:11+0000\n"
+"PO-Revision-Date: 2014-07-10 23:42+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -1505,15 +1505,15 @@ msgstr ""
 "přeškálován (se zachováním poměru stran) na šířku panelu (je-li tento "
 "vodorovný). Při „none“ bude obrázek ponechán v původní velikosti."
 
-#: ../gnome-panel/applet.c:359
+#: ../gnome-panel/applet.c:348
 msgid "???"
 msgstr "???"
 
-#: ../gnome-panel/applet.c:498 ../libpanel-applet/panel-applet.c:167
+#: ../gnome-panel/applet.c:486 ../libpanel-applet/panel-applet.c:167
 msgid "_Move"
 msgstr "_Přesunout"
 
-#: ../gnome-panel/applet.c:505 ../libpanel-applet/panel-applet.c:164
+#: ../gnome-panel/applet.c:493 ../libpanel-applet/panel-applet.c:164
 msgid "_Remove From Panel"
 msgstr "_Odstranit z panelu"
 
@@ -1530,7 +1530,7 @@ msgid "- Edit .desktop files"
 msgstr "- Upravit soubory. desktop"
 
 #: ../gnome-panel/gnome-desktop-item-edit.c:144
-#: ../gnome-panel/gnome-desktop-item-edit.c:198 ../gnome-panel/launcher.c:894
+#: ../gnome-panel/gnome-desktop-item-edit.c:198 ../gnome-panel/launcher.c:892
 msgid "Create Launcher"
 msgstr "Vytvořit spouštěč"
 
@@ -1582,21 +1582,21 @@ msgstr "Pro soubor desktop spouštěče na panelu nebylo poskytnuto URI\n"
 msgid "Unable to open desktop file %s for panel launcher%s%s\n"
 msgstr "Nelze otevřít soubor desktop %s pro spouštěč na panelu %s%s\n"
 
-#: ../gnome-panel/launcher.c:798
+#: ../gnome-panel/launcher.c:797
 msgid "_Launch"
 msgstr "_Spustit"
 
-#: ../gnome-panel/launcher.c:804 ../gnome-panel/panel-action-button.c:170
+#: ../gnome-panel/launcher.c:802 ../gnome-panel/panel-action-button.c:167
 #: ../gnome-panel/panel-context-menu.c:131
 msgid "_Properties"
 msgstr "_Vlastnosti"
 
-#: ../gnome-panel/launcher.c:835
+#: ../gnome-panel/launcher.c:833
 #, c-format
 msgid "Launcher location is not set, cannot load launcher\n"
 msgstr "Není uvedeno umístění spouštěče, spouštěč nelze načíst\n"
 
-#: ../gnome-panel/launcher.c:965 ../gnome-panel/panel-ditem-editor.c:1316
+#: ../gnome-panel/launcher.c:963 ../gnome-panel/panel-ditem-editor.c:1316
 #: ../gnome-panel/panel-ditem-editor.c:1350
 #: ../gnome-panel/panel-ditem-editor.c:1381
 msgid "Could not save launcher"
@@ -1681,11 +1681,13 @@ msgid "Choose an icon"
 msgstr "Vyberte ikonu"
 
 #: ../gnome-panel/libpanel-util/panel-icon-chooser.c:386
-#: ../gnome-panel/panel.c:1402
+#: ../gnome-panel/panel.c:1402 ../gnome-panel/panel-ditem-editor.c:656
+#: ../gnome-panel/panel-ditem-editor.c:998
 msgid "_Cancel"
 msgstr "_Zrušit"
 
 #: ../gnome-panel/libpanel-util/panel-icon-chooser.c:388
+#: ../gnome-panel/panel-ditem-editor.c:1000
 msgid "_Open"
 msgstr "_Otevřít"
 
@@ -1707,81 +1709,81 @@ msgstr "Není nainstalována žádná aplikace určená k obsluze složek hledá
 msgid "Replace a currently running panel"
 msgstr "Nahradit právě spuštěný panel"
 
-#: ../gnome-panel/panel-action-button.c:158
+#: ../gnome-panel/panel-action-button.c:157
 msgid "_Lock Screen"
 msgstr "_Zamknout obrazovku"
 
-#: ../gnome-panel/panel-action-button.c:164
+#: ../gnome-panel/panel-action-button.c:162
 msgid "_Activate Screensaver"
 msgstr "_Aktivovat šetřič obrazovky"
 
-#: ../gnome-panel/panel-action-button.c:270
+#: ../gnome-panel/panel-action-button.c:267
 msgid "Connect to server"
 msgstr "Připojit se k serveru"
 
-#: ../gnome-panel/panel-action-button.c:294
+#: ../gnome-panel/panel-action-button.c:291
 msgid "Could not connect to server"
 msgstr "Nelze se připojit k serveru"
 
-#: ../gnome-panel/panel-action-button.c:324
+#: ../gnome-panel/panel-action-button.c:321
 msgid "Lock Screen"
 msgstr "Zamknout obrazovku"
 
-#: ../gnome-panel/panel-action-button.c:325
+#: ../gnome-panel/panel-action-button.c:322
 msgid "Protect your computer from unauthorized use"
 msgstr "Chrání váš počítač před neautorizovaným použitím"
 
 #. when changing one of those two strings, don't forget to
 #. * update the ones in panel-menu-items.c (look for
 #. * "1" (msgctxt: "panel:showusername"))
-#: ../gnome-panel/panel-action-button.c:338
+#: ../gnome-panel/panel-action-button.c:335
 msgid "Log Out"
 msgstr "Odhlásit se"
 
-#: ../gnome-panel/panel-action-button.c:339
+#: ../gnome-panel/panel-action-button.c:336
 msgid "Log out of this session to log in as a different user"
 msgstr ""
 "Odhlásí se z tohoto sezení, aby bylo možné přihlásit se jako jiný uživatel"
 
-#: ../gnome-panel/panel-action-button.c:347
+#: ../gnome-panel/panel-action-button.c:344
 msgid "Run Application..."
 msgstr "Spustit aplikaci…"
 
-#: ../gnome-panel/panel-action-button.c:348
+#: ../gnome-panel/panel-action-button.c:345
 msgid "Run an application by typing a command or choosing from a list"
 msgstr "Spustí aplikaci zadáním příkazu nebo vybráním ze seznamu"
 
-#: ../gnome-panel/panel-action-button.c:356
+#: ../gnome-panel/panel-action-button.c:353
 msgid "Search for Files..."
 msgstr "Hledat soubory…"
 
-#: ../gnome-panel/panel-action-button.c:357
+#: ../gnome-panel/panel-action-button.c:354
 msgid "Locate documents and folders on this computer by name or content"
 msgstr "Hledá dokumenty a složky v tomto počítači podle názvu či obsahu"
 
-#: ../gnome-panel/panel-action-button.c:364
+#: ../gnome-panel/panel-action-button.c:361
 #: ../gnome-panel/panel-force-quit.c:239
 msgid "Force Quit"
 msgstr "Vynutit ukončení"
 
-#: ../gnome-panel/panel-action-button.c:365
+#: ../gnome-panel/panel-action-button.c:362
 msgid "Force a misbehaving application to quit"
 msgstr "Vynutí ukončení chybně se chovající aplikace"
 
 #. FIXME icon
-#: ../gnome-panel/panel-action-button.c:373
+#: ../gnome-panel/panel-action-button.c:370
 msgid "Connect to Server..."
 msgstr "Připojit se k serveru…"
 
-#: ../gnome-panel/panel-action-button.c:374
+#: ../gnome-panel/panel-action-button.c:371
 msgid "Connect to a remote computer or shared disk"
 msgstr "Připojit se ke vzdálenému počítači nebo sdílenému disku"
 
-#: ../gnome-panel/panel-action-button.c:381
+#: ../gnome-panel/panel-action-button.c:378
 msgid "Power Off"
 msgstr "Vypnout"
 
-#: ../gnome-panel/panel-action-button.c:382
+#: ../gnome-panel/panel-action-button.c:379
 msgid "Power off the computer"
 msgstr "Vypne počítač"
 
@@ -1849,6 +1851,22 @@ msgstr "Vy_hledat položku, kterou přidat na panel:"
 #: ../gnome-panel/panel-addto.c:1018
 msgid "Add to Panel"
 msgstr "Přidat na panel"
+
+#: ../gnome-panel/panel-addto.c:1141
+msgid "_Forward"
+msgstr "_Vpřed"
+
+#: ../gnome-panel/panel-addto.c:1144 ../gnome-panel/panel-addto.c:1240
+msgid "_Add"
+msgstr "Přid_at"
+
+#: ../gnome-panel/panel-addto.c:1237
+msgid "_Back"
+msgstr "_Zpět"
+
+#: ../gnome-panel/panel-addto.c:1243 ../gnome-panel/panel-ditem-editor.c:653
+msgid "_Close"
+msgstr "_Zavřít"
 
 #: ../gnome-panel/panel-applet-frame.c:774
 #, c-format
@@ -1992,6 +2010,14 @@ msgstr "_Procházet…"
 msgid "Co_mment:"
 msgstr "Ko_mentář:"
 
+#: ../gnome-panel/panel-ditem-editor.c:647
+msgid "_Revert"
+msgstr "V_rátit"
+
+#: ../gnome-panel/panel-ditem-editor.c:659
+msgid "_OK"
+msgstr "_Budiž"
+
 #: ../gnome-panel/panel-ditem-editor.c:967
 msgid "Choose an application..."
 msgstr "Zvolit aplikaci…"
@@ -2064,7 +2090,7 @@ msgstr "Umožňuje přistupovat k dokumentům, složkám a místům v síti"
 msgid "Applications"
 msgstr "Aplikace"
 
-#: ../gnome-panel/panel-menu-bar.c:223 ../gnome-panel/panel-menu-button.c:559
+#: ../gnome-panel/panel-menu-bar.c:222 ../gnome-panel/panel-menu-button.c:559
 msgid "_Edit Menus"
 msgstr "_Upravit nabídky"
 
