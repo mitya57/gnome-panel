@@ -264,6 +264,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 EXTRA_DIST =					\
 	$(ui_FILES)				\
 	panel.gresource.xml			\
+	gnome-panel.css \
 	$(uitest_FILES)				\
 	panel-test-applets.gresource.xml	\
 	nothing.cP				\

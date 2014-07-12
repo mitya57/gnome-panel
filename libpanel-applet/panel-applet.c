@@ -692,6 +692,7 @@ panel_applet_menu_cmd_move (GSimpleAction *action,
  * @applet: a #PanelApplet.
  * @xml: a menu XML string.
  * @action_group: a #GtkActionGroup.
+ * @translation_domain: gettext translation domain
  *
  * Sets up the context menu of @applet. @xml is a #GtkUIManager UI definition,
  * describing how to display the menu items. @action_group contains the
@@ -734,6 +735,7 @@ panel_applet_setup_menu (PanelApplet    *applet,
  * @applet: a #PanelApplet.
  * @filename: path to a menu XML file.
  * @action_group: a #GtkActionGroup.
+ * @translation_domain: gettext translation domain
  *
  * Sets up the context menu of @applet. @filename is the path to a menu XML
  * file, containing a #GtkUIManager UI definition that describes how to display
@@ -767,6 +769,7 @@ panel_applet_setup_menu_from_file (PanelApplet    *applet,
  * @applet: a #PanelApplet.
  * @resource_path: a resource path
  * @action_group: a #GtkActionGroup.
+ * @translation_domain: gettext translation domain
  *
  * Sets up the context menu of @applet. @filename is a resource path to a menu
  * XML file, containing a #GtkUIManager UI definition that describes how to

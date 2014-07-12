@@ -92,8 +92,8 @@ noinst_DATA     = $(applet_in_files:.panel-applet.in=.panel-applet)
 EXTRA_DIST =						\
 	org.gnome.panel.TestApplet.panel-applet.in	\
 	panel-applet-marshal.list			\
-	libpanelapplet.pc.in			\
-	libpanelapplet-uninstalled.pc.in
+	libpanel-applet.pc.in			\
+	libpanel-applet-uninstalled.pc.in
 
 CLEANFILES = $(BUILT_SOURCES) $(noinst_DATA)
 
