@@ -42,6 +42,25 @@ static const GOptionEntry options[] = {
   { NULL }
 };
 
+static void
+theme_changed (GtkSettings *settings)
+{
+	static GtkCssProvider *provider = NULL;
+
+	if (provider == NULL) {
+		GFile *file;
+
+		file = g_file_new_for_uri ("resource:///org/gnome/panel/gnome-panel.css");
+		provider = gtk_css_provider_new ();
+
+		gtk_css_provider_load_from_file (provider, file, NULL);
+		g_object_unref (file);
+	}
+
+	gtk_style_context_add_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (provider),
+	                                           GTK_STYLE_PROVIDER_PRIORITY_FALLBACK);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -111,6 +130,11 @@ main (int argc, char **argv)
 	/* Do this at the end, to be sure that we're really ready when
 	 * connecting to the session manager */
 	panel_session_init ();
+
+	/* Load default style for panel */
+	GtkSettings *settings = gtk_settings_get_default ();
+	g_signal_connect (settings, "notify::gtk-theme-name", G_CALLBACK (theme_changed), NULL);
+	theme_changed (settings);
 
 	gtk_main ();
 
