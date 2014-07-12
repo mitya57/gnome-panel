@@ -1,5 +1,5 @@
 m4_define([gnome_panel_major_version], [3])
-m4_define([gnome_panel_minor_version], [8])
+m4_define([gnome_panel_minor_version], [10])
 m4_define([gnome_panel_micro_version], [0])
 
 AC_INIT([gnome-panel], [gnome_panel_major_version.gnome_panel_minor_version.gnome_panel_micro_version],
