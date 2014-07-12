@@ -1,4 +1,8 @@
-AC_INIT([gnome-panel], [3.8.0],
+m4_define([gnome_panel_major_version], [3])
+m4_define([gnome_panel_minor_version], [8])
+m4_define([gnome_panel_micro_version], [0])
+
+AC_INIT([gnome-panel], [gnome_panel_major_version.gnome_panel_minor_version.gnome_panel_micro_version],
         [http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-panel])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz tar-ustar -Wno-portability])
@@ -14,10 +18,12 @@ AC_CONFIG_MACRO_DIR([m4])
 #   change to C+1:0:0
 # - If the interface is the same as the previous version, change to C:R+1:A
 
-LIBPANEL_APPLET_API_VERSION=4.0
-AC_SUBST([LIBPANEL_APPLET_API_VERSION],[$LIBPANEL_APPLET_API_VERSION])
+LIBPANEL_APPLET_API_VERSION=gnome_panel_major_version.gnome_panel_minor_version
+LIBPANEL_APPLET_GIR_VERSION=gnome_panel_major_version[_]gnome_panel_minor_version
+AC_SUBST([LIBPANEL_APPLET_API_VERSION])
+AC_SUBST([LIBPANEL_APPLET_GIR_VERSION])
 
-LIB_PANEL_APPLET_LT_VERSION=1:1:1
+LIB_PANEL_APPLET_LT_VERSION=2:0:0
 AC_SUBST(LIB_PANEL_APPLET_LT_VERSION)
 
 GNOME_MAINTAINER_MODE_DEFINES
@@ -314,8 +320,8 @@ gnome-panel/libpanel-applet-private/Makefile
 gnome-panel/libpanel-util/Makefile
 gnome-panel/gnome-panel.desktop.in
 libpanel-applet/Makefile
-libpanel-applet/libpanelapplet-4.0.pc
-libpanel-applet/libpanelapplet-4.0-uninstalled.pc
+libpanel-applet/libpanel-applet.pc
+libpanel-applet/libpanel-applet-uninstalled.pc
 po/Makefile.in
 applets/Makefile
 applets/clock/Makefile
