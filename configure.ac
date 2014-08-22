@@ -18,10 +18,10 @@ AC_CONFIG_MACRO_DIR([m4])
 #   change to C+1:0:0
 # - If the interface is the same as the previous version, change to C:R+1:A
 
-LIBPANEL_APPLET_API_VERSION=gnome_panel_major_version.gnome_panel_minor_version
+LIBPANEL_APPLET_API_VERSION=5.0
 AC_SUBST([LIBPANEL_APPLET_API_VERSION])
 
-LIBPANEL_APPLET_GIR_VERSION=gnome_panel_major_version[_]gnome_panel_minor_version
+LIBPANEL_APPLET_GIR_VERSION=5_0
 AC_SUBST([LIBPANEL_APPLET_GIR_VERSION])
 
 LIB_PANEL_APPLET_LT_VERSION=0:0:0
