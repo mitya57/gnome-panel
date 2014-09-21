@@ -1432,6 +1432,7 @@ fish_applet_fill (FishApplet *fish)
 	GtkAction      *action;
 
 	fish->orientation = panel_applet_get_orient (applet);
+	setup_fish_widget (fish);
 
 	fish->settings = panel_applet_settings_new (applet, FISH_SCHEMA);
 	fish->lockdown_settings = g_settings_new (LOCKDOWN_SCHEMA);
@@ -1461,7 +1462,6 @@ fish_applet_fill (FishApplet *fish)
 #ifndef FISH_INPROCESS
 	gtk_window_set_default_icon_name (FISH_ICON);
 #endif
-	setup_fish_widget (fish);
 
 	return TRUE;
 }
